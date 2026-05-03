@@ -29,9 +29,11 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Eval results (keep latest, ignore intermediates)
+# Eval results — commit the canonical latest.json + the 1-page PDF.
+# Other JSON files in evals/results/ are intermediates and ignored.
 evals/results/*.json
 !evals/results/.gitkeep
+!evals/results/latest.json
 
 # Local-only runtime data (the latency log is regenerated per session)
 backend/data/latency.sqlite

@@ -60,8 +60,12 @@ Score on these axes (each 0.0 to 1.0):
 
 A perfect 1.0 means the answer satisfies the rubric. Partial coverage gets partial credit (e.g., 0.5 if half the rubric items appear).
 
-Output ONLY valid JSON, no markdown, no fences:
-{{"groundedness": 0.0, "relevance": 0.0, "honesty": 0.0, "completeness": 0.0, "notes": "brief one-line note"}}
+If the answer references a tool call that returned data (e.g., "get_availability returned 5 slots → ..."), trust the TOOL TRACE section as ground truth — those slots are NOT fabricated, they came from a real Cal.com API call.
+
+Output ONLY a single-line JSON object, no markdown, no fences. The "notes" field MUST be under 60 characters with no newlines, no double quotes inside, no special characters.
+
+Schema:
+{{"groundedness": 0.0, "relevance": 0.0, "honesty": 0.0, "completeness": 0.0, "notes": "short note"}}
 """
 
 
@@ -131,7 +135,10 @@ def _summarize_tool_result(result: dict) -> str:
     if "slots" in result:
         return f"{len(result['slots'])} slots returned"
     if "success" in result and result.get("success"):
-        return f"booked event_id={result.get('event_id')} uid={result.get('uid')}"
+        return (
+            f"booked event_id={result.get('event_id')} uid={result.get('uid')} "
+            f"start={result.get('start')} meeting_url={result.get('meeting_url')}"
+        )
     if "error" in result:
         return f"error: {result['error']}"
     return str(result)[:200]

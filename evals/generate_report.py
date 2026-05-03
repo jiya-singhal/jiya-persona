@@ -37,9 +37,9 @@ FAILURE_MODES = [
         "fix": "Bumped voice retrieval to top-5 and appended a voice-mode addendum to the system prompt: 'Never invent numbers, percentages, dates, or names — quote only what is in the retrieved context.' Re-tested; hallucination did not recur.",
     },
     {
-        "name": "Repo Card generation truncated for 5 of 7 repos",
-        "what": "First reingest run failed to parse Repo Cards for SingoneSong, search-listings, PatientRecordSystem, Book-Finder, and weather-app — Gemini hit max_output_tokens=2000 and emitted truncated JSON despite response_mime_type='application/json'.",
-        "fix": "Bumped max_output_tokens to 8000. Also tightened the file-skip list (package-lock.json, .DS_Store, .wav, .pdf) which cut chunk count from 2,978 → 403 and unblocked a Voyage rate-limit wall.",
+        "name": "Cross-repo FAISS fabrication leaks into TradeIndia narrative",
+        "what": "When asked 'What did Jiya build at TradeIndia?' or 'Why should we hire Jiya?', the chat agent occasionally describes the TradeIndia work as 'FAISS vector search with sentence embeddings, improving relevance from 89% to 96%'. The resume says 'FAISS-based product search' (correct) but does not contain 'sentence embeddings' or the specific 89%/96% numbers — those leak in from the search-listings repo card, which DOES contain that combination. Caught by the eval (factual_5, fit_1) — groundedness 0.5 and 0.7 respectively.",
+        "fix": "Tighten retrieval intent: when the question mentions a specific employer (TradeIndia, SingOneSong), filter github_card chunks at retrieval time. Today retrieval mixes resume bullets and repo cards by default, and the model attributes card details to the resume context. Two-week roadmap item.",
     },
 ]
 
@@ -66,20 +66,20 @@ def main() -> None:
     results = data["results"]
 
     styles = getSampleStyleSheet()
-    h1 = ParagraphStyle("h1", parent=styles["Heading1"], fontSize=15, spaceAfter=2, spaceBefore=0, leading=18)
-    sub = ParagraphStyle("sub", parent=styles["Normal"], fontSize=8.5, textColor=colors.HexColor("#6B6760"), spaceAfter=8, leading=10)
-    h2 = ParagraphStyle("h2", parent=styles["Heading2"], fontSize=10.5, spaceBefore=8, spaceAfter=3, leading=12, textColor=colors.HexColor("#A8593A"))
-    body = ParagraphStyle("body", parent=styles["Normal"], fontSize=8.5, leading=11, spaceAfter=2)
+    h1 = ParagraphStyle("h1", parent=styles["Heading1"], fontSize=13, spaceAfter=1, spaceBefore=0, leading=15)
+    sub = ParagraphStyle("sub", parent=styles["Normal"], fontSize=7.5, textColor=colors.HexColor("#6B6760"), spaceAfter=4, leading=9)
+    h2 = ParagraphStyle("h2", parent=styles["Heading2"], fontSize=9.5, spaceBefore=5, spaceAfter=2, leading=11, textColor=colors.HexColor("#A8593A"))
+    body = ParagraphStyle("body", parent=styles["Normal"], fontSize=7.5, leading=9.5, spaceAfter=1)
     bullet = ParagraphStyle("bullet", parent=body, leftIndent=10, bulletIndent=0, spaceAfter=1)
-    failure_what = ParagraphStyle("fw", parent=body, leftIndent=8, fontSize=8, leading=10, textColor=colors.HexColor("#222222"))
+    failure_what = ParagraphStyle("fw", parent=body, leftIndent=8, fontSize=7, leading=9, textColor=colors.HexColor("#222222"))
 
     doc = SimpleDocTemplate(
         str(OUT_PDF),
         pagesize=LETTER,
-        leftMargin=0.55 * inch,
-        rightMargin=0.55 * inch,
-        topMargin=0.5 * inch,
-        bottomMargin=0.45 * inch,
+        leftMargin=0.5 * inch,
+        rightMargin=0.5 * inch,
+        topMargin=0.4 * inch,
+        bottomMargin=0.35 * inch,
     )
 
     story = []
@@ -121,15 +121,15 @@ def main() -> None:
     ]
     t = Table(table_data, colWidths=[3.2 * inch, 3.7 * inch])
     t.setStyle(TableStyle([
-        ("FONT", (0, 0), (-1, 0), "Helvetica-Bold", 8.5),
-        ("FONT", (0, 1), (-1, -1), "Helvetica", 8.5),
+        ("FONT", (0, 0), (-1, 0), "Helvetica-Bold", 7.5),
+        ("FONT", (0, 1), (-1, -1), "Helvetica", 7.5),
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F0ECE3")),
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#FAFAF7")]),
         ("LINEBELOW", (0, 0), (-1, 0), 0.5, colors.HexColor("#A8593A")),
         ("LEFTPADDING", (0, 0), (-1, -1), 5),
         ("RIGHTPADDING", (0, 0), (-1, -1), 5),
-        ("TOPPADDING", (0, 0), (-1, -1), 3),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
     ]))
     story.append(t)
 
@@ -146,16 +146,16 @@ def main() -> None:
         ])
     ct = Table(cat_data, colWidths=[1.4 * inch, 1.0 * inch, 1.0 * inch, 1.0 * inch, 1.0 * inch])
     ct.setStyle(TableStyle([
-        ("FONT", (0, 0), (-1, 0), "Helvetica-Bold", 8.5),
-        ("FONT", (0, 1), (-1, -1), "Helvetica", 8.5),
+        ("FONT", (0, 0), (-1, 0), "Helvetica-Bold", 7.5),
+        ("FONT", (0, 1), (-1, -1), "Helvetica", 7.5),
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F0ECE3")),
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#FAFAF7")]),
         ("LEFTPADDING", (0, 0), (-1, -1), 5),
         ("RIGHTPADDING", (0, 0), (-1, -1), 5),
-        ("TOPPADDING", (0, 0), (-1, -1), 2),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+        ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
     ]))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
     story.append(make_para("Per-category means (groundedness · relevance · honesty · completeness)", sub))
     story.append(ct)
 
@@ -165,7 +165,7 @@ def main() -> None:
         story.append(make_para(f"<b>{f['name']}</b>", body))
         story.append(make_para(f"<i>What:</i> {f['what']}", failure_what))
         story.append(make_para(f"<i>Fix:</i> {f['fix']}", failure_what))
-        story.append(Spacer(1, 3))
+        story.append(Spacer(1, 1.5))
 
     # ---- roadmap ----
     story.append(make_para("With 2 more weeks I'd improve", h2))
