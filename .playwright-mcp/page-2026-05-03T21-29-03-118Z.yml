@@ -1,0 +1,18 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: AI representative
+      - heading "Jiya Singhal" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Software engineering intern at SingOneSong · CS undergrad at Scaler School of Technology
+    - generic [ref=e9]:
+      - generic [ref=e12]:
+        - paragraph [ref=e13]: I'm Jiya's AI rep. Ask about her work at SingOneSong, her public projects, or book a 30-min chat with her directly. Every answer is grounded in her resume and GitHub — sources are shown below each response.
+        - generic [ref=e14]:
+          - generic [ref=e15]: Try asking
+          - button "What did Jiya do at SingOneSong?" [ref=e16] [cursor=pointer]
+          - button "Tell me about the search-listings project" [ref=e17] [cursor=pointer]
+          - button "Can I book a 30-min chat next week?" [ref=e18] [cursor=pointer]
+      - generic [ref=e20]:
+        - textbox "Ask about Jiya's work, or book a chat" [ref=e21]
+        - button "Send" [disabled] [ref=e22]
+  - alert [ref=e23]

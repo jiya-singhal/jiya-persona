@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: AI representative
+      - heading "Jiya Singhal" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Software engineering intern at SingOneSong · CS undergrad at Scaler School of Technology
+    - generic [ref=e9]:
+      - generic [ref=e11]:
+        - generic [ref=e26]: What did Jiya do at SingOneSong?
+        - generic [ref=e27]:
+          - generic [ref=e30]: "At SingOneSong, Jiya is a Software Engineering Intern. She designed and built a multi-metric audio quality classifier from scratch for a Real-Time Noise Detection System. Her work also involved a FastAPI-based audio analysis service for uploading, extracting features, and performing similarity and mood-based searches on audio files. This included using `librosa` for audio features, SQLAlchemy and SQLite for data storage, and `numpy` and `scikit-learn` for content-based similarity search. The code is in a private company repo, so I can't link you to it."
+          - generic [ref=e31]:
+            - generic [ref=e32]: Sources
+            - generic [ref=e33]:
+              - button "1resume · header" [ref=e34] [cursor=pointer]
+              - button "2resume · experience" [ref=e35] [cursor=pointer]
+              - button "3SingoneSong · problem" [ref=e36] [cursor=pointer]
+              - button "4SingoneSong · purpose" [ref=e37] [cursor=pointer]
+              - button "5resume · experience" [ref=e38] [cursor=pointer]
+              - button "6SingoneSong · demonstrates" [ref=e39] [cursor=pointer]
+            - generic [ref=e40]: "Experience SingOneSong Bangalore, India Software Engineering Intern Aug 2025 – Present • Real-Time Noise Detection System: Designed and built a multi-metric audio quality classifier from scratch using"
+        - generic [ref=e43]: Tell me about the search-listings project — what tech and what tradeoffs?
+        - generic [ref=e44]:
+          - generic [ref=e47]: "The search-listings project is an interactive web application for smart product search, combining AI semantic search and fuzzy string matching. It uses Python and Streamlit, with key libraries including `sentence-transformers`, `fuzzywuzzy`, `faiss-cpu`, `numpy`, and `pandas`. Data is stored in CSV files. Regarding tradeoffs, the entire product dataset and FAISS index are loaded into memory, which may limit scalability. The weights for combining different search scores are hardcoded and may require manual tuning. The stop word list is fixed and basic, and the CSV file encoding is hardcoded to 'latin1'. The dependency on `faiss-cpu` indicates the absence of GPU acceleration."
+          - generic [ref=e48]:
+            - generic [ref=e49]: Sources
+            - generic [ref=e50]:
+              - button "1search-listings · demonstrates" [ref=e51] [cursor=pointer]
+              - button "2search-listings · tradeoffs" [ref=e52] [cursor=pointer]
+              - button "3Book-Finder · tradeoffs" [ref=e53] [cursor=pointer]
+              - button "4Book-Finder · card" [ref=e54] [cursor=pointer]
+              - button "5search-listings · purpose" [ref=e55] [cursor=pointer]
+              - button "6search-listings · tech_stack" [ref=e56] [cursor=pointer]
+      - generic [ref=e20]:
+        - textbox "Ask about Jiya's work, or book a chat" [ref=e21]
+        - button "Send" [disabled] [ref=e22]
+  - alert [ref=e23]

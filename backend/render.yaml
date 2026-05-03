@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: jiya-persona-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: VOYAGE_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: CALCOM_API_KEY
+        sync: false
+      - key: CALCOM_EVENT_TYPE_ID
+        sync: false
+    healthCheckPath: /health
+    plan: free

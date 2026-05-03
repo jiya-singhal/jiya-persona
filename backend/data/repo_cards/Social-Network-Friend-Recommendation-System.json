@@ -1,0 +1,51 @@
+{
+  "repo_name": "jiya-singhal/Social-Network-Friend-Recommendation-System",
+  "one_line_purpose": "A Java project that simulates a social network for friend recommendations based on mutual connections, user blocking, and friend circle detection.",
+  "problem_solved": "This project provides a system for users to find new friends based on common connections (mutual friends), manage friendships, block unwanted users, and identify groups of interconnected friends within a social network simulation.",
+  "tech_stack": {
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [],
+    "key_libraries": [
+      "java.util",
+      "javax.swing"
+    ],
+    "storage": "in-memory (HashMaps and HashSets)",
+    "deployment": "local execution as a Java console application or a Java Swing desktop application"
+  },
+  "architecture_summary": "The system is structured into three main components: `SocialGraph`, `RecommendationEngine`, and a user interface (`Main.java` for console or `UI.java` for GUI). The `SocialGraph` class manages user data and friendships using an adjacency list (`HashMap<String, Set<String>>`) and handles user blocking and Disjoint Set Union (DSU) for friend circles. The `RecommendationEngine` class uses the `SocialGraph` to implement friend recommendation logic (BFS up to level 2) and to find friend circles via DSU. Both the console (`Main.java`) and GUI (`UI.java`) interfaces interact with instances of `SocialGraph` and `RecommendationEngine` to provide user functionality.",
+  "key_features": [
+    "Add new users",
+    "Add undirected friendships between users",
+    "Show all registered users",
+    "Recommend friends based on mutual connections (up to 2 levels of separation)",
+    "Display mutual friends with names and count for recommendations",
+    "Block users (unidirectional, preventing recommendations from/to blocked users)",
+    "Detect and display 'friend circles' or communities using Disjoint Set Union (DSU)",
+    "Print the complete social graph (adjacency list format)",
+    "Case-insensitive input handling for usernames",
+    "Suggestions sorted by number of mutual friends and then alphabetically",
+    "Graphical User Interface (GUI) implemented with Swing"
+  ],
+  "notable_code_decisions": [
+    "Uses an adjacency list (HashMap of Sets) to represent the social graph for efficient friend lookup.",
+    "Implements Breadth-First Search (BFS) for friend recommendations, specifically limited to two levels of separation.",
+    "Utilizes the Disjoint Set Union (DSU) data structure with path compression for efficient detection of friend circles/connected components.",
+    "Incorporates a `blockedMap` to handle user blocking, ensuring blocked users are excluded from recommendations.",
+    "All user inputs are converted to lowercase for case-insensitive processing.",
+    "Friend recommendations are sorted first by the count of mutual friends (descending) and then alphabetically by username.",
+    "Separation of concerns is maintained with dedicated classes for graph management (`SocialGraph`), recommendation logic (`RecommendationEngine`), and user interfaces (`Main`, `UI`).",
+    "Provides both a console-based and a Swing-based graphical user interface."
+  ],
+  "tradeoffs_and_limitations": [
+    "Data is stored in-memory; there is no persistence mechanism, meaning all data is lost upon application exit.",
+    "Scalability might be limited for very large social networks due to in-memory storage and simple graph traversal algorithms without optimizations for massive datasets.",
+    "The recommendation algorithm is a simple BFS to level 2, which might not be sophisticated enough for complex real-world recommendation scenarios.",
+    "Blocking is handled as a simple exclusion from recommendations and does not prevent existing friendships or other interactions.",
+    "No explicit error handling for non-existent users when performing actions like adding friendships or blocking, beyond checking user existence in `RecommendationEngine`."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "This project demonstrates fundamental data structures and algorithms, including graph representation (adjacency list), Breadth-First Search (BFS) for pathfinding, and Disjoint Set Union (DSU) with path compression for connected component detection. It showcases object-oriented programming principles in Java, basic user interaction through both console and GUI (Swing), and how these concepts can be applied to solve problems in social network modeling, such as friend recommendations and community detection.",
+  "_last_commit": "2025-06-24T22:00:55+00:00"
+}

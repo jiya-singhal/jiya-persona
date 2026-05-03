@@ -1,0 +1,51 @@
+{
+  "repo_name": "PatientRecordSystem",
+  "one_line_purpose": "The Patient Record System is a Spring Boot application that provides a comprehensive solution for managing patient records, medical histories, and appointments.",
+  "problem_solved": "This project aims to streamline the process of creating, updating, retrieving, and deleting patient information.",
+  "tech_stack": {
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "Spring Data JPA",
+      "Spring Security",
+      "Spring Web"
+    ],
+    "key_libraries": [
+      "Lombok",
+      "jjwt-api",
+      "jjwt-impl",
+      "jjwt-jackson",
+      "mysql-connector-j"
+    ],
+    "storage": "MySQL",
+    "deployment": "unclear from provided files"
+  },
+  "architecture_summary": "The application follows a layered architecture typical for Spring Boot applications, with controllers for API endpoints, services for business logic, and repositories for data access. It includes a JWT-based authentication system and global exception handling. Models define entities for patients, appointments, and medical history. Configuration classes set up Spring Security filters and in-memory user details.",
+  "key_features": [
+    "Patient Profile Management: Create, retrieve, and delete patient details (name, email, contact number, date of birth).",
+    "Medical History Management: Add, retrieve, and delete medical history entries for patients, including listing all records for a specific patient. Medical history includes history ID, patient ID, disease name, treatment details, and date of diagnosis.",
+    "Appointment Management: Retrieve all appointments, list all appointments for a specific patient, update, and delete appointments.",
+    "Authentication and Authorization: JSON Web Token (JWT) based authentication with token generation and validation for secure API endpoints.",
+    "Global Exception Handling: Custom exceptions for specific scenarios (e.g., PatientNotFound, AppointmentNotFound, MedicalHistoryInvalid) with consistent error responses."
+  ],
+  "notable_code_decisions": [
+    "Uses Spring Security for authentication and authorization.",
+    "Implements JWT (JSON Web Token) for stateless API authentication.",
+    "Employs an in-memory user store for authentication (with 'admin' and 'user' roles).",
+    "Custom exception classes and a global exception handler provide specific error responses.",
+    "Utilizes Lombok for reducing boilerplate code in models and DTOs.",
+    "Allows unauthenticated access to the `/authenticate` endpoint for token generation and all `/appointments` endpoints."
+  ],
+  "tradeoffs_and_limitations": [
+    "Authentication uses an in-memory user details service, which is not suitable for production environments requiring persistent user management.",
+    "The JWT secret key and token validity are hardcoded within the `JwtHelper.java` class.",
+    "Patients are explicitly prevented from updating their medical history details directly.",
+    "The `/appointments` endpoints are configured to permit all requests without authentication, which is a significant security vulnerability for a patient record system.",
+    "Specific database schema details (e.g., table creation scripts or detailed column constraints) are not provided in the analyzed files, relying on JPA's auto-generation capabilities."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "This project demonstrates building a RESTful API with Spring Boot, integrating Spring Data JPA for database interaction with MySQL, implementing JWT-based authentication using Spring Security, and handling custom exceptions. It showcases a typical multi-layered application structure for managing resources (patients, medical history, appointments).",
+  "_last_commit": "2024-07-27T08:48:43+00:00"
+}

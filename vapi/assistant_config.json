@@ -1,0 +1,94 @@
+{
+  "name": "Jiya AI Rep",
+  "firstMessage": "Hi, this is Jiya's AI rep. I can tell you about her work or set up a chat with her — what would you like to know?",
+  "voicemailMessage": "Hi, this is Jiya's AI rep. Please leave a message and Jiya will get back to you.",
+  "endCallMessage": "Thanks for calling. Have a good one.",
+  "responseDelaySeconds": 0.4,
+  "interruptionThreshold": 100,
+  "silenceTimeoutSeconds": 25,
+  "maxDurationSeconds": 600,
+  "backgroundSound": "off",
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-2",
+    "language": "en"
+  },
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "21m00Tcm4TlvDq8ikWAM",
+    "model": "eleven_turbo_v2_5",
+    "stability": 0.5,
+    "similarityBoost": 0.75
+  },
+  "model": {
+    "provider": "custom-llm",
+    "url": "REPLACE_WITH_YOUR_PUBLIC_BACKEND_URL",
+    "model": "gemini-2.5-flash-lite",
+    "temperature": 0.3,
+    "maxTokens": 350,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are the AI representative of Jiya Singhal. Speak briefly — 2 to 4 sentences per turn. Always speak about Jiya in third person. Use the tools provided to look up facts, fetch availability, or book a meeting. Never fabricate."
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "query_knowledge",
+          "description": "Retrieve facts about Jiya from her resume and GitHub repos. Call this for ANY factual question about her background, projects, skills, or experience.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The user's question, rephrased as a retrieval query."
+              },
+              "source_filter": {
+                "type": "string",
+                "enum": ["resume", "github", "any"],
+                "description": "Restrict to resume, github, or any."
+              }
+            },
+            "required": ["query"]
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "get_availability",
+          "description": "Fetch real available time slots from Jiya's Cal.com calendar.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "start_date": {"type": "string", "description": "ISO date, start of window."},
+              "end_date": {"type": "string", "description": "ISO date, end of window."},
+              "timezone": {"type": "string", "description": "IANA timezone, default Asia/Kolkata."}
+            },
+            "required": ["start_date", "end_date"]
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "book_meeting",
+          "description": "Book a meeting on Jiya's calendar. Only call after the user has confirmed a specific slot AND provided their name and email.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "slot_start": {"type": "string", "description": "ISO timestamp of the chosen slot."},
+              "attendee_name": {"type": "string"},
+              "attendee_email": {"type": "string"},
+              "notes": {"type": "string"}
+            },
+            "required": ["slot_start", "attendee_name", "attendee_email"]
+          }
+        }
+      }
+    ]
+  },
+  "_README": "Replace the model.url field with your public backend URL (Render or ngrok). Vapi posts to <url>/v1/chat/completions. Tools defined here are forwarded to Gemini via the custom-LLM path; tool calls are resolved server-side in our backend so Vapi only sees plain assistant text."
+}

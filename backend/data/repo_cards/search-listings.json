@@ -1,0 +1,52 @@
+{
+  "repo_name": "jiya-singhal/search-listings",
+  "one_line_purpose": "An interactive web application for smart product search combining AI semantic search and fuzzy string matching.",
+  "problem_solved": "Provides a robust product search functionality that handles varied user queries, including potential misspellings or semantic variations, by combining vector similarity and fuzzy string matching techniques to find relevant products from a predefined list.",
+  "tech_stack": {
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "Streamlit"
+    ],
+    "key_libraries": [
+      "streamlit",
+      "sentence-transformers",
+      "fuzzywuzzy",
+      "python-Levenshtein",
+      "faiss-cpu",
+      "numpy",
+      "pandas"
+    ],
+    "storage": "CSV",
+    "deployment": "unclear from provided files"
+  },
+  "architecture_summary": "The application is a Streamlit web interface that loads product names from a CSV file. It uses a SentenceTransformer model ('all-mpnet-base-v2') to generate semantic embeddings for all product names and builds a FAISS index for efficient similarity search. User queries are preprocessed, embedded, and then used to search the FAISS index for initial candidates. A combined scoring mechanism integrates AI semantic similarity (from FAISS), fuzzy matching (fuzzywuzzy), and boosts for substring and 'starts with' matches. Results are filtered by a score threshold and displayed in the Streamlit UI.",
+  "key_features": [
+    "Interactive product search interface using Streamlit",
+    "Semantic search capability with SentenceTransformer embeddings and FAISS index",
+    "Fuzzy string matching for typo tolerance and partial matches",
+    "Combined scoring system integrating AI similarity, fuzzy scores, and keyword boosts",
+    "Caching of model, product data, and FAISS index for performance optimization",
+    "Preprocessing of search queries (lowercasing, stop word removal)",
+    "Loads product data from a CSV file"
+  ],
+  "notable_code_decisions": [
+    "Extensive use of Streamlit caching (`st.cache_resource`, `st.cache_data`) for the SentenceTransformer model, product data, and FAISS index to improve performance.",
+    "Implementation of a hybrid search algorithm that weights semantic similarity (FAISS), fuzzy matching (fuzzywuzzy), and explicit string matching features (substring, starts-with boosts).",
+    "Utilizing 'all-mpmpnet-base-v2' as the pre-trained SentenceTransformer model for embeddings.",
+    "Loading product names specifically from a 'name' column in a CSV file, with error handling if the column is missing.",
+    "Applying a minimum score threshold (0.1) to filter out less relevant search results.",
+    "Using `faiss.IndexFlatL2` for the vector index, indicating L2 distance as the similarity metric for embeddings."
+  ],
+  "tradeoffs_and_limitations": [
+    "The entire product dataset and FAISS index are loaded into memory, which may limit scalability for extremely large product catalogs or memory-constrained environments.",
+    "The weights for combining different search scores (AI, fuzzy, startswith, substring) are hardcoded and may require manual tuning for optimal performance on different datasets.",
+    "The stop word list for query preprocessing is fixed and basic.",
+    "The CSV file encoding is hardcoded to 'latin1', which might not be universal.",
+    "The dependency on `faiss-cpu` indicates the absence of GPU acceleration for FAISS, which could impact performance for very large indices or high query loads."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "The project demonstrates building an interactive, hybrid search application that leverages modern NLP techniques (sentence embeddings, vector similarity search) alongside traditional string matching methods (fuzzy matching) to create a robust and user-friendly product search experience. It showcases effective use of Streamlit for rapid web application development and caching for performance optimization.",
+  "_last_commit": "2025-07-29T10:38:57+00:00"
+}

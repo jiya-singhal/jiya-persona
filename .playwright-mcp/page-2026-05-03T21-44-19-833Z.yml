@@ -1,0 +1,67 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: AI representative
+      - heading "Jiya Singhal" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Software engineering intern at SingOneSong · CS undergrad at Scaler School of Technology
+    - generic [ref=e9]:
+      - generic [ref=e11]:
+        - generic [ref=e26]: What did Jiya do at SingOneSong?
+        - generic [ref=e27]:
+          - generic [ref=e30]: "At SingOneSong, Jiya is a Software Engineering Intern. She designed and built a multi-metric audio quality classifier from scratch for a Real-Time Noise Detection System. Her work also involved a FastAPI-based audio analysis service for uploading, extracting features, and performing similarity and mood-based searches on audio files. This included using `librosa` for audio features, SQLAlchemy and SQLite for data storage, and `numpy` and `scikit-learn` for content-based similarity search. The code is in a private company repo, so I can't link you to it."
+          - generic [ref=e31]:
+            - generic [ref=e32]: Sources
+            - generic [ref=e33]:
+              - button "1resume · header" [ref=e34] [cursor=pointer]
+              - button "2resume · experience" [ref=e35] [cursor=pointer]
+              - button "3SingoneSong · problem" [ref=e36] [cursor=pointer]
+              - button "4SingoneSong · purpose" [ref=e37] [cursor=pointer]
+              - button "5resume · experience" [ref=e38] [cursor=pointer]
+              - button "6SingoneSong · demonstrates" [ref=e39] [cursor=pointer]
+            - generic [ref=e40]: "Experience SingOneSong Bangalore, India Software Engineering Intern Aug 2025 – Present • Real-Time Noise Detection System: Designed and built a multi-metric audio quality classifier from scratch using"
+        - generic [ref=e43]: Tell me about the search-listings project — what tech and what tradeoffs?
+        - generic [ref=e44]:
+          - generic [ref=e47]: "The search-listings project is an interactive web application for smart product search, combining AI semantic search and fuzzy string matching. It uses Python and Streamlit, with key libraries including `sentence-transformers`, `fuzzywuzzy`, `faiss-cpu`, `numpy`, and `pandas`. Data is stored in CSV files. Regarding tradeoffs, the entire product dataset and FAISS index are loaded into memory, which may limit scalability. The weights for combining different search scores are hardcoded and may require manual tuning. The stop word list is fixed and basic, and the CSV file encoding is hardcoded to 'latin1'. The dependency on `faiss-cpu` indicates the absence of GPU acceleration."
+          - generic [ref=e48]:
+            - generic [ref=e49]: Sources
+            - generic [ref=e50]:
+              - button "1search-listings · demonstrates" [ref=e51] [cursor=pointer]
+              - button "2search-listings · tradeoffs" [ref=e52] [cursor=pointer]
+              - button "3Book-Finder · tradeoffs" [ref=e53] [cursor=pointer]
+              - button "4Book-Finder · card" [ref=e54] [cursor=pointer]
+              - button "5search-listings · purpose" [ref=e55] [cursor=pointer]
+              - button "6search-listings · tech_stack" [ref=e56] [cursor=pointer]
+        - generic [ref=e59]: Can I book a 30-min chat next week? Looking at 2026-05-12 to 2026-05-14.
+        - generic [ref=e60]:
+          - generic [ref=e63]: Yes, Jiya has availability on May 12, 2026, from 9:00 AM to 11:30 AM IST, in 30-minute slots. Would any of those times work for you?
+          - generic [ref=e64]:
+            - generic [ref=e65]: Pulled from Jiya's calendar
+            - list [ref=e66]:
+              - listitem [ref=e67]: Tue 12 May, 9:00
+              - listitem [ref=e68]: Tue 12 May, 9:30
+              - listitem [ref=e69]: Tue 12 May, 10:00
+              - listitem [ref=e70]: Tue 12 May, 10:30
+              - listitem [ref=e71]: Tue 12 May, 11:00
+          - generic [ref=e72]:
+            - generic [ref=e73]: Sources
+            - generic [ref=e74]:
+              - button "1resume · experience" [ref=e75] [cursor=pointer]
+              - button "2resume · experience" [ref=e76] [cursor=pointer]
+              - button "3search-listings · purpose" [ref=e77] [cursor=pointer]
+              - button "4weather-app · assest/js/app.js" [ref=e78] [cursor=pointer]
+              - button "5weather-app · assest/js/app.js" [ref=e79] [cursor=pointer]
+              - button "6Social-Network-Friend-Recommendation-System · problem" [ref=e80] [cursor=pointer]
+        - generic [ref=e83]: "9 AM works. Name: Phase 4 Tester, email: phase4-tester@example.com"
+        - generic [ref=e92]:
+          - generic [ref=e93]: Sources
+          - generic [ref=e94]:
+            - button "1weather-app · assest/js/app.js" [ref=e95] [cursor=pointer]
+            - button "2Contact-Manager-App · README.md" [ref=e96] [cursor=pointer]
+            - button "3resume · certifications" [ref=e97] [cursor=pointer]
+            - button "4weather-app · assest/js/module.js" [ref=e98] [cursor=pointer]
+            - button "5resume · header" [ref=e99] [cursor=pointer]
+            - button "6Contact-Manager-App · tradeoffs" [ref=e100] [cursor=pointer]
+      - generic [ref=e20]:
+        - textbox "…thinking" [disabled] [ref=e101]
+        - button "Send" [disabled] [ref=e22]
+  - alert [ref=e23]

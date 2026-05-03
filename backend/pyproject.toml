@@ -1,0 +1,26 @@
+[project]
+name = "jiya-persona-backend"
+version = "0.1.0"
+description = "AI persona backend — RAG + voice + chat"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic-settings>=2.4.0",
+    "email-validator>=2.0.0",
+    "google-genai>=0.3.0",
+    "voyageai>=0.3.0",
+    "chromadb>=0.5.0",
+    "pypdf>=4.0.0",
+    "PyGithub>=2.4.0",
+    "httpx>=0.27.0",
+    "sse-starlette>=2.0.0",
+    "reportlab>=4.2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]

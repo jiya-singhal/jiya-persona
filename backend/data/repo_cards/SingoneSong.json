@@ -1,0 +1,59 @@
+{
+  "repo_name": "jiya-singhal/SingoneSong",
+  "one_line_purpose": "A FastAPI-based audio analysis service for uploading, extracting features, and performing similarity and mood-based searches on audio files.",
+  "problem_solved": "Providing quick retrieval and mood-based search capabilities for music or audio datasets.",
+  "tech_stack": {
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "FastAPI"
+    ],
+    "key_libraries": [
+      "uvicorn",
+      "python-multipart",
+      "librosa",
+      "soundfile",
+      "numpy",
+      "scipy",
+      "pydantic",
+      "scikit-learn",
+      "sqlalchemy",
+      "aiofiles",
+      "python-dotenv"
+    ],
+    "storage": "SQLite for metadata, local filesystem for audio files.",
+    "deployment": "uvicorn"
+  },
+  "architecture_summary": "The application is a FastAPI web service (`app/main.py`) that exposes REST API endpoints for audio file operations. It uses SQLAlchemy to interact with a SQLite database (`audio_metadata.db`) for storing audio metadata, including extracted features. Audio files are stored on the local filesystem within `app/storage`. Core functionalities like feature extraction are handled by `librosa` (`app/features.py`), while `numpy` and `scikit-learn` are used for feature vector normalization and similarity calculations (`app/utils.py`). A simple rule-based system (`app/mood.py`) supports mood-based natural language search.",
+  "key_features": [
+    "Audio file upload and local storage for .wav and .mp3 formats.",
+    "Extraction of key audio features using `librosa`: tempo, spectral centroid, RMS, duration, zero-crossing rate, and spectral rolloff.",
+    "Similarity search for audio tracks based on an existing audio ID using Euclidean or Cosine distance.",
+    "Similarity search for audio tracks based on specified feature ranges (e.g., tempo, RMS).",
+    "Text-based search by audio title or tags.",
+    "Mood-based natural language search, mapping audio features to descriptive mood labels.",
+    "Normalization of feature vectors before similarity computations.",
+    "Collision-safe file saving for uploaded audio files.",
+    "Result limiting to top 5 similar tracks for search endpoints."
+  ],
+  "notable_code_decisions": [
+    "Uses basic `librosa` features for audio analysis, without incorporating more advanced pre-trained embeddings (e.g., PANNs, OpenL3).",
+    "Employs z-score normalization for feature vectors to ensure fair comparison during similarity calculations.",
+    "Provides a choice between Euclidean and Cosine distance metrics for similarity searches.",
+    "Stores audio files directly on the local filesystem rather than in a dedicated object storage service.",
+    "Utilizes SQLite for database persistence, suitable for smaller scale applications.",
+    "Implements a simple rule-based system for mood classification based on thresholds of extracted features.",
+    "Handles concurrent file uploads by appending an index to filenames to prevent overwriting."
+  ],
+  "tradeoffs_and_limitations": [
+    "Relies on basic `librosa` features for audio analysis, which may be less discriminative or robust compared to pre-trained embeddings for complex audio understanding.",
+    "Audio files are stored locally, limiting scalability for large datasets and distributed deployments.",
+    "SQLite database may not be suitable for high-concurrency environments or very large-scale data storage.",
+    "Mood classification is based on simple, hardcoded rules and thresholds, which might not capture the full complexity or nuance of human-perceived moods.",
+    "The current feature extraction process does not utilize more advanced techniques like pre-trained embeddings, potentially impacting the accuracy of search results for complex audio queries."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "Building a RESTful API with FastAPI for managing and analyzing audio data; practical application of `librosa` for extracting fundamental audio features; database interaction with SQLAlchemy and SQLite for structured data storage; implementation of content-based similarity search algorithms (Euclidean and Cosine distance) using `numpy` and `scikit-learn`; basic principles of natural language processing for mapping queries to audio characteristics; handling file uploads and local file system management in a web application; data preprocessing techniques like feature normalization for machine learning tasks.",
+  "_last_commit": "2025-08-15T10:16:02+00:00"
+}
