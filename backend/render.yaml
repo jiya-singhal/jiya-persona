@@ -2,7 +2,10 @@ services:
   - type: web
     name: jiya-persona-backend
     runtime: docker
+    rootDir: backend
     dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
     envVars:
       - key: GEMINI_API_KEY
         sync: false
@@ -14,5 +17,9 @@ services:
         sync: false
       - key: CALCOM_EVENT_TYPE_ID
         sync: false
-    healthCheckPath: /health
-    plan: free
+      - key: VAPI_API_KEY
+        sync: false
+      - key: BACKEND_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

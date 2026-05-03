@@ -1,0 +1,25 @@
+# Local dev only
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Local secrets — Render injects via dashboard env vars
+.env
+
+# Local-only runtime data
+data/latency.sqlite
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# IMPORTANT: data/chroma_db, data/repo_cards, data/resume.pdf are NOT ignored.
+# They ship with the image so the prod container has the RAG corpus baked in.

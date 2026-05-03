@@ -9,11 +9,10 @@ build/
 
 # Environments
 .env
+.env.local
 .venv/
 venv/
-
-# ChromaDB
-backend/data/chroma_db/
+backend/.env
 
 # Node
 node_modules/
@@ -33,16 +32,18 @@ Thumbs.db
 # Eval results (keep latest, ignore intermediates)
 evals/results/*.json
 !evals/results/.gitkeep
-# Logs
-*.sqlite
+
+# Local-only runtime data (the latency log is regenerated per session)
+backend/data/latency.sqlite
+
+# Logs (but NOT chroma.sqlite3 — that ships with the image)
 *.log
 
-.env
-backend/.env
-backend/data/chroma_db/
-node_modules/
-.next/
-__pycache__/
-*.pyc
+# Local Playwright/screenshot output (Phase 4 artifacts)
 screenshots/
-backend/data/latency.db
+.playwright-mcp/
+
+# IMPORTANT: backend/data/chroma_db/ and backend/data/repo_cards/ are NOT
+# ignored — they ship with the image so Render boots with the RAG corpus
+# baked in. Regenerating at boot would burn Gemini API calls and add minutes
+# to cold-start.
