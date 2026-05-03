@@ -46,7 +46,7 @@ export function ChatWindow() {
     setInput("");
     setStreaming(true);
 
-    const history: HistoryItem[] = turns.flatMap((t) => {
+    const history: HistoryItem[] = turns.flatMap((t): HistoryItem[] => {
       if (t.role === "user") return [{ role: "user" as const, text: t.text }];
       return t.text ? [{ role: "model" as const, text: t.text }] : [];
     });
