@@ -1,0 +1,30 @@
+{
+  "order": [
+    "voicequal",
+    "jiya-persona",
+    "KV-Cache",
+    "Distributed-Live-Polling-System",
+    "search-listings",
+    "agentic-workflow",
+    "singing_detection",
+    "devops-ci-cd",
+    "SingoneSong",
+    "Social-Network-Friend-Recommendation-System",
+    "PatientRecordSystem",
+    "Book-Finder",
+    "Contact-Manager-App"
+  ],
+  "featured": [
+    "voicequal",
+    "jiya-persona",
+    "KV-Cache",
+    "Distributed-Live-Polling-System",
+    "search-listings"
+  ],
+  "taglines": {
+    "voicequal": "Audio-quality library on PyPI — published with its full 200-clip benchmark, not a favourable subset.",
+    "jiya-persona": "This site. A RAG-grounded AI rep with voice, chat, real calendar booking, and an LLM-judge eval harness.",
+    "KV-Cache": "Distributed key-value cache — consistent hashing, synchronous primary-replica replication, bounded LRU."
+  },
+  "hide": []
+}

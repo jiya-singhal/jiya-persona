@@ -5,6 +5,7 @@ import { streamChat, type HistoryItem, type Source, type ToolCallEvent } from "@
 import { MessageBubble } from "./MessageBubble";
 import { SourceCitation } from "./SourceCitation";
 import { BookingInline } from "./BookingInline";
+import { CHAT_SUGGESTIONS } from "@/content/profile";
 
 type AgentTurn = {
   role: "agent";
@@ -15,12 +16,6 @@ type AgentTurn = {
 };
 type UserTurn = { role: "user"; text: string };
 type Turn = AgentTurn | UserTurn;
-
-const SUGGESTIONS = [
-  "What did Jiya do at SingOneSong?",
-  "Tell me about the search-listings project",
-  "Can I book a 30-min chat next week?",
-];
 
 export function ChatWindow() {
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -93,25 +88,25 @@ export function ChatWindow() {
 
   return (
     <div className="flex flex-col h-full">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-8">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-6 sm:px-6 sm:py-8">
         <div className="mx-auto max-w-prose space-y-5">
           {turns.length === 0 ? (
-            <div className="space-y-6 pt-4">
-              <p className="text-ink/75 leading-relaxed">
-                I&apos;m Jiya&apos;s AI rep. Ask about her work at SingOneSong, her public
-                projects, or book a 30-min chat with her directly. Every answer is
-                grounded in her resume and GitHub — sources are shown below each
-                response.
+            <div className="space-y-6 pt-2">
+              <p className="text-ivory/75 leading-relaxed">
+                I&apos;m Jiya&apos;s AI rep — ask me anything an interviewer would.
+                Every answer is grounded in her resume and GitHub, with sources
+                shown below each response. I can also book a real slot on her
+                calendar.
               </p>
               <div className="flex flex-col gap-2">
-                <div className="text-[11px] uppercase tracking-wider text-muted">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-mist">
                   Try asking
                 </div>
-                {SUGGESTIONS.map((s) => (
+                {CHAT_SUGGESTIONS.map((s) => (
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="text-left text-sm rounded-lg border border-rule bg-white px-3 py-2 hover:border-clay/50 transition-colors"
+                    className="text-left text-sm rounded-lg border border-veil bg-curtain px-3 py-2 text-ivory/85 hover:border-gold/50 transition-colors"
                   >
                     {s}
                   </button>
@@ -130,7 +125,7 @@ export function ChatWindow() {
                     {t.text || (t.pending ? <Pending /> : "")}
                   </MessageBubble>
                   {t.toolCalls.map((tc, j) => (
-                    <BookingInline key={j} tool={tc} />
+                    <BookingInline key={j} tool={tc} onPickSlot={send} />
                   ))}
                   {t.sources.length > 0 && (
                     <SourceCitation sources={t.sources} />
@@ -142,7 +137,7 @@ export function ChatWindow() {
         </div>
       </div>
 
-      <div className="border-t border-rule bg-bg/80 backdrop-blur px-6 py-4">
+      <div className="border-t border-veil bg-stage/60 backdrop-blur px-5 py-4 sm:px-6">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -156,12 +151,12 @@ export function ChatWindow() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={streaming ? "…thinking" : "Ask about Jiya's work, or book a chat"}
             disabled={streaming}
-            className="flex-1 rounded-xl border border-rule bg-white px-4 py-3 text-[15px] outline-none focus:border-clay/60 disabled:opacity-50"
+            className="flex-1 rounded-xl border border-veil bg-curtain px-4 py-3 text-[15px] text-ivory placeholder:text-mist outline-none focus:border-gold/60 disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={streaming || !input.trim()}
-            className="rounded-xl bg-clay px-5 py-3 text-bg text-sm font-medium disabled:opacity-40 hover:bg-clay/90 transition-colors"
+            className="rounded-xl bg-kumkum px-5 py-3 text-ivory text-sm font-medium disabled:opacity-40 hover:bg-kumkum/85 transition-colors"
           >
             Send
           </button>
@@ -184,7 +179,7 @@ function Pending() {
 function Dot({ delay }: { delay: string }) {
   return (
     <span
-      className="inline-block w-1.5 h-1.5 rounded-full bg-muted animate-pulse"
+      className="inline-block w-1.5 h-1.5 rounded-full bg-mist animate-pulse"
       style={{ animationDelay: delay }}
     />
   );

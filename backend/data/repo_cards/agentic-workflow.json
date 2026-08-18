@@ -1,0 +1,38 @@
+{
+  "repo_name": "agentic-workflow",
+  "one_line_purpose": "An n8n workflow that analyzes job descriptions and resumes using AI and deterministic code to provide a fit score, skill gap analysis, and personalized application advice.",
+  "problem_solved": "Job seekers waste time applying to mismatched roles. This n8n workflow takes a job description and resume, extracts skills using AI, scores the match deterministically, and produces a personalized gap analysis or application advice.",
+  "tech_stack": {
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": [
+      "n8n"
+    ],
+    "key_libraries": [
+      "Google Gemini 2.5 Flash"
+    ],
+    "storage": "unclear from provided files",
+    "deployment": "n8n (local or self-hosted instance)"
+  },
+  "architecture_summary": "The system is an n8n workflow composed of seven nodes. It starts with a 'Form Trigger' to collect a job description and resume. Two 'Google Gemini' nodes then extract structured skills from the JD and resume respectively. A 'Code' node (JavaScript) deterministically compares these skills, calculates a match score, and identifies matched/missing skills. An 'IF' node branches the workflow based on whether the fit score is high or low. Two subsequent 'Google Gemini' nodes generate personalized advice: an application coach persona for high fit or a gap analyst persona for low fit. Finally, the results, including score, skills, and advice, are returned to the user via the 'Respond to Form / Output' mechanism.",
+  "key_features": [
+    "Web form input for job description and resume text",
+    "AI-powered skill extraction from free-form text using Google Gemini 2.5 Flash",
+    "Deterministic skill matching and fit score calculation (JavaScript)",
+    "Conditional workflow branching based on fit score",
+    "Personalized advice generation with distinct AI personas (application coach vs. gap analyst)",
+    "Structured JSON outputs from AI models for reliable parsing",
+    "Exposed as a callable tool via an n8n Form Trigger"
+  ],
+  "notable_code_decisions": [
+    "Strategic combination of AI for ambiguous tasks (extraction, generation) and deterministic code for precise, auditable tasks (scoring, routing).",
+    "Enforcement of strict JSON schemas in AI prompts to ensure structured and reliable LLM outputs.",
+    "Dynamic AI persona switching based on workflow context (e.g., neutral extractor vs. career advisor).",
+    "Case-insensitive and partial-match skill comparison logic in the JavaScript code node for robust matching."
+  ],
+  "tradeoffs_and_limitations": "unclear from provided files",
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "This project demonstrates the practical application of 'agentic workflows' within a low-code/no-code orchestration platform (n8n). It showcases how to effectively integrate large language models (Google Gemini) for tasks requiring natural language understanding and generation, while leveraging deterministic code for logic that demands accuracy and reproducibility. It also illustrates prompt engineering techniques for structured outputs and persona-based responses, and the creation of a multi-step, conditional automation process for a real-world problem.",
+  "_last_commit": "2026-06-05T19:18:32+00:00"
+}

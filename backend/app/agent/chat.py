@@ -47,8 +47,31 @@ class ChatRequest:
     history: list[HistoryTurn] = field(default_factory=list)
 
 
+EMPLOYER_SIGNALS = ("singonesong", "sing one song", "tradeindia", "trade india")
+EXPLICIT_REPO_SIGNALS = ("repo", "repository", "github", "open source", "open-source")
+
+
+def _repo_name_signals() -> tuple[str, ...]:
+    names = []
+    for full in settings.github_repos:
+        name = full.split("/")[-1].lower()
+        if name == "singonesong":
+            continue  # collides with the employer name; needs an explicit repo word
+        names.append(name)
+        names.append(name.replace("-", " ").replace("_", " "))
+    return tuple(names)
+
+
 def _detect_filter(message: str) -> str:
     lower = message.lower()
+    mentions_employer = any(s in lower for s in EMPLOYER_SIGNALS)
+    mentions_repo = any(s in lower for s in EXPLICIT_REPO_SIGNALS) or any(
+        n in lower for n in _repo_name_signals()
+    )
+    # Employer questions answer from the resume only: Repo Card facts bleeding
+    # into employer narratives was the top eval failure mode.
+    if mentions_employer and not mentions_repo:
+        return "resume"
     repo_signals = ("project", "repo", "github", "built", "code", "tech stack", "tradeoff")
     resume_signals = ("intern", "experience", "singonesong", "tradeindia", "education", "scaler")
     if any(s in lower for s in repo_signals) and not any(s in lower for s in resume_signals):
@@ -120,7 +143,11 @@ async def stream_chat(req: ChatRequest) -> AsyncIterator[dict]:
         yield {"event": "error", "data": {"message": "GEMINI_API_KEY not set"}}
         return
 
-    source_filter = req.source_filter or _detect_filter(req.message)
+    source_filter = (
+        req.source_filter
+        if req.source_filter in ("resume", "github")
+        else _detect_filter(req.message)
+    )
     chunks = _retrieve(req.message, source_filter)
     timer.mark_retrieval_end(len(chunks))
     yield {"event": "sources", "data": {"sources": _serialize_sources(chunks)}}

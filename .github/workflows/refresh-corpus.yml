@@ -1,0 +1,60 @@
+# Nightly RAG refresh: re-reads the curated GitHub repos + resume, regenerates
+# Repo Cards for anything with new commits, rebuilds ChromaDB, and regenerates
+# the frontend's projects.json. If anything changed, the commit+push triggers
+# both Render (backend, corpus baked into the image) and Vercel (frontend)
+# to redeploy automatically.
+#
+# Loop-safe: triggers only on schedule/dispatch, never on push.
+#
+# Required repo secrets:
+#   GEMINI_API_KEY    — Repo Card generation
+#   VOYAGE_API_KEY    — embeddings
+#   GH_INGEST_TOKEN   — GitHub PAT (public_repo read) for the ingestion API calls
+
+name: refresh-corpus
+
+on:
+  schedule:
+    - cron: "30 2 * * *" # daily 02:30 UTC = 08:00 IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend
+        working-directory: backend
+        run: pip install -e .
+
+      - name: Rebuild RAG corpus
+        working-directory: backend
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VOYAGE_API_KEY: ${{ secrets.VOYAGE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GH_INGEST_TOKEN }}
+        run: python -m app.scripts.reingest
+
+      - name: Regenerate frontend projects.json
+        working-directory: frontend
+        run: node scripts/build-content.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "corpus-refresh-bot"
+          git config user.email "actions@github.com"
+          git add backend/data/repo_cards backend/data/chroma_db frontend/content/projects.json
+          if git diff --cached --quiet; then
+            echo "Corpus unchanged — nothing to push."
+          else
+            git commit -m "chore: nightly RAG corpus refresh"
+            git push
+          fi

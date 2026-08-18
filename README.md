@@ -1,11 +1,27 @@
-# Jiya Singhal — AI Persona
+# Jiya Singhal — Portfolio + AI Persona
 
-An AI representative of Jiya Singhal that an evaluator can **chat with at a public URL** or **call on a phone number**, that proposes real slots from her Cal.com calendar and books a meeting end-to-end. Every factual claim is grounded in her resume and her seven public GitHub repos — no hardcoded answers, no fabrication.
+One shareable link that shows who Jiya is: an animated portfolio (hero, experience, projects, **live GitHub commit stream**) with a flagship **AI representative** an interviewer can chat with, that answers "why is she right for this role" with grounded specifics and **books a real meeting** on her Cal.com calendar end-to-end. Every factual claim is grounded in her resume and her GitHub repos — no hardcoded answers, no fabrication.
 
-- **Live chat:** <https://jiya-persona.vercel.app>
+- **Live site:** <https://jiya-persona.vercel.app>
+- **Standalone chat:** <https://jiya-persona.vercel.app/chat>
 - **Live backend:** <https://jiya-persona-backend.onrender.com>
 - **Voice (Vapi assistant):** see [`vapi/SETUP.md`](./vapi/SETUP.md) — set up via the Vapi dashboard and provision a Twilio number through it.
 - **1-page eval report:** [`evals/results/Jiya-Persona-Evals.pdf`](./evals/results/Jiya-Persona-Evals.pdf)
+
+## The portfolio
+
+A single dark, "stage"-themed scrolling page (design leans into Jiya's audio/voice work and her Bharatanatyam background — a live **pitch-curve** hero that follows the cursor like an f0 analyzer):
+
+| section | what it shows |
+| --- | --- |
+| **Hero** | animated pitch trace + headline metrics (57s→15s latency, 21,750-test benchmark, 5.5%→0.6% false positives, LeetCode Knight) |
+| **About** | narrative, education, open-source PRs |
+| **Experience** | Sing One Song + Tradeindia, metric by metric |
+| **Projects** | cards auto-generated from the same Repo Cards that feed the AI — purpose, stack, architecture, and *honest tradeoffs* pulled from the actual code |
+| **Live from GitHub** | real recent commits, fetched from the GitHub API at request time (not curated) |
+| **AI chat** | the persona, embedded — cites sources, refuses what it can't back up, books meetings |
+
+Frontend: Next.js 14 App Router, Tailwind, framer-motion, deployed to Vercel. The Projects section reads `frontend/content/projects.json`, generated from `backend/data/repo_cards/*.json` by `frontend/scripts/build-content.mjs` (run it after any re-ingest). A nightly GitHub Action ([`.github/workflows/refresh-corpus.yml`](./.github/workflows/refresh-corpus.yml)) re-reads the repos and pushes an updated corpus so the AI's knowledge stays current.
 
 ---
 

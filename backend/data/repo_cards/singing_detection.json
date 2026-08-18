@@ -1,0 +1,53 @@
+{
+  "repo_name": "jiya-singhal/singing_detection",
+  "one_line_purpose": "A production-ready AI system for detecting singing segments in audio files.",
+  "problem_solved": "Detecting and identifying temporal segments containing singing voices within an audio file.",
+  "tech_stack": {
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "PyTorch",
+      "pyannote.audio"
+    ],
+    "key_libraries": [
+      "librosa",
+      "numpy",
+      "pyannote.audio",
+      "torch",
+      "torchaudio",
+      "huggingface_hub"
+    ],
+    "storage": "File system for audio input and output of results (JSON/CSV).",
+    "deployment": "Local execution as a Python script."
+  },
+  "architecture_summary": "The system is implemented as a Python class `SingingVocalDetector`. It initializes by loading a Voice Activity Detection (VAD) pipeline from `pyannote.audio`, optionally using Hugging Face authentication. The core processing involves chunking the input audio into overlapping frames, removing silent frames based on RMS energy, applying the `pyannote.audio` VAD model to detect voice activity, and then enhancing singing probability using additional acoustic features (Zero Crossing Rate, RMS, Spectral Centroid) calculated with `librosa`. Finally, it merges consecutive singing frames into larger segments based on a confidence threshold and minimum duration, outputting segment timestamps.",
+  "key_features": [
+    "Singing vocal detection in audio files.",
+    "Configurable parameters: frame duration, RMS threshold, singing confidence threshold, and minimum segment duration.",
+    "Utilizes pyannote.audio for robust Voice Activity Detection.",
+    "Enhances singing probability with acoustic features (Zero Crossing Rate, RMS, Spectral Centroid) using librosa.",
+    "Segments are merged to provide consolidated singing intervals with confidence scores.",
+    "Supports Hugging Face authentication for model access.",
+    "Supports various audio input formats (WAV, MP3, FLAC, M4A, OGG, AAC) via librosa.",
+    "Output results can be saved in JSON or CSV format."
+  ],
+  "notable_code_decisions": [
+    "Uses `pyannote.audio` as the primary VAD engine, leveraging pre-trained models from Hugging Face.",
+    "Implements a fallback mechanism for Hugging Face authentication to improve robustness.",
+    "Integrates `librosa` for fine-grained acoustic feature extraction (ZCR, RMS, spectral centroid) to refine singing probability predictions.",
+    "Includes input parameter validation in the constructor to prevent invalid configurations.",
+    "Adds a small constant (1e-12) to RMS calculation to ensure numerical stability and prevent division by zero.",
+    "Employs Python's `logging` module for informative output and error handling throughout the pipeline.",
+    "Processes audio in chunks to manage memory, although explicit large file handling may still be needed."
+  ],
+  "tradeoffs_and_limitations": [
+    "Can experience 'Memory issues with large files', as stated in the Readme, suggesting the need for chunking or parameter adjustment.",
+    "Relies heavily on external pre-trained models (pyannote/segmentation) which requires network access and Hugging Face authentication for optimal results.",
+    "The acoustic feature enhancement uses heuristic factors which may not be universally optimal across all audio types or singing styles.",
+    "The `models/Cnn14_16k_mAP=0.438.pth` and `models/class_labels_indices.csv` files are present in the repository but their direct usage by the provided `singing_detector.py` code is unclear from provided files."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "This repository demonstrates the integration of state-of-the-art deep learning models for audio event detection with traditional audio signal processing techniques. It showcases how to build a robust, configurable, and 'production-ready' audio analysis pipeline in Python, including handling external model dependencies (Hugging Face), parameter validation, and detailed logging for monitoring execution flow and debugging.",
+  "_last_commit": "2025-09-13T12:30:52+00:00"
+}

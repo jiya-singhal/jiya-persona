@@ -17,24 +17,35 @@ function fmtSlot(iso: string): string {
   }
 }
 
-export function BookingInline({ tool }: { tool: ToolCallEvent }) {
+export function BookingInline({
+  tool,
+  onPickSlot,
+}: {
+  tool: ToolCallEvent;
+  onPickSlot?: (text: string) => void;
+}) {
   if (tool.name === "get_availability") {
     const slots = (tool.result?.slots as string[]) ?? [];
     return (
-      <div className="mt-3 rounded-lg border border-rule bg-white p-3">
-        <div className="text-[11px] uppercase tracking-wider text-muted mb-2">
-          Pulled from Jiya's calendar
+      <div className="mt-3 rounded-lg border border-veil bg-curtain p-3">
+        <div className="font-mono text-[11px] uppercase tracking-wider text-mist mb-2">
+          Pulled from Jiya&apos;s calendar
         </div>
         {slots.length === 0 ? (
-          <div className="text-sm text-muted">No slots available in that window.</div>
+          <div className="text-sm text-mist">No slots available in that window.</div>
         ) : (
-          <ul className="space-y-1">
+          <div className="flex flex-wrap gap-2">
             {slots.map((s) => (
-              <li key={s} className="text-sm font-mono text-ink/80">
+              <button
+                key={s}
+                onClick={() => onPickSlot?.(`I'd like the ${fmtSlot(s)} slot.`)}
+                disabled={!onPickSlot}
+                className="rounded-md border border-veil px-3 py-1.5 text-sm font-mono text-ivory/85 transition-colors hover:border-gold hover:text-gold disabled:cursor-default"
+              >
                 {fmtSlot(s)}
-              </li>
+              </button>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     );
@@ -44,23 +55,23 @@ export function BookingInline({ tool }: { tool: ToolCallEvent }) {
     const r = tool.result as Record<string, unknown>;
     if (r?.success) {
       return (
-        <div className="mt-3 rounded-lg border border-clay/30 bg-clay/5 p-3">
-          <div className="text-[11px] uppercase tracking-wider text-clay mb-2">
+        <div className="mt-3 rounded-lg border border-gold/40 bg-gold/10 p-3">
+          <div className="font-mono text-[11px] uppercase tracking-wider text-gold mb-2">
             Meeting booked
           </div>
-          <div className="text-sm text-ink/85 space-y-1">
+          <div className="text-sm text-ivory/90 space-y-1">
             <div>
-              <span className="text-muted">When: </span>
+              <span className="text-mist">When: </span>
               {r.start ? fmtSlot(String(r.start)) : "?"}
             </div>
             {r.meeting_url ? (
               <div>
-                <span className="text-muted">Meet: </span>
+                <span className="text-mist">Meet: </span>
                 <a
                   href={String(r.meeting_url)}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-clay underline-offset-2 hover:underline"
+                  className="text-gold underline-offset-2 hover:underline"
                 >
                   {String(r.meeting_url)}
                 </a>
@@ -68,12 +79,12 @@ export function BookingInline({ tool }: { tool: ToolCallEvent }) {
             ) : null}
             {r.confirmation_url ? (
               <div>
-                <span className="text-muted">Confirmation: </span>
+                <span className="text-mist">Confirmation: </span>
                 <a
                   href={String(r.confirmation_url)}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-clay underline-offset-2 hover:underline"
+                  className="text-gold underline-offset-2 hover:underline"
                 >
                   view in Cal.com
                 </a>
@@ -84,7 +95,7 @@ export function BookingInline({ tool }: { tool: ToolCallEvent }) {
       );
     }
     return (
-      <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">
+      <div className="mt-3 rounded-lg border border-kumkum/50 bg-kumkum/10 p-3 text-sm text-ivory/90">
         Booking failed: {String(r?.error ?? "unknown error")}
       </div>
     );

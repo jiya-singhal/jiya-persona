@@ -2,22 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://rsms.me/inter/inter.css");
+html {
+  scroll-behavior: smooth;
+}
 
 html, body {
-  background: #FAFAF7;
-  color: #1A1A1A;
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background: #0F0D14;
+  color: #F2EDE4;
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "cv11", "ss01";
 }
 
 ::selection {
-  background: #A8593A;
-  color: #FAFAF7;
+  background: #D8A960;
+  color: #0F0D14;
 }
 
 /* Subtle scrollbar */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: #E5E1D8; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #C9C2B4; }
+::-webkit-scrollbar-thumb { background: #2A2536; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3A3448; }
+
+/* Visible keyboard focus without boxing every hover state */
+:focus-visible {
+  outline: 2px solid #D8A960;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

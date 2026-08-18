@@ -49,3 +49,7 @@ screenshots/
 # ignored — they ship with the image so Render boots with the RAG corpus
 # baked in. Regenerating at boot would burn Gemini API calls and add minutes
 # to cold-start.
+
+# OMC tooling state
+.omc/
+**/.omc/

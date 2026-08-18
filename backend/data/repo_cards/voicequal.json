@@ -1,0 +1,50 @@
+{
+  "repo_name": "voicequal",
+  "one_line_purpose": "Real-time audio quality assessment for voice apps.",
+  "problem_solved": "Analyzes audio to determine if a recording is clean enough to process, providing a quality tier and underlying metrics.",
+  "tech_stack": {
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [],
+    "key_libraries": [
+      "numpy",
+      "scipy",
+      "soundfile",
+      "rich",
+      "sounddevice"
+    ],
+    "storage": "Local filesystem (for calibration data and input/output audio files)",
+    "deployment": "unclear from provided files"
+  },
+  "architecture_summary": "Voicequal is a Python library and CLI tool that performs real-time audio quality assessment. It processes audio from files or live mic streams in overlapping frames. Each frame undergoes calculation of acoustic metrics (RMS, spectral flatness, SNR, spectral concentration, noise floor). These per-frame metrics feed into a `RollingStats` component which maintains historical data for background loudness and temporal variance. The aggregated rolling statistics are then passed to an `SNR-gated tiered assessment` logic to determine an overall quality tier (excellent, good, fair, poor). Live streaming incorporates a `hysteresis buffer` to stabilize quality tier changes, and an auto-calibration module adjusts for microphone signal levels.",
+  "key_features": [
+    "Real-time audio quality assessment",
+    "Outputs quality tiers: excellent, good, fair, poor",
+    "Analyzes audio using four core acoustic metrics: SNR, Spectral flatness, Temporal variance, Background dBA",
+    "Provides a command-line interface for file analysis and live mic streaming",
+    "Includes an auto-calibration mechanism for microphones to adjust for hardware differences",
+    "Stabilizes streaming quality output with a hysteresis buffer to prevent flicker",
+    "Includes a benchmark suite against a reproducible test set (VocalSet, MUSAN)"
+  ],
+  "notable_code_decisions": [
+    "Uses SNR-gated tiered assessment logic where high SNR fast-paths to higher quality tiers, while low SNR triggers a composite score from multiple metrics.",
+    "Implements a hysteresis buffer for live streaming, requiring a new quality tier to persist for a configurable number of frames (default 3) before being announced.",
+    "Calculates spectral noise floor using the 75th percentile of the power spectrum in dB, excluding digital silence bins.",
+    "Determines background dBA from the median of recent RMS values, designed to track sustained noise and ignore single-frame spikes.",
+    "Introduced a `spectral_concentration` metric (ratio of energy in top-N loudest FFT bins) to gate SNR fast-paths, preventing noise-like audio from being misclassified as high quality.",
+    "Processes audio in 2048-sample frames with a 1600-sample hop (100ms) for both file and live analysis.",
+    "Stores microphone calibration data locally in a JSON file (`~/.voicequal/calibration.json`)."
+  ],
+  "tradeoffs_and_limitations": [
+    "Calibrated for voice/recording quality (cleanliness for processing), not subjective human perception of pleasing sound.",
+    "Background dBA is a calibrated proxy, not a certified acoustic dB meter using IEC 61672 A-weighted filters.",
+    "Requires calibration (`voicequal listen --calibrate`) once per new machine or microphone setup due to varying signal levels.",
+    "Assumes reasonable audio input and does not include built-in echo cancellation or noise suppression.",
+    "Benchmark results indicate modest exact accuracy (46.0%) and higher off-by-one accuracy (82.0%), with particular weakness in classifying 'very loud SNR' scenarios.",
+    "Spectral SNR (peak bin vs. noise floor) can sometimes misclassify loud vocals buried in broadband noise as high quality, as the vocal's harmonic peak remains dominant."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "This project demonstrates the application of Digital Signal Processing (DSP) techniques for audio analysis, including FFT-derived metrics (SNR, spectral flatness, spectral concentration) and time-domain metrics (RMS, temporal variance). It showcases the implementation of a real-time audio processing pipeline with stateful rolling statistics and hysteresis buffering for robust live analysis. It also provides an example of a well-structured Python library with a command-line interface (`rich` and `argparse`), modular design (metrics, state, assessment logic), and a practical benchmarking setup for objective evaluation.",
+  "_last_commit": "2026-07-15T18:32:22+00:00"
+}

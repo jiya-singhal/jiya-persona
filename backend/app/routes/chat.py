@@ -29,7 +29,7 @@ class ChatBody(BaseModel):
 async def chat(body: ChatBody):
     req = ChatRequest(
         message=body.message,
-        source_filter=body.source_filter or "any",
+        source_filter=body.source_filter or "",
         history=[HistoryTurn(role=h.role, text=h.text) for h in body.history],
     )
 

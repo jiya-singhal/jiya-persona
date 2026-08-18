@@ -1,0 +1,67 @@
+{
+  "repo_name": "jiya-singhal/jiya-persona",
+  "one_line_purpose": "An AI representative of Jiya Singhal that an evaluator can chat with or call, proposing real slots from her Cal.com calendar and booking meetings end-to-end.",
+  "problem_solved": "The project creates an AI representative capable of answering specific questions about Jiya Singhal's background, projects, and skills, grounded in her resume and GitHub repositories, without fabrication. It also allows users to book meetings with Jiya by proposing real-time calendar slots via Cal.com integration, handling both chat and low-latency voice interactions.",
+  "tech_stack": {
+    "languages": [
+      "Python",
+      "TypeScript",
+      "Dockerfile",
+      "CSS",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "FastAPI",
+      "Next.js"
+    ],
+    "key_libraries": [
+      "fastapi",
+      "uvicorn",
+      "pydantic-settings",
+      "google-genai",
+      "voyageai",
+      "chromadb",
+      "pypdf",
+      "PyGithub",
+      "httpx",
+      "sse-starlette",
+      "reportlab",
+      "next",
+      "react",
+      "react-dom",
+      "tailwindcss"
+    ],
+    "storage": "ChromaDB (on-disk)",
+    "deployment": "Render, Vercel, Vapi"
+  },
+  "architecture_summary": "The application follows a client-server architecture with a Next.js 14 frontend (Vercel) and a FastAPI backend (Render). The frontend provides a chat interface, source citations, and booking components, proxying chat requests to the backend via SSE. Voice interactions are handled through Vapi, which integrates with Deepgram for STT and ElevenLabs for TTS, routing to the backend's OpenAI-compatible completions endpoint. The FastAPI backend houses the RAG system, which uses ChromaDB for vector storage, Voyage AI for embeddings, and processes data from a committed resume PDF and auto-summarized GitHub Repo Cards. Google Gemini API serves as the core LLM (`gemini-2.5-flash` for chat, `gemini-2.5-flash-lite` for voice), handling responses and server-side function calls for Cal.com calendar integration. The RAG corpus is pre-baked into the backend's Docker image.",
+  "key_features": [
+    "AI representative for Jiya Singhal with a defined persona.",
+    "Chat interface with real-time streaming responses and source citations.",
+    "Voice interface via Vapi integration with low first-token latency (1.0s target).",
+    "Retrieval Augmented Generation (RAG) system grounded in resume PDF and GitHub repository summaries.",
+    "Real-time calendar booking integration with Cal.com for proposing and booking meetings.",
+    "Automated evaluation suite with LLM-judged metrics (groundedness, relevance, honesty) and PDF report generation.",
+    "Model split strategy for different modalities (chat vs. voice) to optimize performance characteristics.",
+    "Server-side function calling for calendar tools.",
+    "Dynamic RAG source filtering (resume, github, any)."
+  ],
+  "notable_code_decisions": [
+    "Pre-retrieval RAG for chat, injecting context into the user turn before the LLM call.",
+    "Server-side function calling for Cal.com booking tools (`get_availability`, `book_meeting`) orchestrated by Gemini.",
+    "Strategic model split using `gemini-2.5-flash` for chat (groundedness focus) and `gemini-2.5-flash-lite` for voice (latency focus), with prompt adjustments.",
+    "RAG corpus (ChromaDB, Repo Cards, resume PDF) pre-indexed and baked into the Docker image for deployment.",
+    "Implementation of an OpenAI-compatible `/v1/chat/completions` endpoint to facilitate Vapi custom-LLM integration.",
+    "Use of Server-Sent Events (SSE) for streaming chat responses from the backend to the frontend.",
+    "Dynamic source filtering for RAG queries based on user message content.",
+    "Maximal Marginal Relevance (MMR) for diverse retrieval in the RAG system."
+  ],
+  "tradeoffs_and_limitations": [
+    "A hallucination rate of 20% (groundedness < 0.8) was observed, primarily due to cross-repo factual leaks from repo cards.",
+    "The voice mode utilizes `gemini-2.5-flash-lite` with a shorter context (top-5 RAG chunks) to achieve lower first-token latency, which might present a tradeoff with groundedness compared to the chat model.",
+    "A `MAX_TOOL_TURNS` safety cap is implemented to prevent infinite tool-call loops."
+  ],
+  "complexity_level": "advanced",
+  "what_it_demonstrates": "This repository demonstrates the comprehensive development of an AI persona leveraging a RAG system with Google Gemini LLMs for both real-time chat and voice interactions. It showcases advanced RAG techniques including multi-source ingestion (PDF, GitHub repos), embedding, and diversified retrieval. The project exemplifies robust LLM integration with server-side function calling for external APIs (Cal.com), streaming responses for improved user experience, and a detailed automated evaluation framework to measure and report key performance indicators like groundedness and latency. It also illustrates a practical approach to prompt engineering for persona consistency and factuality.",
+  "_last_commit": "2026-05-04T13:32:01+00:00"
+}

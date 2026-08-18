@@ -24,6 +24,7 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel
 
+from app.agent.chat import _detect_filter
 from app.agent.system_prompt import SYSTEM_PROMPT, build_user_turn
 from app.calendar_integration.calcom import CalcomError, book_meeting, get_availability
 from app.config import settings
@@ -83,7 +84,7 @@ def _retrieve_for_voice(message: str) -> list[dict]:
         voyage_api_key=settings.voyage_api_key,
         chroma_dir=str(settings.chroma_dir),
         query_text=message,
-        source_filter="any",
+        source_filter=_detect_filter(message),
         k=10,
         top_k_after_mmr=VOICE_TOP_K,
     )
