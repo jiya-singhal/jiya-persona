@@ -1,53 +1,53 @@
 {
   "repo_name": "jiya-singhal/singing_detection",
-  "one_line_purpose": "A production-ready AI system for detecting singing segments in audio files.",
-  "problem_solved": "Detecting and identifying temporal segments containing singing voices within an audio file.",
+  "one_line_purpose": "Production-ready AI system for detecting singing segments in audio files.",
+  "problem_solved": "The system solves the problem of automatically identifying and segmenting periods of singing activity within an audio file.",
   "tech_stack": {
     "languages": [
       "Python"
     ],
     "frameworks": [
-      "PyTorch",
-      "pyannote.audio"
+      "pyannote.audio",
+      "Torch"
     ],
     "key_libraries": [
       "librosa",
       "numpy",
-      "pyannote.audio",
-      "torch",
       "torchaudio",
       "huggingface_hub"
     ],
-    "storage": "File system for audio input and output of results (JSON/CSV).",
-    "deployment": "Local execution as a Python script."
+    "storage": "Local file system for audio inputs, model configurations (downloaded by pyannote.audio), and output results (JSON/CSV).",
+    "deployment": "Local script execution via command-line interface."
   },
-  "architecture_summary": "The system is implemented as a Python class `SingingVocalDetector`. It initializes by loading a Voice Activity Detection (VAD) pipeline from `pyannote.audio`, optionally using Hugging Face authentication. The core processing involves chunking the input audio into overlapping frames, removing silent frames based on RMS energy, applying the `pyannote.audio` VAD model to detect voice activity, and then enhancing singing probability using additional acoustic features (Zero Crossing Rate, RMS, Spectral Centroid) calculated with `librosa`. Finally, it merges consecutive singing frames into larger segments based on a confidence threshold and minimum duration, outputting segment timestamps.",
+  "architecture_summary": "The system is implemented as a Python class `SingingVocalDetector`. It initializes by loading a `pyannote.audio` Voice Activity Detection (VAD) pipeline, with optional Hugging Face authentication. The core detection process involves segmenting input audio into overlapping frames, calculating RMS energy for initial silence filtering, and then processing the (concatenated) waveform through the `pyannote.audio` VAD pipeline. Frame-level singing probabilities are then enhanced using `librosa` to extract acoustic features like zero-crossing rate, RMS energy, and spectral centroid. Finally, consecutive frames exceeding a singing confidence threshold are merged into coherent singing segments. The system appears designed for command-line execution, processing one audio file at a time.",
   "key_features": [
-    "Singing vocal detection in audio files.",
-    "Configurable parameters: frame duration, RMS threshold, singing confidence threshold, and minimum segment duration.",
-    "Utilizes pyannote.audio for robust Voice Activity Detection.",
-    "Enhances singing probability with acoustic features (Zero Crossing Rate, RMS, Spectral Centroid) using librosa.",
-    "Segments are merged to provide consolidated singing intervals with confidence scores.",
-    "Supports Hugging Face authentication for model access.",
-    "Supports various audio input formats (WAV, MP3, FLAC, M4A, OGG, AAC) via librosa.",
-    "Output results can be saved in JSON or CSV format."
+    "Detects and segments singing passages within audio files.",
+    "Utilizes a pre-trained Voice Activity Detection (VAD) model from `pyannote.audio`.",
+    "Enhances singing detection confidence through additional acoustic feature analysis (zero-crossing rate, RMS energy, spectral centroid) using `librosa`.",
+    "Offers configurable parameters for detection sensitivity (e.g., frame duration, RMS threshold, singing confidence, minimum segment duration).",
+    "Supports various audio input formats (WAV, MP3, FLAC, M4A, OGG, AAC) compatible with `librosa`.",
+    "Outputs detected singing segments in either JSON or CSV format.",
+    "Integrates with Hugging Face for model access and authentication.",
+    "Provides logging for execution status and debugging."
   ],
   "notable_code_decisions": [
-    "Uses `pyannote.audio` as the primary VAD engine, leveraging pre-trained models from Hugging Face.",
-    "Implements a fallback mechanism for Hugging Face authentication to improve robustness.",
-    "Integrates `librosa` for fine-grained acoustic feature extraction (ZCR, RMS, spectral centroid) to refine singing probability predictions.",
-    "Includes input parameter validation in the constructor to prevent invalid configurations.",
-    "Adds a small constant (1e-12) to RMS calculation to ensure numerical stability and prevent division by zero.",
-    "Employs Python's `logging` module for informative output and error handling throughout the pipeline.",
-    "Processes audio in chunks to manage memory, although explicit large file handling may still be needed."
+    "Employs `pyannote.audio.pipelines.VoiceActivityDetection` as the primary VAD engine.",
+    "Includes robust parameter validation in the `__init__` method.",
+    "Implements a fallback mechanism for Hugging Face authentication when loading models.",
+    "Refines VAD outputs into specific singing detection by incorporating acoustic feature engineering (ZCR, RMS, spectral centroid) via `librosa`.",
+    "Uses `numpy` with an epsilon for numerically stable RMS energy calculations.",
+    "Audio is processed in chunks with padding to handle frame boundaries.",
+    "Consecutive singing-classified frames are merged to form meaningful, longer segments.",
+    "Utilizes Python's `logging` module for clear informational and error messages."
   ],
   "tradeoffs_and_limitations": [
-    "Can experience 'Memory issues with large files', as stated in the Readme, suggesting the need for chunking or parameter adjustment.",
-    "Relies heavily on external pre-trained models (pyannote/segmentation) which requires network access and Hugging Face authentication for optimal results.",
-    "The acoustic feature enhancement uses heuristic factors which may not be universally optimal across all audio types or singing styles.",
-    "The `models/Cnn14_16k_mAP=0.438.pth` and `models/class_labels_indices.csv` files are present in the repository but their direct usage by the provided `singing_detector.py` code is unclear from provided files."
+    "The system's core functionality relies on external pre-trained models (specifically `pyannote/segmentation`), which requires Hugging Face authentication and an internet connection for initial model download.",
+    "Processing large audio files may lead to memory issues due to the concatenation of audio frames for VAD processing, as indicated in the `Readme.md` troubleshooting section.",
+    "The custom acoustic feature enhancement applies fixed weighting factors, which might limit generalizability or optimal performance across highly diverse audio datasets or singing styles.",
+    "Effective performance requires manual tuning of parameters like singing confidence and minimum segment duration, as suggested in the `Readme.md`.",
+    "The `models/Cnn14_16k_mAP=0.438.pth` and `models/class_labels_indices.csv` files are present in the repository but are not loaded or used by the provided `singing_detector.py` code, indicating either an incomplete implementation or unused artifacts."
   ],
   "complexity_level": "intermediate",
-  "what_it_demonstrates": "This repository demonstrates the integration of state-of-the-art deep learning models for audio event detection with traditional audio signal processing techniques. It showcases how to build a robust, configurable, and 'production-ready' audio analysis pipeline in Python, including handling external model dependencies (Hugging Face), parameter validation, and detailed logging for monitoring execution flow and debugging.",
+  "what_it_demonstrates": "This project demonstrates the practical application and integration of advanced machine learning libraries (`pyannote.audio`, `torch`) with audio signal processing tools (`librosa`) to build a specialized audio analysis system. It showcases robust Python development practices, including object-oriented design, parameter validation, error handling, structured logging, and interaction with external model providers like Hugging Face. It provides insights into techniques for voice activity detection, acoustic feature extraction, and post-processing for segmenting specific events in audio.",
   "_last_commit": "2025-09-13T12:30:52+00:00"
 }

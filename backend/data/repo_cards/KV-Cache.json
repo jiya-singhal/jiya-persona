@@ -1,7 +1,7 @@
 {
   "repo_name": "jiya-singhal/KV-Cache",
   "one_line_purpose": "A high-performance, in-memory key-value cache server built with Python and asyncio, communicating over raw TCP sockets.",
-  "problem_solved": "Provides a fast, in-memory key-value storage solution that supports caching features like Time-To-Live (TTL) and Least Recently Used (LRU) eviction, handling concurrent client connections over a custom TCP protocol.",
+  "problem_solved": "Provides a high-performance, in-memory key-value store that can handle concurrent requests, offering fast data retrieval and storage with optional time-to-live (TTL) and Least Recently Used (LRU) eviction policies.",
   "tech_stack": {
     "languages": [
       "Python",
@@ -12,47 +12,54 @@
       "asyncio"
     ],
     "key_libraries": [
-      "collections",
+      "collections.OrderedDict",
+      "logging",
+      "argparse",
+      "socket",
+      "statistics",
       "dataclasses",
-      "time",
       "pytest",
       "pytest-asyncio",
       "pytest-cov",
       "pytest-timeout",
+      "black",
+      "isort",
+      "mypy",
+      "flake8",
       "uvloop"
     ],
-    "storage": "In-memory, using Python's collections.OrderedDict",
-    "deployment": "Docker containers, AWS EC2"
+    "storage": "In-memory (using Python's OrderedDict)",
+    "deployment": "Docker, AWS EC2"
   },
-  "architecture_summary": "The KV-Cache server is structured into three main layers: Network, Protocol, and Cache. The Network Layer (tcp_server.py) uses asyncio to provide an asynchronous TCP server, handling multiple concurrent client connections. The Protocol Layer (parser.py, commands.py) defines and parses custom text-based commands (PUT, GET, DELETE, EXISTS, QUIT) and formats responses. The Cache Layer (store.py, eviction.py) manages the in-memory key-value data with support for Time-To-Live (TTL) expiration and Least Recently Used (LRU) eviction policies. Clients interact with the server over raw TCP sockets.",
+  "architecture_summary": "The KV-Cache server is structured into three main layers: a Network Layer (`tcp_server.py`) utilizing `asyncio` for concurrent TCP connections; a Protocol Layer (`parser.py`, `commands.py`) responsible for parsing custom text-based commands and formatting responses; and a Cache Layer (`store.py`, `eviction.py`) that implements the core key-value storage, Time-To-Live (TTL) management, and a Least Recently Used (LRU) eviction policy. Client requests flow from a TCP socket through the protocol parser to the KV store, and responses are returned accordingly.",
   "key_features": [
-    "In-memory key-value storage",
-    "High-performance asynchronous TCP server using asyncio",
-    "Custom text-based network protocol (PUT, GET, DELETE, EXISTS, QUIT)",
-    "Time-To-Live (TTL) for automatic key expiration",
+    "High-performance, in-memory key-value store",
+    "Async TCP server using Python's asyncio for non-blocking I/O",
+    "Handles multiple concurrent client connections",
+    "Custom text-based protocol supporting PUT, GET, DELETE, EXISTS, and QUIT commands",
+    "Key-value storage with O(1) average-case time complexity for operations",
+    "Time-To-Live (TTL) management for automatic key expiration",
     "Least Recently Used (LRU) eviction policy for cache management",
-    "Docker support for containerization",
-    "Configurable host, port, and maximum cache size",
-    "Command-line client for interactive testing",
-    "Load testing and benchmarking scripts",
-    "Graceful server shutdown via signals"
+    "Docker image for easy containerization and deployment",
+    "Includes benchmarking script for performance analysis of internal components",
+    "Includes load testing script for simulating concurrent clients and measuring network performance"
   ],
   "notable_code_decisions": [
-    "Utilizes asyncio for non-blocking I/O and concurrent client handling in the TCP server.",
-    "Employs collections.OrderedDict for the KVStore and LRUEvictionPolicy to achieve O(1) average-case time complexity for cache operations and efficient LRU ordering.",
-    "Divides functionality into distinct Network, Protocol, and Cache layers for modularity.",
-    "Configuration parameters are managed through src/config/settings.py and can be overridden by environment variables or command-line arguments.",
-    "Expired keys are handled with lazy cleanup during GET, DELETE, and EXISTS operations, with an additional cleanup_expired method for proactive removal.",
-    "Dockerfile is configured to run the server as a non-root user (appuser) for improved security."
+    "Implementation of a custom, simple text-based protocol over raw TCP sockets, providing direct control over communication specifics.",
+    "Leveraging Python's `asyncio` for concurrent, non-blocking I/O to efficiently manage multiple client connections.",
+    "Utilizing `collections.OrderedDict` for the core KV store and LRU eviction, enabling O(1) average-case time complexity for key operations and LRU order maintenance.",
+    "Modular software design with distinct layers for network handling, protocol parsing, and cache logic (store, TTL, eviction) to enhance maintainability and testability.",
+    "Provision of command-line arguments and environment variables for flexible server configuration (host, port, max-keys, debug).",
+    "Inclusion of comprehensive load testing and benchmarking scripts to validate and measure performance characteristics objectively."
   ],
   "tradeoffs_and_limitations": [
-    "In-memory storage means data is not persistent across server restarts.",
-    "Designed for a single server instance, lacking inherent distributed caching, replication, or sharding mechanisms.",
-    "The custom raw TCP protocol requires client-side implementation specific to this server, not compatible with standard protocols like HTTP or Redis protocol.",
-    "Only supports basic string key-value pairs; no complex data structures like lists, sets, or hashes.",
-    "LRU eviction, while efficient, may not be optimal for all workload patterns."
+    "In-memory storage results in data loss upon server restart or failure, as there is no persistence mechanism.",
+    "The custom TCP protocol requires specific client-side implementation (e.g., `scripts/client.py` or `netcat`), lacking compatibility with standard, widely-used client libraries.",
+    "The architecture is single-node, which limits scalability beyond the resources of a single machine and presents a single point of failure.",
+    "No explicit authentication or authorization mechanisms are provided, making the server insecure for untrusted network environments without external security layers.",
+    "The protocol's error handling is basic, relying on simple 'OK'/'ERROR' responses without detailed error codes."
   ],
   "complexity_level": "intermediate",
-  "what_it_demonstrates": "Building a high-performance asynchronous network server using Python's asyncio. Implementing core caching concepts such as in-memory key-value storage, Time-To-Live (TTL), and Least Recently Used (LRU) eviction. Designing and parsing a custom network protocol over raw TCP sockets. Containerizing applications with Docker. Performing basic load testing and benchmarking. Setting up an application for cloud deployment (e.g., AWS EC2). Practicing structured project organization, testing, and dependency management.",
+  "what_it_demonstrates": "This project demonstrates the development of a high-performance, asynchronous TCP server using Python's `asyncio`, including the design and implementation of a custom network protocol. It showcases fundamental cache functionalities such as key-value storage, Time-To-Live (TTL), and Least Recently Used (LRU) eviction policies. Furthermore, it exemplifies modular software design, comprehensive testing (unit, integration, load, benchmark), application containerization with Docker, and basic cloud deployment patterns.",
   "_last_commit": "2026-01-25T17:01:35+00:00"
 }

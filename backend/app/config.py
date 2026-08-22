@@ -30,10 +30,7 @@ class Settings(BaseSettings):
         "jiya-singhal/devops-ci-cd",
         "jiya-singhal/singing_detection",
         "jiya-singhal/jiya-persona",
-        # search-listings temporarily excluded: its Repo Card needs a Gemini
-        # call and the API key's monthly spend cap is currently exhausted.
-        # Re-add once the cap resets or the key is swapped.
-        # "jiya-singhal/search-listings",
+        "jiya-singhal/search-listings",
         "jiya-singhal/SingoneSong",
         "jiya-singhal/Social-Network-Friend-Recommendation-System",
         "jiya-singhal/PatientRecordSystem",

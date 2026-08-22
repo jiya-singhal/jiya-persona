@@ -1,0 +1,49 @@
+{
+  "repo_name": "search-listings",
+  "one_line_purpose": "An interactive web application for smart product search combining AI embeddings and fuzzy matching.",
+  "problem_solved": "Enables users to search a list of products more effectively than simple keyword search by leveraging semantic understanding and tolerance for typos/variations, providing a ranked list of relevant results.",
+  "tech_stack": {
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "streamlit"
+    ],
+    "key_libraries": [
+      "sentence-transformers",
+      "fuzzywuzzy",
+      "python-Levenshtein",
+      "faiss-cpu",
+      "numpy",
+      "pandas"
+    ],
+    "storage": "CSV files",
+    "deployment": "unclear from provided files"
+  },
+  "architecture_summary": "The application is a single-page Streamlit web application. It loads a pre-trained `SentenceTransformer` model and product names from a CSV file. It then creates an in-memory FAISS index from the embeddings of these product names. When a user submits a query, the query is preprocessed, embedded, and used to perform a k-nearest neighbor search on the FAISS index. The results from FAISS are then further refined and re-ranked using fuzzy matching (`fuzzywuzzy`), and custom boosts for substring and \"starts with\" matches, all combined with a weighted average. The top results are displayed to the user. Critical components like the model, product data, and FAISS index are cached to improve performance.",
+  "key_features": [
+    "Interactive web-based product search interface.",
+    "Semantic search capability using sentence embeddings.",
+    "Fuzzy string matching for typo tolerance and variations.",
+    "Hybrid scoring system combining semantic similarity, fuzzy match scores, and positional boosts.",
+    "Query preprocessing to remove stop words.",
+    "Caching of model, product data, and FAISS index for efficiency.",
+    "Displays search results with match percentages."
+  ],
+  "notable_code_decisions": [
+    "Extensive use of Streamlit's `@st.cache_resource` and `@st.cache_data` decorators for caching the model, data loading, and FAISS index construction.",
+    "Implementation of a weighted hybrid scoring function to combine semantic (AI), fuzzy, startswith, and substring match scores.",
+    "Initial search for a larger number of candidates (top_k * 3) from FAISS before applying fuzzy matching and re-ranking.",
+    "Filtering of final search results to only include matches above a certain score threshold (0.1).",
+    "Manual definition of common stop words for query preprocessing."
+  ],
+  "tradeoffs_and_limitations": [
+    "The product data and FAISS index are loaded entirely into memory, which may limit scalability for very large datasets without external storage or a more distributed FAISS setup.",
+    "The stop-word list for query preprocessing is hardcoded and relatively small.",
+    "Scoring weights for different matching components (AI, fuzzy, boosts) are hardcoded and may require tuning for optimal performance on different datasets.",
+    "Uses `encoding='latin1'` for CSV, which might not handle all character sets universally."
+  ],
+  "complexity_level": "intermediate",
+  "what_it_demonstrates": "How to build an interactive data application using Streamlit; implementation of a hybrid search system combining semantic similarity (embeddings) and lexical matching (fuzzywuzzy); utilizing `sentence-transformers` for creating text embeddings; working with `FAISS` for efficient similarity search on vector embeddings; techniques for caching computationally expensive operations in Streamlit applications; basic data loading, preprocessing, and manipulation with `pandas` and `numpy`.",
+  "_last_commit": "2025-07-29T10:38:57+00:00"
+}

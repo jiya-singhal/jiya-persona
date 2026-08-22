@@ -76,8 +76,22 @@
       "id": "repo_5",
       "category": "repo",
       "question": "Which of your public repos is the most technically advanced?",
-      "expected_behavior": "Honest comparison — likely PatientRecordSystem or search-listings — without inventing features.",
+      "expected_behavior": "Honest comparison — likely voicequal, KV-Cache (distributed), the Distributed Live Polling System, or jiya-persona itself — without inventing features.",
       "grading_rubric": "Must pick a real repo and justify with concrete features visible in its card. No invented complexity."
+    },
+    {
+      "id": "repo_6",
+      "category": "repo",
+      "question": "Tell me about the voicequal project.",
+      "expected_behavior": "An audio-quality library (published to PyPI) that scores recordings on multiple metrics; grounded in its repo card, no invented numbers.",
+      "grading_rubric": "Must describe audio-quality scoring/metrics from the card. No fabricated accuracy figures."
+    },
+    {
+      "id": "repo_7",
+      "category": "repo",
+      "question": "What does the KV-Cache repo do and how is it built?",
+      "expected_behavior": "A distributed key-value cache — consistent hashing across nodes, primary-replica replication, bounded LRU eviction; grounded in its card.",
+      "grading_rubric": "Must mention distributed cache AND at least one of: consistent hashing, replication, LRU. No invented benchmarks."
     },
     {
       "id": "fit_1",

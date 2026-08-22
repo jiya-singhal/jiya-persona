@@ -1,69 +1,67 @@
 {
   "repo_name": "jiya-singhal/devops-ci-cd",
   "one_line_purpose": "A complete CI/CD pipeline with Kubernetes deployment using GitHub Actions.",
-  "problem_solved": "This project demonstrates a production-style CI/CD pipeline that builds a Java Spring Boot application, runs unit tests, checks code style, scans for security vulnerabilities (SAST with CodeQL, SCA with OWASP), builds and scans Docker images (Trivy), pushes verified images to Docker Hub, and deploys to a Kubernetes cluster on AWS EC2.",
+  "problem_solved": "This project demonstrates a production-style CI/CD pipeline that automates the building, testing, security scanning, containerization, and deployment of a Java Spring Boot application to a Kubernetes cluster on AWS EC2.",
   "tech_stack": {
     "languages": [
-      "Java",
       "HCL",
-      "Dockerfile",
-      "YAML"
+      "Java",
+      "Dockerfile"
     ],
     "frameworks": [
       "Spring Boot"
     ],
     "key_libraries": [
       "Maven",
-      "JUnit",
+      "JUnit 5",
       "Checkstyle",
-      "JaCoCo",
-      "GitHub Actions",
-      "CodeQL",
       "OWASP Dependency Check",
+      "CodeQL",
       "Trivy",
       "Docker",
       "Terraform",
-      "AWS CLI/SDK",
-      "k3s"
+      "k3s",
+      "Kubernetes",
+      "GitHub Actions",
+      "curl"
     ],
-    "storage": "unclear from provided files",
-    "deployment": "GitHub Actions, Docker Hub, AWS EC2, Kubernetes (k3s)"
+    "storage": "Docker Hub (for container images), AWS EC2 (for application deployment), Git (for source code)",
+    "deployment": "GitHub Actions orchestrates deployment to an AWS EC2 instance running k3s (lightweight Kubernetes), provisioned via Terraform."
   },
-  "architecture_summary": "The project implements a DevSecOps CI/CD pipeline. The CI pipeline (GitHub Actions) builds a Java Spring Boot application using Maven, performs code style checks (Checkstyle), runs unit tests (JUnit), executes SAST (CodeQL) and SCA (OWASP Dependency Check), builds a Docker image (multi-stage build), scans the image for vulnerabilities (Trivy), tests the container's health, and pushes the image to Docker Hub. Upon successful CI, the CD pipeline (GitHub Actions) uses Terraform to provision an AWS EC2 instance. This EC2 instance is configured via `user_data` to install k3s (a lightweight Kubernetes distribution), pull the Docker image from Docker Hub, create a Kubernetes Deployment with 2 replicas, and expose the application using a NodePort service. The application is a simple Spring Boot web application with `/health`, `/hello`, and `/version` endpoints, and a `CalculatorService`.",
+  "architecture_summary": "The project features a Java Spring Boot application. A comprehensive CI/CD pipeline is implemented using GitHub Actions. The CI workflow builds the application, runs unit tests, performs code style checks (Checkstyle), and conducts security scans (SAST with CodeQL, SCA with OWASP Dependency Check). It then builds a multi-stage Docker image, scans it with Trivy, tests the running container, and pushes the verified image to Docker Hub. The CD workflow, triggered upon successful CI, utilizes Terraform to provision an AWS EC2 instance and a security group. This EC2 instance is configured via user_data scripts to install k3s (lightweight Kubernetes) and deploy the Dockerized application as a Kubernetes Deployment, exposed via a NodePort service. The CD pipeline further logs into the EC2 to perform additional deployment steps via kubectl.",
   "key_features": [
-    "Automated CI pipeline on code push to main/master",
-    "Automated build, test, and linting (Checkstyle)",
-    "Integrated security scanning: SAST (CodeQL), SCA (OWASP Dependency Check), Container Image Scanning (Trivy)",
-    "Multi-stage Docker image build for optimized size",
-    "Automated container testing (health/hello endpoints)",
-    "Deployment to Docker Hub",
-    "Automated CD pipeline triggered by successful CI",
-    "Infrastructure provisioning on AWS EC2 using Terraform",
-    "Lightweight Kubernetes (k3s) installation and application deployment via user_data script",
-    "Kubernetes deployment with multiple replicas and NodePort service",
-    "Verification of deployed application health",
-    "Provides simple REST endpoints (`/health`, `/hello`, `/version`)",
-    "Includes a basic `CalculatorService` with unit tests"
+    "Automated CI/CD pipeline using GitHub Actions",
+    "Java Spring Boot application build and testing (Maven, JUnit)",
+    "Code quality enforcement with Checkstyle",
+    "Source code static analysis (SAST) with CodeQL",
+    "Dependency vulnerability scanning (SCA) with OWASP Dependency Check",
+    "Docker image building (multi-stage) and vulnerability scanning with Trivy",
+    "Automated Docker image push to Docker Hub",
+    "Infrastructure as Code (IaC) with Terraform for AWS EC2 and Security Group provisioning",
+    "Deployment to a Kubernetes cluster (k3s) on an AWS EC2 instance",
+    "Kubernetes Deployment with liveness and readiness probes",
+    "Application exposure via Kubernetes NodePort service",
+    "Container runtime tests within CI pipeline",
+    "Integrated DevSecOps practices with security scans at multiple stages"
   ],
   "notable_code_decisions": [
-    "Uses a multi-stage Docker build to minimize the final image size.",
-    "The AWS EC2 instance type `t3.small` is explicitly chosen for cost efficiency ('Free tier - 2GB RAM - good for k3s!').",
-    "k3s is installed with `--disable traefik --disable metrics-server` flags in the `user_data` script to reduce its footprint on the `t3.small` EC2 instance.",
-    "Kubernetes deployment and service creation are embedded within Terraform's `user_data` script and also executed via SSH commands in the CD pipeline, rather than applying external `.yaml` files from the repository.",
-    "The OWASP Dependency Check step in `ci.yml` uses `|| true` to prevent the CI pipeline from failing solely based on dependency findings, potentially for demonstration or to allow manual review.",
-    "SSH keys are dynamically generated within the CD pipeline for secure, ephemeral access to the provisioned EC2 instance.",
-    "The application version '1.0.0' is hardcoded in `pom.xml` and `HelloController.java`."
+    "Utilizes GitHub Actions as the sole CI/CD orchestrator for both CI and CD stages.",
+    "Implements a multi-stage Dockerfile to minimize final image size.",
+    "Integrates multiple security tools (CodeQL, OWASP Dependency Check, Trivy) early in the pipeline for DevSecOps.",
+    "Employs Terraform for programmatic provisioning of AWS infrastructure (EC2, Security Group, SSH Key).",
+    "Deploys k3s, a lightweight Kubernetes distribution, suitable for single-node deployments and demonstrations.",
+    "Defines explicit liveness and readiness probes in both Dockerfile (HEALTHCHECK) and Kubernetes deployment for robust application monitoring.",
+    "Uses Maven plugins for build, test, linting (Checkstyle), and code coverage (JaCoCo, though not fully integrated in CI reporting)."
   ],
   "tradeoffs_and_limitations": [
-    "The `cd.yml` attempts to install k3s and deploy the application via SSH commands *after* `terraform apply`, despite `terraform/main.tf`'s `user_data` script already performing k3s installation and application deployment. This creates redundancy and potential for conflicting states.",
-    "The `cd.yml` deploys the application with `replicas=1` through SSH commands, while the `terraform/main.tf` `user_data` script configures `replicas: 2` for the Kubernetes deployment, leading to an inconsistent number of application instances.",
-    "The use of a `t3.small` EC2 instance and k3s for deployment, while cost-efficient and lightweight for demonstration, is not suited for high-availability, fault-tolerance, or scalable production environments.",
-    "Exposing the application via `NodePort` on a single EC2 instance is simplistic for demonstration but lacks the robustness, security, and advanced traffic management of a production-grade load balancer or ingress controller.",
-    "The infrastructure provisioned (EC2 instance) is ephemeral and recreated on each CD run, which is not typical for managing persistent Kubernetes clusters.",
-    "The OWASP Dependency Check step in CI uses `|| true`, preventing the build from failing even if high-severity CVEs are found, which might be a deliberate choice for a demo but is generally not a production best practice.",
-    "Requires external GitHub secrets for Docker Hub and AWS credentials, adding a manual setup step."
+    "The Terraform setup provisions a single AWS EC2 instance for Kubernetes (k3s), which is not suitable for high availability or production-grade clusters.",
+    "The Kubernetes service is exposed via NodePort, opening a wide range of ports (30000-32767) in the security group and making the application directly accessible on the EC2 IP, which may not be ideal for production environments (e.g., lacking a load balancer or Ingress controller).",
+    "The AWS security group allows broad ingress from `0.0.0.0/0` for SSH, HTTP, application ports (8080), k3s API (6443), and NodePort range, which is overly permissive for a production environment.",
+    "There is an inconsistency in the specified replica count: the `README.md` and the `user_data` script in `terraform/main.tf` state 2 replicas, but the `cd.yml` workflow explicitly deploys 1 replica during the 'Deploy Application' step via `kubectl create deployment --replicas=1`.",
+    "The `cd.yml` pipeline's 'Install k3s on EC2' step re-executes `curl -sfL https://get.k3s.io | sh -`, potentially redundant or conflicting with the k3s installation from the Terraform user_data script.",
+    "The `dependency-check-suppression.xml` file is present but empty, indicating no dependency vulnerabilities are suppressed."
   ],
   "complexity_level": "intermediate",
-  "what_it_demonstrates": "This project demonstrates a comprehensive DevSecOps CI/CD pipeline from code commit to cloud deployment. It showcases best practices like automated testing, code quality checks, multiple layers of security scanning (SAST, SCA, container scanning), containerization with Docker, infrastructure as code with Terraform for AWS, and application orchestration with Kubernetes (k3s). It highlights how to integrate these tools using GitHub Actions to achieve continuous delivery of a Spring Boot application.",
+  "what_it_demonstrates": "This project demonstrates the complete lifecycle of a cloud-native application using modern DevOps and DevSecOps practices. It showcases how to: implement continuous integration (CI) with automated builds, tests, and static/dependency/container security scans; perform continuous delivery/deployment (CD) by provisioning cloud infrastructure (AWS EC2) with Terraform, deploying a containerized application to Kubernetes (k3s), and automating the entire process using GitHub Actions. It also highlights best practices for Dockerization and Kubernetes deployment configurations.",
   "_last_commit": "2026-02-06T12:52:15+00:00"
 }

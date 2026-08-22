@@ -85,7 +85,8 @@ def generate_repo_card(
 
     if cache_file.exists():
         cached = json.loads(cache_file.read_text())
-        if cached.get("_last_commit") == repo_data.last_commit_date:
+        # Never reuse a card that failed to generate — always retry those.
+        if cached.get("_last_commit") == repo_data.last_commit_date and not cached.get("error"):
             logger.info(f"Using cached Repo Card for {repo_data.name}")
             return cached
 
@@ -100,7 +101,7 @@ def generate_repo_card(
             contents=f"{REPO_CARD_PROMPT}\n\n--- Repository data ---\n{context}",
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
-                max_output_tokens=8000,
+                max_output_tokens=16000,
             ),
         )
         card = _parse_card(response.text or "")

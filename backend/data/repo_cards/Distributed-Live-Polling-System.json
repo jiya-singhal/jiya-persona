@@ -1,51 +1,48 @@
 {
-  "repo_name": "Distributed-Live-Polling-System",
-  "one_line_purpose": "A backend system for live polling that demonstrates persistence, caching, batching, and sharding.",
-  "problem_solved": "It aims to solve challenges in building a scalable and resilient live polling system, specifically addressing data persistence, reducing database load through application-layer caching, optimizing write performance via batching, and distributing data across multiple storage nodes using sharding and consistent hashing.",
+  "repo_name": "jiya-singhal/Distributed-Live-Polling-System",
+  "one_line_purpose": "Implements the backend for a live polling system featuring real-time voting, persistence, caching, and sharding.",
+  "problem_solved": "The system addresses the challenge of building a scalable and resilient live polling application by implementing data persistence, application-layer caching, write batching, and sharded data distribution across multiple Redis instances using consistent hashing.",
   "tech_stack": {
     "languages": [
       "Python",
       "Dockerfile"
     ],
     "frameworks": [
-      "FastAPI",
-      "Uvicorn"
+      "FastAPI"
     ],
     "key_libraries": [
+      "uvicorn",
       "redis",
       "pydantic",
       "pydantic-settings",
-      "httpx",
-      "python-dotenv"
+      "httpx"
     ],
-    "storage": "Redis, In-memory (for caching and batching buffer)",
+    "storage": "Redis (sharded across two instances)",
     "deployment": "Docker, Docker Compose"
   },
-  "architecture_summary": "The system comprises a FastAPI application that handles HTTP requests for voting and results. Data persistence and lookup are managed by a simulated Redis cluster of two distinct instances. Consistent hashing is implemented to distribute poll IDs across these Redis nodes. A background worker in the FastAPI app handles batch processing to aggregate votes in memory before flushing them to Redis.",
+  "architecture_summary": "The system uses a FastAPI application as its API layer, handling voting and result requests. It integrates with two Redis instances, configured via Docker Compose, to store polling data. A custom consistent hashing algorithm is implemented to distribute poll IDs across these Redis nodes. The application employs an in-memory cache for results and a background worker for batch processing of votes, flushing them to Redis periodically.",
   "key_features": [
-    "Basic in-memory polling for vote counting and result retrieval.",
-    "Data persistence using Redis for votes to survive application restarts.",
-    "Application-layer caching with a 5-second TTL to reduce Redis read load.",
-    "Batch processing of votes, buffering them in memory and flushing to Redis every 10 seconds to optimize write performance.",
-    "Redis sharding using a custom consistent hashing implementation to distribute polls across multiple Redis instances.",
-    "API endpoint for casting votes (POST /api/v1/vote/{poll_id}).",
-    "API endpoint for retrieving poll results (GET /api/v1/results/{poll_id}).",
-    "Health check endpoint (GET /)."
+    "API endpoints for casting votes (`POST /vote`) and retrieving real-time poll results (`GET /results`).",
+    "Persistence of vote data using Redis.",
+    "Application-layer read-through caching with a 5-second TTL to reduce Redis load.",
+    "Write-behind batch processing of votes, accumulating them in memory and flushing to Redis every 10 seconds.",
+    "Distributed storage of poll data across two Redis instances using a custom consistent hashing implementation for sharding.",
+    "Health check endpoint."
   ],
   "notable_code_decisions": [
-    "Custom implementation of Consistent Hashing for sharding poll data across Redis nodes.",
-    "Usage of `redis.asyncio` for non-blocking asynchronous Redis interactions within the FastAPI application.",
-    "FastAPI's `on_event(\"startup\")` is used to create an asyncio background task for periodic batch flushing.",
-    "Configuration management is handled using `pydantic-settings`, allowing environment variables to override default settings.",
-    "A `defaultdict` is employed for in-memory storage of votes, serving both initial in-memory polling and the write-behind batching buffer.",
-    "Result retrieval combines cached data, current Redis data, and pending in-memory buffer data to provide up-to-date results."
+    "Utilizing FastAPI for rapid API development and asynchronous request handling.",
+    "Developing a custom `ConsistentHash` class for client-side sharding logic instead of relying on a Redis Cluster.",
+    "Implementing caching and batching logic directly within the `PollingService` using class-level dictionaries.",
+    "Using `asyncio.create_task` to manage background batch flushing as part of the application startup.",
+    "Leveraging `pydantic-settings` for managing application configuration via environment variables."
   ],
   "tradeoffs_and_limitations": [
-    "The Redis sharding is simulated using two distinct Redis instances via Docker Compose, rather than a true Redis Cluster setup.",
-    "Application-layer caching and batching mechanisms are local to a single FastAPI application instance, and would require additional distributed coordination for horizontal scaling of the application layer itself.",
-    "The `ConsistentHash` implementation does not explicitly handle rebalancing or dynamic node addition/removal after initial setup, which would be crucial in a production environment."
+    "The system simulates a Redis cluster using two independent Redis instances with client-side sharding, which is not a true Redis Cluster and might have different operational characteristics.",
+    "In-memory caching and batching buffers (class-level dictionaries) mean that pending votes or recent cache entries could be lost upon application crashes or restarts before being flushed to Redis.",
+    "The current `ConsistentHash` implementation (as per provided code) focuses on distribution but lacks explicit handling for dynamic node additions/removals and rebalancing, which are typical concerns in production consistent hashing setups.",
+    "The `flush_batch` background task runs indefinitely with a fixed interval, requiring robust error handling for Redis operations to prevent failures from stopping the batching process entirely (not explicitly shown in provided snippets)."
   ],
   "complexity_level": "intermediate",
-  "what_it_demonstrates": "Implementation of read-through and write-behind caching strategies. Effective use of Redis for data persistence and scalable storage. Design principles for a scalable system using sharding and consistent hashing for distributing data.",
+  "what_it_demonstrates": "Demonstrates the implementation of core concepts for building scalable backend services, including API design with FastAPI, data persistence with Redis, performance optimization through application-layer caching and write batching, and distributed system patterns like client-side sharding with consistent hashing.",
   "_last_commit": "2026-01-04T15:41:23+00:00"
 }

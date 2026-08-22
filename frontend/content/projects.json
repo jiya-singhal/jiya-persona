@@ -6,26 +6,32 @@
       "url": "https://github.com/jiya-singhal/voicequal",
       "featured": true,
       "tagline": "Audio-quality library on PyPI — published with its full 200-clip benchmark, not a favourable subset.",
-      "problem": "Analyzes audio to determine if a recording is clean enough to process, providing a quality tier and underlying metrics.",
-      "architecture": "Voicequal is a Python library and CLI tool that performs real-time audio quality assessment. It processes audio from files or live mic streams in overlapping frames. Each frame undergoes calculation of acoustic metrics (RMS, spectral flatness, SNR, spectral concentration, noise floor). These per-frame metrics feed into a `RollingStats` component which maintains historical data for background loudness and temporal variance. The aggregated rolling statistics are then passed to an `SNR-gated tiered assessment` logic to determine an overall quality tier (excellent, good, fair, poor). Live streaming incorporates a `hysteresis buffer` to stabilize quality tier changes, and an auto-calibration module adjusts for microphone signal levels.",
+      "problem": "Determining if an audio recording is clean enough to process by analyzing acoustic metrics.",
+      "architecture": "The system processes audio by loading files or streaming chunks from a microphone. Audio is divided into overlapping frames. For each frame, it computes acoustic metrics: RMS, spectral flatness, spectral concentration, SNR, and noise floor. These per-frame metrics feed into a `RollingStats` object that maintains historical buffers for noise floor and RMS values, enabling the calculation of temporal variance and aggregated background dBA. Finally, an `assess_quality` function uses these aggregated metrics in an SNR-gated tiered assessment logic to determine a quality tier (excellent, good, fair, or poor) and a descriptive reason. For real-time streaming, a `LiveDetector` adds a hysteresis buffer to stabilize tier changes.",
       "features": [
-        "Real-time audio quality assessment",
-        "Outputs quality tiers: excellent, good, fair, poor",
-        "Analyzes audio using four core acoustic metrics: SNR, Spectral flatness, Temporal variance, Background dBA",
-        "Provides a command-line interface for file analysis and live mic streaming",
-        "Includes an auto-calibration mechanism for microphones to adjust for hardware differences",
-        "Stabilizes streaming quality output with a hysteresis buffer to prevent flicker",
-        "Includes a benchmark suite against a reproducible test set (VocalSet, MUSAN)"
+        "Real-time audio quality assessment for voice applications",
+        "Analyzes audio using four acoustic metrics: SNR, Spectral Flatness, Temporal Variance, Background dBA",
+        "Returns a quality tier: 'excellent', 'good', 'fair', or 'poor'",
+        "Provides numerical values for all assessed metrics and a reason for the tier decision",
+        "Supports one-shot file analysis (`assess`)",
+        "Supports real-time streaming analysis from a microphone (`LiveDetector`) with tier change callbacks",
+        "Command-line interface (CLI) for file assessment and live listening",
+        "Auto-calibration for microphone input to account for hardware and OS processing differences",
+        "Benchmarks against a reproducible test set mixed from VocalSet and MUSAN datasets",
+        "Stabilizes streaming assessment with a hysteresis buffer (new tier must persist for N frames)",
+        "Estimates noise floor using 10th percentile of recent RMS values",
+        "Reports room loudness as the median of recent RMS values",
+        "Includes a `spectral_concentration` metric to gauge how tonal vs. broadband an audio frame is"
       ],
       "tradeoffs": [
-        "Calibrated for voice/recording quality (cleanliness for processing), not subjective human perception of pleasing sound.",
-        "Background dBA is a calibrated proxy, not a certified acoustic dB meter using IEC 61672 A-weighted filters.",
+        "Calibrated for voice/recording quality (clean enough to process), not subjective pleasingness.",
+        "Background dBA is a calibrated proxy, not a certified acoustic dB meter (does not use IEC 61672 A-weighted filter).",
         "Requires calibration (`voicequal listen --calibrate`) once per new machine or microphone setup due to varying signal levels.",
-        "Assumes reasonable audio input and does not include built-in echo cancellation or noise suppression.",
-        "Benchmark results indicate modest exact accuracy (46.0%) and higher off-by-one accuracy (82.0%), with particular weakness in classifying 'very loud SNR' scenarios.",
-        "Spectral SNR (peak bin vs. noise floor) can sometimes misclassify loud vocals buried in broadband noise as high quality, as the vocal's harmonic peak remains dominant."
+        "Assumes reasonable audio input; no built-in echo cancellation or noise suppression.",
+        "Accuracy can vary if the OS pre-processes mic audio (e.g., macOS Voice Isolation, browser noise suppression), even with calibration.",
+        "Known weakness in `v0.1.1`: low exact accuracy (5.0%) for `very_loud_snr` category (voice mixed with noise at ~5 dB SNR) because spectral SNR can read high for loud vocals buried in noise. `v0.2.0` plans to address this with Voice Activity Detection (VAD) gating for RMS-domain SNR estimation."
       ],
-      "demonstrates": "This project demonstrates the application of Digital Signal Processing (DSP) techniques for audio analysis, including FFT-derived metrics (SNR, spectral flatness, spectral concentration) and time-domain metrics (RMS, temporal variance). It showcases the implementation of a real-time audio processing pipeline with stateful rolling statistics and hysteresis buffering for robust live analysis. It also provides an example of a well-structured Python library with a command-line interface (`rich` and `argparse`), modular design (metrics, state, assessment logic), and a practical benchmarking setup for objective evaluation.",
+      "demonstrates": "The project demonstrates a practical application of digital signal processing (DSP) for real-time audio analysis, including: feature extraction (RMS, SNR, spectral flatness, spectral concentration), rolling statistics for temporal context, custom rule-based classification logic, and stream processing with hysteresis. It showcases how to build a usable Python library with a CLI, benchmarks, and clear API for both file-based and live streaming audio data.",
       "complexity": "intermediate",
       "languages": [
         "Python"
@@ -43,25 +49,27 @@
       "url": "https://github.com/jiya-singhal/jiya-persona",
       "featured": true,
       "tagline": "This site. A RAG-grounded AI rep with voice, chat, real calendar booking, and an LLM-judge eval harness.",
-      "problem": "The project creates an AI representative capable of answering specific questions about Jiya Singhal's background, projects, and skills, grounded in her resume and GitHub repositories, without fabrication. It also allows users to book meetings with Jiya by proposing real-time calendar slots via Cal.com integration, handling both chat and low-latency voice interactions.",
-      "architecture": "The application follows a client-server architecture with a Next.js 14 frontend (Vercel) and a FastAPI backend (Render). The frontend provides a chat interface, source citations, and booking components, proxying chat requests to the backend via SSE. Voice interactions are handled through Vapi, which integrates with Deepgram for STT and ElevenLabs for TTS, routing to the backend's OpenAI-compatible completions endpoint. The FastAPI backend houses the RAG system, which uses ChromaDB for vector storage, Voyage AI for embeddings, and processes data from a committed resume PDF and auto-summarized GitHub Repo Cards. Google Gemini API serves as the core LLM (`gemini-2.5-flash` for chat, `gemini-2.5-flash-lite` for voice), handling responses and server-side function calls for Cal.com calendar integration. The RAG corpus is pre-baked into the backend's Docker image.",
+      "problem": "Provides a grounded and factual AI persona for Jiya Singhal that can answer questions about her professional background (resume, GitHub repositories) without hallucination, and also facilitate real-time meeting scheduling by interacting with her Cal.com calendar. It also offers both chat and voice interfaces for interaction.",
+      "architecture": "The system features a Next.js frontend deployed on Vercel, interacting with a FastAPI backend deployed on Render. The backend handles RAG (Retrieval Augmented Generation) by querying a ChromaDB vector store, which contains chunks from Jiya's resume (PDF) and auto-summarized GitHub repo cards. Embeddings are generated using VoyageAI. The backend uses Google's Gemini API for LLM interactions. For scheduling, the backend integrates with the Cal.com API. Voice interactions are facilitated by Vapi, which orchestrates Deepgram STT and ElevenLabs TTS, and communicates with the backend via an OpenAI-compatible endpoint. Different Gemini models (`gemini-2.5-flash` for chat, `gemini-2.5-flash-lite` for voice) are used for optimization. The RAG corpus is baked into the backend's Docker image.",
       "features": [
-        "AI representative for Jiya Singhal with a defined persona.",
-        "Chat interface with real-time streaming responses and source citations.",
-        "Voice interface via Vapi integration with low first-token latency (1.0s target).",
-        "Retrieval Augmented Generation (RAG) system grounded in resume PDF and GitHub repository summaries.",
-        "Real-time calendar booking integration with Cal.com for proposing and booking meetings.",
-        "Automated evaluation suite with LLM-judged metrics (groundedness, relevance, honesty) and PDF report generation.",
-        "Model split strategy for different modalities (chat vs. voice) to optimize performance characteristics.",
-        "Server-side function calling for calendar tools.",
-        "Dynamic RAG source filtering (resume, github, any)."
+        "AI representative of Jiya Singhal for evaluators.",
+        "Interactive chat interface accessible via a public URL.",
+        "Voice interface accessible via a phone number using Vapi.",
+        "Factual claims grounded in Jiya's resume and public GitHub repositories (RAG).",
+        "Proposes and books real meeting slots from Jiya's Cal.com calendar.",
+        "Streaming voice replies with optimized first-token latency (target 1.0s in production).",
+        "Uses `gemini-2.5-flash` for chat and `gemini-2.5-flash-lite` for voice, optimizing for groundedness and latency respectively.",
+        "Automated summarization of GitHub repositories into 'Repo Cards' using Gemini.",
+        "Includes an evaluation suite with 20 questions, LLM-judging, and PDF report generation for metrics like groundedness, relevance, and honesty."
       ],
       "tradeoffs": [
-        "A hallucination rate of 20% (groundedness < 0.8) was observed, primarily due to cross-repo factual leaks from repo cards.",
-        "The voice mode utilizes `gemini-2.5-flash-lite` with a shorter context (top-5 RAG chunks) to achieve lower first-token latency, which might present a tradeoff with groundedness compared to the chat model.",
-        "A `MAX_TOOL_TURNS` safety cap is implemented to prevent infinite tool-call loops."
+        "A 20% hallucination rate (groundedness < 0.8) was observed in evaluations, primarily due to a cross-repo leak where details from one repo card (search-listings) bled into narratives about another (TradeIndia).",
+        "The `gemini-2.5-flash-lite` model used for voice has a shorter context length, which is compensated for by a voice-mode prompt addendum.",
+        "The RAG corpus being 'baked into Docker image' implies that updates to the resume or GitHub repos require rebuilding and redeploying the Docker image.",
+        "Unclear from provided files regarding detailed error handling strategies beyond HTTP exceptions for external API failures.",
+        "The frontend uses a proxy (`/api/chat`) to the backend, which adds an additional network hop for chat requests."
       ],
-      "demonstrates": "This repository demonstrates the comprehensive development of an AI persona leveraging a RAG system with Google Gemini LLMs for both real-time chat and voice interactions. It showcases advanced RAG techniques including multi-source ingestion (PDF, GitHub repos), embedding, and diversified retrieval. The project exemplifies robust LLM integration with server-side function calling for external APIs (Cal.com), streaming responses for improved user experience, and a detailed automated evaluation framework to measure and report key performance indicators like groundedness and latency. It also illustrates a practical approach to prompt engineering for persona consistency and factuality.",
+      "demonstrates": "This repository demonstrates the development of an advanced AI persona system leveraging RAG, large language models (Gemini), and external API integrations. It showcases how to build interactive chat and voice interfaces, implement server-side function calling, optimize for real-time performance (e.g., voice latency), and construct a robust evaluation framework for LLM-based applications, including prompt engineering for groundedness and mitigation of hallucination.",
       "complexity": "advanced",
       "languages": [
         "Python",
@@ -73,12 +81,12 @@
       "frameworks": [
         "FastAPI",
         "Next.js",
+        "Vanilla JavaScript",
         "uvicorn",
         "pydantic-settings",
         "google-genai",
         "voyageai",
-        "chromadb",
-        "pypdf"
+        "chromadb"
       ]
     },
     {
@@ -86,28 +94,28 @@
       "url": "https://github.com/jiya-singhal/KV-Cache",
       "featured": true,
       "tagline": "Distributed key-value cache — consistent hashing, synchronous primary-replica replication, bounded LRU.",
-      "problem": "Provides a fast, in-memory key-value storage solution that supports caching features like Time-To-Live (TTL) and Least Recently Used (LRU) eviction, handling concurrent client connections over a custom TCP protocol.",
-      "architecture": "The KV-Cache server is structured into three main layers: Network, Protocol, and Cache. The Network Layer (tcp_server.py) uses asyncio to provide an asynchronous TCP server, handling multiple concurrent client connections. The Protocol Layer (parser.py, commands.py) defines and parses custom text-based commands (PUT, GET, DELETE, EXISTS, QUIT) and formats responses. The Cache Layer (store.py, eviction.py) manages the in-memory key-value data with support for Time-To-Live (TTL) expiration and Least Recently Used (LRU) eviction policies. Clients interact with the server over raw TCP sockets.",
+      "problem": "Provides a high-performance, in-memory key-value store that can handle concurrent requests, offering fast data retrieval and storage with optional time-to-live (TTL) and Least Recently Used (LRU) eviction policies.",
+      "architecture": "The KV-Cache server is structured into three main layers: a Network Layer (`tcp_server.py`) utilizing `asyncio` for concurrent TCP connections; a Protocol Layer (`parser.py`, `commands.py`) responsible for parsing custom text-based commands and formatting responses; and a Cache Layer (`store.py`, `eviction.py`) that implements the core key-value storage, Time-To-Live (TTL) management, and a Least Recently Used (LRU) eviction policy. Client requests flow from a TCP socket through the protocol parser to the KV store, and responses are returned accordingly.",
       "features": [
-        "In-memory key-value storage",
-        "High-performance asynchronous TCP server using asyncio",
-        "Custom text-based network protocol (PUT, GET, DELETE, EXISTS, QUIT)",
-        "Time-To-Live (TTL) for automatic key expiration",
+        "High-performance, in-memory key-value store",
+        "Async TCP server using Python's asyncio for non-blocking I/O",
+        "Handles multiple concurrent client connections",
+        "Custom text-based protocol supporting PUT, GET, DELETE, EXISTS, and QUIT commands",
+        "Key-value storage with O(1) average-case time complexity for operations",
+        "Time-To-Live (TTL) management for automatic key expiration",
         "Least Recently Used (LRU) eviction policy for cache management",
-        "Docker support for containerization",
-        "Configurable host, port, and maximum cache size",
-        "Command-line client for interactive testing",
-        "Load testing and benchmarking scripts",
-        "Graceful server shutdown via signals"
+        "Docker image for easy containerization and deployment",
+        "Includes benchmarking script for performance analysis of internal components",
+        "Includes load testing script for simulating concurrent clients and measuring network performance"
       ],
       "tradeoffs": [
-        "In-memory storage means data is not persistent across server restarts.",
-        "Designed for a single server instance, lacking inherent distributed caching, replication, or sharding mechanisms.",
-        "The custom raw TCP protocol requires client-side implementation specific to this server, not compatible with standard protocols like HTTP or Redis protocol.",
-        "Only supports basic string key-value pairs; no complex data structures like lists, sets, or hashes.",
-        "LRU eviction, while efficient, may not be optimal for all workload patterns."
+        "In-memory storage results in data loss upon server restart or failure, as there is no persistence mechanism.",
+        "The custom TCP protocol requires specific client-side implementation (e.g., `scripts/client.py` or `netcat`), lacking compatibility with standard, widely-used client libraries.",
+        "The architecture is single-node, which limits scalability beyond the resources of a single machine and presents a single point of failure.",
+        "No explicit authentication or authorization mechanisms are provided, making the server insecure for untrusted network environments without external security layers.",
+        "The protocol's error handling is basic, relying on simple 'OK'/'ERROR' responses without detailed error codes."
       ],
-      "demonstrates": "Building a high-performance asynchronous network server using Python's asyncio. Implementing core caching concepts such as in-memory key-value storage, Time-To-Live (TTL), and Least Recently Used (LRU) eviction. Designing and parsing a custom network protocol over raw TCP sockets. Containerizing applications with Docker. Performing basic load testing and benchmarking. Setting up an application for cloud deployment (e.g., AWS EC2). Practicing structured project organization, testing, and dependency management.",
+      "demonstrates": "This project demonstrates the development of a high-performance, asynchronous TCP server using Python's `asyncio`, including the design and implementation of a custom network protocol. It showcases fundamental cache functionalities such as key-value storage, Time-To-Live (TTL), and Least Recently Used (LRU) eviction policies. Furthermore, it exemplifies modular software design, comprehensive testing (unit, integration, load, benchmark), application containerization with Docker, and basic cloud deployment patterns.",
       "complexity": "intermediate",
       "languages": [
         "Python",
@@ -116,38 +124,37 @@
       ],
       "frameworks": [
         "asyncio",
-        "collections",
+        "collections.OrderedDict",
+        "logging",
+        "argparse",
+        "socket",
+        "statistics",
         "dataclasses",
-        "time",
-        "pytest",
-        "pytest-asyncio",
-        "pytest-cov",
-        "pytest-timeout"
+        "pytest"
       ]
     },
     {
       "name": "Distributed-Live-Polling-System",
       "url": "https://github.com/jiya-singhal/Distributed-Live-Polling-System",
       "featured": true,
-      "tagline": "A backend system for live polling that demonstrates persistence, caching, batching, and sharding.",
-      "problem": "It aims to solve challenges in building a scalable and resilient live polling system, specifically addressing data persistence, reducing database load through application-layer caching, optimizing write performance via batching, and distributing data across multiple storage nodes using sharding and consistent hashing.",
-      "architecture": "The system comprises a FastAPI application that handles HTTP requests for voting and results. Data persistence and lookup are managed by a simulated Redis cluster of two distinct instances. Consistent hashing is implemented to distribute poll IDs across these Redis nodes. A background worker in the FastAPI app handles batch processing to aggregate votes in memory before flushing them to Redis.",
+      "tagline": "Implements the backend for a live polling system featuring real-time voting, persistence, caching, and sharding.",
+      "problem": "The system addresses the challenge of building a scalable and resilient live polling application by implementing data persistence, application-layer caching, write batching, and sharded data distribution across multiple Redis instances using consistent hashing.",
+      "architecture": "The system uses a FastAPI application as its API layer, handling voting and result requests. It integrates with two Redis instances, configured via Docker Compose, to store polling data. A custom consistent hashing algorithm is implemented to distribute poll IDs across these Redis nodes. The application employs an in-memory cache for results and a background worker for batch processing of votes, flushing them to Redis periodically.",
       "features": [
-        "Basic in-memory polling for vote counting and result retrieval.",
-        "Data persistence using Redis for votes to survive application restarts.",
-        "Application-layer caching with a 5-second TTL to reduce Redis read load.",
-        "Batch processing of votes, buffering them in memory and flushing to Redis every 10 seconds to optimize write performance.",
-        "Redis sharding using a custom consistent hashing implementation to distribute polls across multiple Redis instances.",
-        "API endpoint for casting votes (POST /api/v1/vote/{poll_id}).",
-        "API endpoint for retrieving poll results (GET /api/v1/results/{poll_id}).",
-        "Health check endpoint (GET /)."
+        "API endpoints for casting votes (`POST /vote`) and retrieving real-time poll results (`GET /results`).",
+        "Persistence of vote data using Redis.",
+        "Application-layer read-through caching with a 5-second TTL to reduce Redis load.",
+        "Write-behind batch processing of votes, accumulating them in memory and flushing to Redis every 10 seconds.",
+        "Distributed storage of poll data across two Redis instances using a custom consistent hashing implementation for sharding.",
+        "Health check endpoint."
       ],
       "tradeoffs": [
-        "The Redis sharding is simulated using two distinct Redis instances via Docker Compose, rather than a true Redis Cluster setup.",
-        "Application-layer caching and batching mechanisms are local to a single FastAPI application instance, and would require additional distributed coordination for horizontal scaling of the application layer itself.",
-        "The `ConsistentHash` implementation does not explicitly handle rebalancing or dynamic node addition/removal after initial setup, which would be crucial in a production environment."
+        "The system simulates a Redis cluster using two independent Redis instances with client-side sharding, which is not a true Redis Cluster and might have different operational characteristics.",
+        "In-memory caching and batching buffers (class-level dictionaries) mean that pending votes or recent cache entries could be lost upon application crashes or restarts before being flushed to Redis.",
+        "The current `ConsistentHash` implementation (as per provided code) focuses on distribution but lacks explicit handling for dynamic node additions/removals and rebalancing, which are typical concerns in production consistent hashing setups.",
+        "The `flush_batch` background task runs indefinitely with a fixed interval, requiring robust error handling for Redis operations to prevent failures from stopping the batching process entirely (not explicitly shown in provided snippets)."
       ],
-      "demonstrates": "Implementation of read-through and write-behind caching strategies. Effective use of Redis for data persistence and scalable storage. Design principles for a scalable system using sharding and consistent hashing for distributing data.",
+      "demonstrates": "Demonstrates the implementation of core concepts for building scalable backend services, including API design with FastAPI, data persistence with Redis, performance optimization through application-layer caching and write batching, and distributed system patterns like client-side sharding with consistent hashing.",
       "complexity": "intermediate",
       "languages": [
         "Python",
@@ -155,32 +162,74 @@
       ],
       "frameworks": [
         "FastAPI",
-        "Uvicorn",
+        "uvicorn",
         "redis",
         "pydantic",
         "pydantic-settings",
-        "httpx",
-        "python-dotenv"
+        "httpx"
+      ]
+    },
+    {
+      "name": "search-listings",
+      "url": "https://github.com/jiya-singhal/search-listings",
+      "featured": true,
+      "tagline": "An interactive web application for smart product search combining AI embeddings and fuzzy matching.",
+      "problem": "Enables users to search a list of products more effectively than simple keyword search by leveraging semantic understanding and tolerance for typos/variations, providing a ranked list of relevant results.",
+      "architecture": "The application is a single-page Streamlit web application. It loads a pre-trained `SentenceTransformer` model and product names from a CSV file. It then creates an in-memory FAISS index from the embeddings of these product names. When a user submits a query, the query is preprocessed, embedded, and used to perform a k-nearest neighbor search on the FAISS index. The results from FAISS are then further refined and re-ranked using fuzzy matching (`fuzzywuzzy`), and custom boosts for substring and \"starts with\" matches, all combined with a weighted average. The top results are displayed to the user. Critical components like the model, product data, and FAISS index are cached to improve performance.",
+      "features": [
+        "Interactive web-based product search interface.",
+        "Semantic search capability using sentence embeddings.",
+        "Fuzzy string matching for typo tolerance and variations.",
+        "Hybrid scoring system combining semantic similarity, fuzzy match scores, and positional boosts.",
+        "Query preprocessing to remove stop words.",
+        "Caching of model, product data, and FAISS index for efficiency.",
+        "Displays search results with match percentages."
+      ],
+      "tradeoffs": [
+        "The product data and FAISS index are loaded entirely into memory, which may limit scalability for very large datasets without external storage or a more distributed FAISS setup.",
+        "The stop-word list for query preprocessing is hardcoded and relatively small.",
+        "Scoring weights for different matching components (AI, fuzzy, boosts) are hardcoded and may require tuning for optimal performance on different datasets.",
+        "Uses `encoding='latin1'` for CSV, which might not handle all character sets universally."
+      ],
+      "demonstrates": "How to build an interactive data application using Streamlit; implementation of a hybrid search system combining semantic similarity (embeddings) and lexical matching (fuzzywuzzy); utilizing `sentence-transformers` for creating text embeddings; working with `FAISS` for efficient similarity search on vector embeddings; techniques for caching computationally expensive operations in Streamlit applications; basic data loading, preprocessing, and manipulation with `pandas` and `numpy`.",
+      "complexity": "intermediate",
+      "languages": [
+        "Python"
+      ],
+      "frameworks": [
+        "streamlit",
+        "sentence-transformers",
+        "fuzzywuzzy",
+        "python-Levenshtein",
+        "faiss-cpu",
+        "numpy",
+        "pandas"
       ]
     },
     {
       "name": "agentic-workflow",
       "url": "https://github.com/jiya-singhal/agentic-workflow",
       "featured": false,
-      "tagline": "An n8n workflow that analyzes job descriptions and resumes using AI and deterministic code to provide a fit score, skill gap analysis, and personalized application advice.",
-      "problem": "Job seekers waste time applying to mismatched roles. This n8n workflow takes a job description and resume, extracts skills using AI, scores the match deterministically, and produces a personalized gap analysis or application advice.",
-      "architecture": "The system is an n8n workflow composed of seven nodes. It starts with a 'Form Trigger' to collect a job description and resume. Two 'Google Gemini' nodes then extract structured skills from the JD and resume respectively. A 'Code' node (JavaScript) deterministically compares these skills, calculates a match score, and identifies matched/missing skills. An 'IF' node branches the workflow based on whether the fit score is high or low. Two subsequent 'Google Gemini' nodes generate personalized advice: an application coach persona for high fit or a gap analyst persona for low fit. Finally, the results, including score, skills, and advice, are returned to the user via the 'Respond to Form / Output' mechanism.",
+      "tagline": "An n8n workflow that analyzes job descriptions and resumes to provide a fit score, skill gap analysis, and personalized application advice using AI.",
+      "problem": "Job seekers waste time applying to mismatched roles. This workflow solves this by taking a job description and resume, extracting skills using AI, scoring the match deterministically, and producing a personalized gap analysis or application advice.",
+      "architecture": "The workflow is triggered by a public web form collecting job description and resume text. It then uses Google Gemini 2.5 Flash to extract skills from both inputs. A deterministic JavaScript code node compares the extracted skills to calculate a match score and identify missing skills. Based on a predefined score threshold, an IF node routes the workflow to one of two paths: a 'strong fit' path for tailored application advice or a 'weak fit' path for a skill gap analysis, both generated by Google Gemini 2.5 Flash using different personas. Finally, the structured report, including score, matched skills, missing skills, and personalized advice, is returned to the user.",
       "features": [
-        "Web form input for job description and resume text",
-        "AI-powered skill extraction from free-form text using Google Gemini 2.5 Flash",
-        "Deterministic skill matching and fit score calculation (JavaScript)",
-        "Conditional workflow branching based on fit score",
-        "Personalized advice generation with distinct AI personas (application coach vs. gap analyst)",
-        "Structured JSON outputs from AI models for reliable parsing",
-        "Exposed as a callable tool via an n8n Form Trigger"
+        "AI-powered skill extraction from job descriptions and resumes",
+        "Deterministic match scoring and skill gap identification",
+        "Personalized application advice or upskilling roadmap based on fit score",
+        "Web form as a public user interface and trigger",
+        "Structured JSON output from AI models for reliable downstream processing",
+        "Conditional branching logic based on match score",
+        "Dynamic AI persona switching (skill extractor, application coach, gap analyst)",
+        "Workflow exposed as a callable tool via n8n Form Trigger"
       ],
-      "tradeoffs": "unclear from provided files",
-      "demonstrates": "This project demonstrates the practical application of 'agentic workflows' within a low-code/no-code orchestration platform (n8n). It showcases how to effectively integrate large language models (Google Gemini) for tasks requiring natural language understanding and generation, while leveraging deterministic code for logic that demands accuracy and reproducibility. It also illustrates prompt engineering techniques for structured outputs and persona-based responses, and the creation of a multi-step, conditional automation process for a real-world problem.",
+      "tradeoffs": [
+        "Reliance on the quality and consistency of the AI model (Gemini 2.5 Flash) for accurate skill extraction and relevant advice generation, which may still involve potential for hallucination or misinterpretation.",
+        "The skill scoring mechanism in the JavaScript node is based on basic string matching (includes operator) which might not capture semantic similarity or skill hierarchy effectively.",
+        "The generated '30-day learning plan' for weak fits is general AI-generated advice, not a deeply personalized curriculum based on real-time learning resources or a comprehensive user profile.",
+        "The solution's scalability and performance would be dependent on the n8n instance and Google Gemini API rate limits."
+      ],
+      "demonstrates": "This repository demonstrates building an agentic AI workflow using a low-code orchestration platform (n8n). It highlights the effective combination of AI (LLMs) for ambiguous tasks like extraction and generation, with deterministic code for critical, reproducible logic like scoring and routing. It also showcases prompt engineering techniques for structured outputs, persona-based AI interactions, conditional workflow execution, and exposing a complex process as a user-friendly tool.",
       "complexity": "intermediate",
       "languages": [
         "JavaScript"
@@ -194,36 +243,36 @@
       "name": "singing_detection",
       "url": "https://github.com/jiya-singhal/singing_detection",
       "featured": false,
-      "tagline": "A production-ready AI system for detecting singing segments in audio files.",
-      "problem": "Detecting and identifying temporal segments containing singing voices within an audio file.",
-      "architecture": "The system is implemented as a Python class `SingingVocalDetector`. It initializes by loading a Voice Activity Detection (VAD) pipeline from `pyannote.audio`, optionally using Hugging Face authentication. The core processing involves chunking the input audio into overlapping frames, removing silent frames based on RMS energy, applying the `pyannote.audio` VAD model to detect voice activity, and then enhancing singing probability using additional acoustic features (Zero Crossing Rate, RMS, Spectral Centroid) calculated with `librosa`. Finally, it merges consecutive singing frames into larger segments based on a confidence threshold and minimum duration, outputting segment timestamps.",
+      "tagline": "Production-ready AI system for detecting singing segments in audio files.",
+      "problem": "The system solves the problem of automatically identifying and segmenting periods of singing activity within an audio file.",
+      "architecture": "The system is implemented as a Python class `SingingVocalDetector`. It initializes by loading a `pyannote.audio` Voice Activity Detection (VAD) pipeline, with optional Hugging Face authentication. The core detection process involves segmenting input audio into overlapping frames, calculating RMS energy for initial silence filtering, and then processing the (concatenated) waveform through the `pyannote.audio` VAD pipeline. Frame-level singing probabilities are then enhanced using `librosa` to extract acoustic features like zero-crossing rate, RMS energy, and spectral centroid. Finally, consecutive frames exceeding a singing confidence threshold are merged into coherent singing segments. The system appears designed for command-line execution, processing one audio file at a time.",
       "features": [
-        "Singing vocal detection in audio files.",
-        "Configurable parameters: frame duration, RMS threshold, singing confidence threshold, and minimum segment duration.",
-        "Utilizes pyannote.audio for robust Voice Activity Detection.",
-        "Enhances singing probability with acoustic features (Zero Crossing Rate, RMS, Spectral Centroid) using librosa.",
-        "Segments are merged to provide consolidated singing intervals with confidence scores.",
-        "Supports Hugging Face authentication for model access.",
-        "Supports various audio input formats (WAV, MP3, FLAC, M4A, OGG, AAC) via librosa.",
-        "Output results can be saved in JSON or CSV format."
+        "Detects and segments singing passages within audio files.",
+        "Utilizes a pre-trained Voice Activity Detection (VAD) model from `pyannote.audio`.",
+        "Enhances singing detection confidence through additional acoustic feature analysis (zero-crossing rate, RMS energy, spectral centroid) using `librosa`.",
+        "Offers configurable parameters for detection sensitivity (e.g., frame duration, RMS threshold, singing confidence, minimum segment duration).",
+        "Supports various audio input formats (WAV, MP3, FLAC, M4A, OGG, AAC) compatible with `librosa`.",
+        "Outputs detected singing segments in either JSON or CSV format.",
+        "Integrates with Hugging Face for model access and authentication.",
+        "Provides logging for execution status and debugging."
       ],
       "tradeoffs": [
-        "Can experience 'Memory issues with large files', as stated in the Readme, suggesting the need for chunking or parameter adjustment.",
-        "Relies heavily on external pre-trained models (pyannote/segmentation) which requires network access and Hugging Face authentication for optimal results.",
-        "The acoustic feature enhancement uses heuristic factors which may not be universally optimal across all audio types or singing styles.",
-        "The `models/Cnn14_16k_mAP=0.438.pth` and `models/class_labels_indices.csv` files are present in the repository but their direct usage by the provided `singing_detector.py` code is unclear from provided files."
+        "The system's core functionality relies on external pre-trained models (specifically `pyannote/segmentation`), which requires Hugging Face authentication and an internet connection for initial model download.",
+        "Processing large audio files may lead to memory issues due to the concatenation of audio frames for VAD processing, as indicated in the `Readme.md` troubleshooting section.",
+        "The custom acoustic feature enhancement applies fixed weighting factors, which might limit generalizability or optimal performance across highly diverse audio datasets or singing styles.",
+        "Effective performance requires manual tuning of parameters like singing confidence and minimum segment duration, as suggested in the `Readme.md`.",
+        "The `models/Cnn14_16k_mAP=0.438.pth` and `models/class_labels_indices.csv` files are present in the repository but are not loaded or used by the provided `singing_detector.py` code, indicating either an incomplete implementation or unused artifacts."
       ],
-      "demonstrates": "This repository demonstrates the integration of state-of-the-art deep learning models for audio event detection with traditional audio signal processing techniques. It showcases how to build a robust, configurable, and 'production-ready' audio analysis pipeline in Python, including handling external model dependencies (Hugging Face), parameter validation, and detailed logging for monitoring execution flow and debugging.",
+      "demonstrates": "This project demonstrates the practical application and integration of advanced machine learning libraries (`pyannote.audio`, `torch`) with audio signal processing tools (`librosa`) to build a specialized audio analysis system. It showcases robust Python development practices, including object-oriented design, parameter validation, error handling, structured logging, and interaction with external model providers like Hugging Face. It provides insights into techniques for voice activity detection, acoustic feature extraction, and post-processing for segmenting specific events in audio.",
       "complexity": "intermediate",
       "languages": [
         "Python"
       ],
       "frameworks": [
-        "PyTorch",
         "pyannote.audio",
+        "Torch",
         "librosa",
         "numpy",
-        "torch",
         "torchaudio",
         "huggingface_hub"
       ]
@@ -233,188 +282,174 @@
       "url": "https://github.com/jiya-singhal/devops-ci-cd",
       "featured": false,
       "tagline": "A complete CI/CD pipeline with Kubernetes deployment using GitHub Actions.",
-      "problem": "This project demonstrates a production-style CI/CD pipeline that builds a Java Spring Boot application, runs unit tests, checks code style, scans for security vulnerabilities (SAST with CodeQL, SCA with OWASP), builds and scans Docker images (Trivy), pushes verified images to Docker Hub, and deploys to a Kubernetes cluster on AWS EC2.",
-      "architecture": "The project implements a DevSecOps CI/CD pipeline. The CI pipeline (GitHub Actions) builds a Java Spring Boot application using Maven, performs code style checks (Checkstyle), runs unit tests (JUnit), executes SAST (CodeQL) and SCA (OWASP Dependency Check), builds a Docker image (multi-stage build), scans the image for vulnerabilities (Trivy), tests the container's health, and pushes the image to Docker Hub. Upon successful CI, the CD pipeline (GitHub Actions) uses Terraform to provision an AWS EC2 instance. This EC2 instance is configured via `user_data` to install k3s (a lightweight Kubernetes distribution), pull the Docker image from Docker Hub, create a Kubernetes Deployment with 2 replicas, and expose the application using a NodePort service. The application is a simple Spring Boot web application with `/health`, `/hello`, and `/version` endpoints, and a `CalculatorService`.",
+      "problem": "This project demonstrates a production-style CI/CD pipeline that automates the building, testing, security scanning, containerization, and deployment of a Java Spring Boot application to a Kubernetes cluster on AWS EC2.",
+      "architecture": "The project features a Java Spring Boot application. A comprehensive CI/CD pipeline is implemented using GitHub Actions. The CI workflow builds the application, runs unit tests, performs code style checks (Checkstyle), and conducts security scans (SAST with CodeQL, SCA with OWASP Dependency Check). It then builds a multi-stage Docker image, scans it with Trivy, tests the running container, and pushes the verified image to Docker Hub. The CD workflow, triggered upon successful CI, utilizes Terraform to provision an AWS EC2 instance and a security group. This EC2 instance is configured via user_data scripts to install k3s (lightweight Kubernetes) and deploy the Dockerized application as a Kubernetes Deployment, exposed via a NodePort service. The CD pipeline further logs into the EC2 to perform additional deployment steps via kubectl.",
       "features": [
-        "Automated CI pipeline on code push to main/master",
-        "Automated build, test, and linting (Checkstyle)",
-        "Integrated security scanning: SAST (CodeQL), SCA (OWASP Dependency Check), Container Image Scanning (Trivy)",
-        "Multi-stage Docker image build for optimized size",
-        "Automated container testing (health/hello endpoints)",
-        "Deployment to Docker Hub",
-        "Automated CD pipeline triggered by successful CI",
-        "Infrastructure provisioning on AWS EC2 using Terraform",
-        "Lightweight Kubernetes (k3s) installation and application deployment via user_data script",
-        "Kubernetes deployment with multiple replicas and NodePort service",
-        "Verification of deployed application health",
-        "Provides simple REST endpoints (`/health`, `/hello`, `/version`)",
-        "Includes a basic `CalculatorService` with unit tests"
+        "Automated CI/CD pipeline using GitHub Actions",
+        "Java Spring Boot application build and testing (Maven, JUnit)",
+        "Code quality enforcement with Checkstyle",
+        "Source code static analysis (SAST) with CodeQL",
+        "Dependency vulnerability scanning (SCA) with OWASP Dependency Check",
+        "Docker image building (multi-stage) and vulnerability scanning with Trivy",
+        "Automated Docker image push to Docker Hub",
+        "Infrastructure as Code (IaC) with Terraform for AWS EC2 and Security Group provisioning",
+        "Deployment to a Kubernetes cluster (k3s) on an AWS EC2 instance",
+        "Kubernetes Deployment with liveness and readiness probes",
+        "Application exposure via Kubernetes NodePort service",
+        "Container runtime tests within CI pipeline",
+        "Integrated DevSecOps practices with security scans at multiple stages"
       ],
       "tradeoffs": [
-        "The `cd.yml` attempts to install k3s and deploy the application via SSH commands *after* `terraform apply`, despite `terraform/main.tf`'s `user_data` script already performing k3s installation and application deployment. This creates redundancy and potential for conflicting states.",
-        "The `cd.yml` deploys the application with `replicas=1` through SSH commands, while the `terraform/main.tf` `user_data` script configures `replicas: 2` for the Kubernetes deployment, leading to an inconsistent number of application instances.",
-        "The use of a `t3.small` EC2 instance and k3s for deployment, while cost-efficient and lightweight for demonstration, is not suited for high-availability, fault-tolerance, or scalable production environments.",
-        "Exposing the application via `NodePort` on a single EC2 instance is simplistic for demonstration but lacks the robustness, security, and advanced traffic management of a production-grade load balancer or ingress controller.",
-        "The infrastructure provisioned (EC2 instance) is ephemeral and recreated on each CD run, which is not typical for managing persistent Kubernetes clusters.",
-        "The OWASP Dependency Check step in CI uses `|| true`, preventing the build from failing even if high-severity CVEs are found, which might be a deliberate choice for a demo but is generally not a production best practice.",
-        "Requires external GitHub secrets for Docker Hub and AWS credentials, adding a manual setup step."
+        "The Terraform setup provisions a single AWS EC2 instance for Kubernetes (k3s), which is not suitable for high availability or production-grade clusters.",
+        "The Kubernetes service is exposed via NodePort, opening a wide range of ports (30000-32767) in the security group and making the application directly accessible on the EC2 IP, which may not be ideal for production environments (e.g., lacking a load balancer or Ingress controller).",
+        "The AWS security group allows broad ingress from `0.0.0.0/0` for SSH, HTTP, application ports (8080), k3s API (6443), and NodePort range, which is overly permissive for a production environment.",
+        "There is an inconsistency in the specified replica count: the `README.md` and the `user_data` script in `terraform/main.tf` state 2 replicas, but the `cd.yml` workflow explicitly deploys 1 replica during the 'Deploy Application' step via `kubectl create deployment --replicas=1`.",
+        "The `cd.yml` pipeline's 'Install k3s on EC2' step re-executes `curl -sfL https://get.k3s.io | sh -`, potentially redundant or conflicting with the k3s installation from the Terraform user_data script.",
+        "The `dependency-check-suppression.xml` file is present but empty, indicating no dependency vulnerabilities are suppressed."
       ],
-      "demonstrates": "This project demonstrates a comprehensive DevSecOps CI/CD pipeline from code commit to cloud deployment. It showcases best practices like automated testing, code quality checks, multiple layers of security scanning (SAST, SCA, container scanning), containerization with Docker, infrastructure as code with Terraform for AWS, and application orchestration with Kubernetes (k3s). It highlights how to integrate these tools using GitHub Actions to achieve continuous delivery of a Spring Boot application.",
+      "demonstrates": "This project demonstrates the complete lifecycle of a cloud-native application using modern DevOps and DevSecOps practices. It showcases how to: implement continuous integration (CI) with automated builds, tests, and static/dependency/container security scans; perform continuous delivery/deployment (CD) by provisioning cloud infrastructure (AWS EC2) with Terraform, deploying a containerized application to Kubernetes (k3s), and automating the entire process using GitHub Actions. It also highlights best practices for Dockerization and Kubernetes deployment configurations.",
       "complexity": "intermediate",
       "languages": [
-        "Java",
         "HCL",
-        "Dockerfile",
-        "YAML"
+        "Java",
+        "Dockerfile"
       ],
       "frameworks": [
         "Spring Boot",
         "Maven",
-        "JUnit",
+        "JUnit 5",
         "Checkstyle",
-        "JaCoCo",
-        "GitHub Actions",
+        "OWASP Dependency Check",
         "CodeQL",
-        "OWASP Dependency Check"
+        "Trivy",
+        "Docker"
       ]
     },
     {
       "name": "SingoneSong",
       "url": "https://github.com/jiya-singhal/SingoneSong",
       "featured": false,
-      "tagline": "A FastAPI-based audio analysis service for uploading, extracting features, and performing similarity and mood-based searches on audio files.",
-      "problem": "Providing quick retrieval and mood-based search capabilities for music or audio datasets.",
-      "architecture": "The application is a FastAPI web service (`app/main.py`) that exposes REST API endpoints for audio file operations. It uses SQLAlchemy to interact with a SQLite database (`audio_metadata.db`) for storing audio metadata, including extracted features. Audio files are stored on the local filesystem within `app/storage`. Core functionalities like feature extraction are handled by `librosa` (`app/features.py`), while `numpy` and `scikit-learn` are used for feature vector normalization and similarity calculations (`app/utils.py`). A simple rule-based system (`app/mood.py`) supports mood-based natural language search.",
+      "tagline": "This project implements a FastAPI-based audio analysis service that uploads audio files, extracts relevant features, performs similarity search, and supports mood-based natural language search.",
+      "problem": "It addresses the need for quick retrieval and mood-based search within music or audio datasets by providing a REST API to analyze, store, and search audio files based on their acoustic features and metadata.",
+      "architecture": "The project is a REST API built using FastAPI. It uses an SQLite database (managed by SQLAlchemy) to store audio metadata (title, tags) and extracted acoustic features (tempo, spectral centroid, RMS, duration, ZCR, rolloff). Audio files are uploaded via a POST endpoint and stored locally on the filesystem. Upon upload, librosa is used to extract features. The API provides endpoints for similarity search against an existing audio ID (using Euclidean or Cosine distance on normalized feature vectors), search by feature ranges, text search by title or tags, and a mood-based natural language search that categorizes audio based on feature thresholds.",
       "features": [
-        "Audio file upload and local storage for .wav and .mp3 formats.",
-        "Extraction of key audio features using `librosa`: tempo, spectral centroid, RMS, duration, zero-crossing rate, and spectral rolloff.",
-        "Similarity search for audio tracks based on an existing audio ID using Euclidean or Cosine distance.",
-        "Similarity search for audio tracks based on specified feature ranges (e.g., tempo, RMS).",
-        "Text-based search by audio title or tags.",
-        "Mood-based natural language search, mapping audio features to descriptive mood labels.",
-        "Normalization of feature vectors before similarity computations.",
-        "Collision-safe file saving for uploaded audio files.",
-        "Result limiting to top 5 similar tracks for search endpoints."
+        "Audio file upload and local storage (supports .wav, .mp3)",
+        "Extraction of core audio features (tempo, spectral centroid, RMS, duration, zero-crossing rate, spectral rolloff) using librosa",
+        "Storage of extracted features and metadata in an SQLite database",
+        "Similarity search between audio tracks based on features (cosine or Euclidean distance)",
+        "Search by specified feature ranges (e.g., tempo, RMS)",
+        "Text search by audio title or tags",
+        "Mood-based natural language search by mapping audio features to descriptive labels",
+        "Normalization of feature vectors before similarity computation",
+        "Collision-safe file saving for uploaded audio files",
+        "Result limiting to top 5 for similarity searches"
       ],
       "tradeoffs": [
-        "Relies on basic `librosa` features for audio analysis, which may be less discriminative or robust compared to pre-trained embeddings for complex audio understanding.",
-        "Audio files are stored locally, limiting scalability for large datasets and distributed deployments.",
-        "SQLite database may not be suitable for high-concurrency environments or very large-scale data storage.",
-        "Mood classification is based on simple, hardcoded rules and thresholds, which might not capture the full complexity or nuance of human-perceived moods.",
-        "The current feature extraction process does not utilize more advanced techniques like pre-trained embeddings, potentially impacting the accuracy of search results for complex audio queries."
+        "Feature extraction relies on basic librosa features; advanced techniques like pre-trained embeddings (e.g., PANNs, OpenL3, MusiCNN) are explicitly not used, limiting the richness of audio representation.",
+        "Mood inference is based on simple thresholding of a few features, which may not capture complex musical emotions accurately.",
+        "Audio files and metadata are stored locally in a SQLite database and filesystem, making the solution less scalable for large-scale, distributed deployments.",
+        "Similarity search loads all audio data into memory for processing, which can become a performance bottleneck with very large datasets.",
+        "Text search employs a naive ranking strategy, which may not yield optimal relevance for complex queries."
       ],
-      "demonstrates": "Building a RESTful API with FastAPI for managing and analyzing audio data; practical application of `librosa` for extracting fundamental audio features; database interaction with SQLAlchemy and SQLite for structured data storage; implementation of content-based similarity search algorithms (Euclidean and Cosine distance) using `numpy` and `scikit-learn`; basic principles of natural language processing for mapping queries to audio characteristics; handling file uploads and local file system management in a web application; data preprocessing techniques like feature normalization for machine learning tasks.",
+      "demonstrates": "This project demonstrates the development of a RESTful API using FastAPI, integration of audio processing libraries like librosa for feature extraction, database management with SQLAlchemy and SQLite, implementation of similarity search algorithms (cosine, Euclidean distance) with feature normalization, handling file uploads, and a basic approach to natural language-based audio search using feature-to-label mapping. It showcases modular project structure and dependency management for a Python web service.",
       "complexity": "intermediate",
       "languages": [
         "Python"
       ],
       "frameworks": [
         "FastAPI",
-        "uvicorn",
-        "python-multipart",
         "librosa",
-        "soundfile",
         "numpy",
-        "scipy",
-        "pydantic"
+        "scikit-learn",
+        "pydantic",
+        "sqlalchemy",
+        "uvicorn",
+        "python-multipart"
       ]
     },
     {
       "name": "Social-Network-Friend-Recommendation-System",
       "url": "https://github.com/jiya-singhal/Social-Network-Friend-Recommendation-System",
       "featured": false,
-      "tagline": "A Java project that simulates a social network for friend recommendations based on mutual connections, user blocking, and friend circle detection.",
-      "problem": "This project provides a system for users to find new friends based on common connections (mutual friends), manage friendships, block unwanted users, and identify groups of interconnected friends within a social network simulation.",
-      "architecture": "The system is structured into three main components: `SocialGraph`, `RecommendationEngine`, and a user interface (`Main.java` for console or `UI.java` for GUI). The `SocialGraph` class manages user data and friendships using an adjacency list (`HashMap<String, Set<String>>`) and handles user blocking and Disjoint Set Union (DSU) for friend circles. The `RecommendationEngine` class uses the `SocialGraph` to implement friend recommendation logic (BFS up to level 2) and to find friend circles via DSU. Both the console (`Main.java`) and GUI (`UI.java`) interfaces interact with instances of `SocialGraph` and `RecommendationEngine` to provide user functionality.",
+      "tagline": "A Java project that simulates a friend suggestion engine using graph data structures and algorithms, with a console and Swing GUI.",
+      "problem": "The project solves the problem of recommending new friends to users based on mutual connections in a social network, allowing for user blocking, and identifying distinct friend communities (circles).",
+      "architecture": "The system is composed of three main logical units: `SocialGraph` which manages user data, friendships, and blocking relationships using adjacency lists and Disjoint Set Union (DSU) for friend circles; `RecommendationEngine` which provides friend recommendations using Breadth-First Search (BFS) and leverages the `SocialGraph`; and a user interface layer provided by `Main.java` (console-based) and `UI.java` (Swing GUI-based) to interact with the core logic.",
       "features": [
-        "Add new users",
-        "Add undirected friendships between users",
-        "Show all registered users",
-        "Recommend friends based on mutual connections (up to 2 levels of separation)",
-        "Display mutual friends with names and count for recommendations",
-        "Block users (unidirectional, preventing recommendations from/to blocked users)",
-        "Detect and display 'friend circles' or communities using Disjoint Set Union (DSU)",
-        "Print the complete social graph (adjacency list format)",
-        "Case-insensitive input handling for usernames",
-        "Suggestions sorted by number of mutual friends and then alphabetically",
-        "Graphical User Interface (GUI) implemented with Swing"
+        "Add Users",
+        "Add Friendships (Undirected Graph)",
+        "Show All Users",
+        "Recommend Friends based on mutual connections (up to 2 levels)",
+        "Show Mutual Friends (Names & Count)",
+        "Exclude Blocked Users from suggestions",
+        "Block Users (bidirectional blocking for suggestions)",
+        "Detect Friend Circles (using DSU)",
+        "View Social Graph (adjacency list representation)",
+        "Console Interface",
+        "GUI Interface with Swing (with enhanced styling)",
+        "Case-insensitive Input Handling",
+        "Sorted Suggestions (by number of mutual friends, then alphabetically)"
       ],
-      "tradeoffs": [
-        "Data is stored in-memory; there is no persistence mechanism, meaning all data is lost upon application exit.",
-        "Scalability might be limited for very large social networks due to in-memory storage and simple graph traversal algorithms without optimizations for massive datasets.",
-        "The recommendation algorithm is a simple BFS to level 2, which might not be sophisticated enough for complex real-world recommendation scenarios.",
-        "Blocking is handled as a simple exclusion from recommendations and does not prevent existing friendships or other interactions.",
-        "No explicit error handling for non-existent users when performing actions like adding friendships or blocking, beyond checking user existence in `RecommendationEngine`."
-      ],
-      "demonstrates": "This project demonstrates fundamental data structures and algorithms, including graph representation (adjacency list), Breadth-First Search (BFS) for pathfinding, and Disjoint Set Union (DSU) with path compression for connected component detection. It showcases object-oriented programming principles in Java, basic user interaction through both console and GUI (Swing), and how these concepts can be applied to solve problems in social network modeling, such as friend recommendations and community detection.",
+      "tradeoffs": [],
+      "demonstrates": "This project demonstrates the practical application of core graph data structures (adjacency lists) and algorithms (Breadth-First Search, Disjoint Set Union with path compression) to solve a real-world problem like friend recommendation and community detection in a social network. It also showcases fundamental Java programming concepts, object-oriented design, and the development of both console-based and graphical user interfaces (Swing).",
       "complexity": "intermediate",
       "languages": [
         "Java"
       ],
       "frameworks": [
-        "java.util",
-        "javax.swing"
+        "Swing",
+        "java.util.*",
+        "javax.swing.*"
       ]
     },
     {
       "name": "PatientRecordSystem",
       "url": "https://github.com/jiya-singhal/PatientRecordSystem",
       "featured": false,
-      "tagline": "The Patient Record System is a Spring Boot application that provides a comprehensive solution for managing patient records, medical histories, and appointments.",
-      "problem": "This project aims to streamline the process of creating, updating, retrieving, and deleting patient information.",
-      "architecture": "The application follows a layered architecture typical for Spring Boot applications, with controllers for API endpoints, services for business logic, and repositories for data access. It includes a JWT-based authentication system and global exception handling. Models define entities for patients, appointments, and medical history. Configuration classes set up Spring Security filters and in-memory user details.",
+      "tagline": "A Spring Boot application for managing patient records, medical histories, and appointments.",
+      "problem": "Streamlining the process of creating, updating, retrieving, and deleting patient information, medical histories, and appointments within a secure system.",
+      "architecture": "A RESTful API built with Spring Boot, following a layered architecture (Controllers, Services, Repositories, Models). It uses Spring Data JPA for persistence, Spring Security with JWT for authentication, and global exception handling for error management.",
       "features": [
-        "Patient Profile Management: Create, retrieve, and delete patient details (name, email, contact number, date of birth).",
-        "Medical History Management: Add, retrieve, and delete medical history entries for patients, including listing all records for a specific patient. Medical history includes history ID, patient ID, disease name, treatment details, and date of diagnosis.",
-        "Appointment Management: Retrieve all appointments, list all appointments for a specific patient, update, and delete appointments.",
-        "Authentication and Authorization: JSON Web Token (JWT) based authentication with token generation and validation for secure API endpoints.",
-        "Global Exception Handling: Custom exceptions for specific scenarios (e.g., PatientNotFound, AppointmentNotFound, MedicalHistoryInvalid) with consistent error responses."
+        "Patient Profile Management (Create, retrieve, delete patient details: name, email, contact number, date of birth)",
+        "Medical History Management (Add, retrieve, delete entries for patients including history ID, patient ID, disease name, treatment details, and date of diagnosis)",
+        "Appointment Management (Retrieve all appointments, list all appointments for a specific patient, update, and delete appointments)",
+        "JSON Web Token (JWT) based authentication and authorization",
+        "Global exception handling with custom exceptions (e.g., PatientNotFound, AppointmentNotFound, MedicalHistoryInvalid)"
       ],
-      "tradeoffs": [
-        "Authentication uses an in-memory user details service, which is not suitable for production environments requiring persistent user management.",
-        "The JWT secret key and token validity are hardcoded within the `JwtHelper.java` class.",
-        "Patients are explicitly prevented from updating their medical history details directly.",
-        "The `/appointments` endpoints are configured to permit all requests without authentication, which is a significant security vulnerability for a patient record system.",
-        "Specific database schema details (e.g., table creation scripts or detailed column constraints) are not provided in the analyzed files, relying on JPA's auto-generation capabilities."
-      ],
-      "demonstrates": "This project demonstrates building a RESTful API with Spring Boot, integrating Spring Data JPA for database interaction with MySQL, implementing JWT-based authentication using Spring Security, and handling custom exceptions. It showcases a typical multi-layered application structure for managing resources (patients, medical history, appointments).",
+      "tradeoffs": [],
+      "demonstrates": "Demonstrates building a secure RESTful API using Spring Boot, Spring Data JPA for data access, Spring Security for JWT-based authentication, and structured error handling. It showcases a typical CRUD application for managing entities like Patients, Medical Histories, and Appointments.",
       "complexity": "intermediate",
       "languages": [
         "Java"
       ],
       "frameworks": [
         "Spring Boot",
-        "Spring Data JPA",
         "Spring Security",
+        "Spring Data JPA",
         "Spring Web",
+        "Spring WebFlux",
         "Lombok",
-        "jjwt-api",
-        "jjwt-impl",
-        "jjwt-jackson"
+        "jjwt",
+        "mysql-connector-j"
       ]
     },
     {
       "name": "Book-Finder",
       "url": "https://github.com/jiya-singhal/Book-Finder",
       "featured": false,
-      "tagline": "A web application for searching and displaying book information.",
-      "problem": "The application solves the problem of discovering and finding books by providing a search interface to explore books across various genres and interests.",
-      "architecture": "A single-page application (SPA) built with React and bootstrapped with Create React App. It leverages React Router for client-side navigation and React Context API for global state management (search term, book list, loading state). The application fetches book data and details from the Open Library API via `fetch`. Components are structured for search functionality, displaying book lists, and detailed book views, with styling managed by plain CSS and CSS variables.",
+      "tagline": "A web application for searching and displaying details about books using the Open Library API.",
+      "problem": "Enables users to discover books by title and view their corresponding details like description, authors, and publication information.",
+      "architecture": "The application is a single-page application (SPA) built with React. It uses React Router for declarative navigation. Global state for search terms, book lists, and loading status is managed via React Context API. Data is fetched asynchronously from the Open Library API. The UI is composed of functional components for search forms, book listings, and detailed book views.",
       "features": [
-        "Book search by title",
-        "Display of search results",
-        "Detailed book view with information like title, description, cover image, authors, publication year, and subjects",
-        "Client-side routing for navigation",
-        "Debounced search input with dynamic suggestions",
-        "Loading indicator"
+        "Search for books by title",
+        "Display a list of book search results (up to 20 items per search)",
+        "View detailed information for individual books",
+        "Loading indicators during data fetching",
+        "Search input debouncing",
+        "Real-time search suggestions",
+        "Responsive design for various screen sizes"
       ],
-      "tradeoffs": [
-        "The application currently limits search results to 20-30 items without pagination, which restricts the depth of book exploration",
-        "Error handling is basic, primarily logging to the console and updating a result title",
-        "There is no user authentication or personalized features",
-        "The styling relies on plain CSS, which could become less maintainable in a larger, more complex application"
-      ],
-      "demonstrates": "The project demonstrates building a React single-page application using functional components and hooks, client-side routing with `react-router-dom`, global state management via React Context API, and asynchronous data fetching from an external API. It also showcases implementation of search functionality with debouncing, component-based architecture, and basic CSS styling with responsive considerations.",
+      "tradeoffs": [],
+      "demonstrates": "Core React concepts, including component architecture, state management with Hooks (`useState`, `useEffect`, `useContext`, `useRef`, `useCallback`), and prop drilling avoidance with Context. Integration with a third-party RESTful API (Open Library) for dynamic content. Client-side routing implementation using `react-router-dom` for a multi-page feel in a SPA. Strategies for handling asynchronous operations and displaying loading states. User input handling, form submission, and optimizing API calls with debouncing. Modular CSS styling and responsive design considerations.",
       "complexity": "intermediate",
       "languages": [
         "JavaScript",
@@ -423,47 +458,45 @@
       ],
       "frameworks": [
         "React",
-        "Create React App",
-        "axios",
         "react-router-dom",
+        "@fortawesome/react-fontawesome",
         "react-icons",
-        "@fortawesome/fontawesome-svg-core",
-        "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/react-fontawesome"
+        "axios"
       ]
     },
     {
       "name": "Contact-Manager-App",
       "url": "https://github.com/jiya-singhal/Contact-Manager-App",
       "featured": false,
-      "tagline": "An Express.js backend API for managing contacts with user authentication.",
-      "problem": "Provides a robust backend for a contact management application, handling user registration, login, and authenticated CRUD operations for personal contacts.",
-      "architecture": "The application follows a RESTful API architecture built with Express.js. It connects to a MongoDB database using Mongoose. The codebase is organized into routes, controllers, models, and middleware. Routes define API endpoints, controllers handle business logic and database interactions, models define data schemas, and middleware handles authentication (JWT validation) and error management. Environment variables are used for configuration. Async operations are managed using `express-async-handler`.",
+      "tagline": "An Express.js backend API for managing user contacts.",
+      "problem": "Provides a RESTful API to store, retrieve, update, and delete contact information, secured with user authentication and authorization.",
+      "architecture": "A Node.js Express application following a modular architecture with separate routes, controllers, models, and middleware. It uses MongoDB for data persistence, JWT for authentication, and bcrypt for password hashing. It includes global error handling.",
       "features": [
-        "User registration with password hashing (bcrypt)",
-        "User login with JSON Web Token (JWT) generation for authentication",
-        "JWT-based authentication middleware to protect private routes",
-        "CRUD (Create, Read, Update, Delete) operations for contacts",
-        "Authorization checks to ensure users can only manage their own contacts",
-        "Centralized error handling middleware for different HTTP status codes (400, 401, 403, 404, 500)"
+        "User registration and login.",
+        "JWT-based authentication for protecting API routes.",
+        "CRUD operations (Create, Read, Update, Delete) for contacts.",
+        "Contacts are associated with individual users.",
+        "Custom error handling middleware.",
+        "API endpoints for managing users and contacts."
       ],
       "tradeoffs": [
-        "JWT access tokens have a short expiration of 15 minutes, which might require frequent re-authentication or a refresh token mechanism (not implemented in provided code).",
-        "Error messages in the error handler expose stack traces, which might not be desirable in a production environment due to security concerns.",
-        "The application relies on a single MongoDB connection, which might not be optimized for highly concurrent or distributed environments without further configuration."
+        "JWT access tokens have a short expiration (15 minutes), implying a need for a refresh token mechanism not present in the provided code.",
+        "Error responses expose stack traces, which could be a security concern in a production environment.",
+        "Basic input validation is implemented, but the `express-validator` library is listed as a dependency without apparent usage in the provided controller snippets for more advanced validation."
       ],
-      "demonstrates": "This repository demonstrates building a secure RESTful API using Node.js, Express.js, and MongoDB. It showcases best practices for user authentication with JWT, password hashing, structured API design with MVC-like patterns (models, views/controllers, routes), centralized error handling, and database interaction using Mongoose.",
+      "demonstrates": "How to build a RESTful API with Node.js and Express.js, implement user authentication and authorization with JWT and bcrypt, integrate with MongoDB using Mongoose, and structure a backend application with middleware and error handling.",
       "complexity": "intermediate",
       "languages": [
         "JavaScript"
       ],
       "frameworks": [
         "Express.js",
-        "mongoose",
         "bcrypt",
-        "jsonwebtoken",
         "dotenv",
-        "express-async-handler"
+        "express-async-handler",
+        "jsonwebtoken",
+        "mongoose",
+        "nodemon"
       ]
     }
   ]
