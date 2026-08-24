@@ -17,15 +17,32 @@ type AgentTurn = {
 type UserTurn = { role: "user"; text: string };
 type Turn = AgentTurn | UserTurn;
 
-export function ChatWindow() {
+export function ChatWindow({
+  autosendFromQuery = false,
+}: {
+  autosendFromQuery?: boolean;
+}) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const autosent = useRef(false);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [turns]);
+
+  // The ⌘K palette routes here as /chat?q=…; send it once on arrival.
+  useEffect(() => {
+    if (!autosendFromQuery || autosent.current) return;
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q?.trim()) {
+      autosent.current = true;
+      send(q.trim());
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autosendFromQuery]);
 
   async function send(text: string) {
     if (!text.trim() || streaming) return;
@@ -92,21 +109,21 @@ export function ChatWindow() {
         <div className="mx-auto max-w-prose space-y-5">
           {turns.length === 0 ? (
             <div className="space-y-6 pt-2">
-              <p className="text-ink/75 leading-relaxed">
-                I&apos;m Jiya&apos;s AI twin - ask me anything an interviewer would.
-                Every answer is grounded in her resume and GitHub, with sources
-                shown below each response. I can also book a real slot on her
-                calendar.
+              <p className="leading-relaxed text-ivory/80">
+                I&apos;m Jiya&apos;s AI persona - ask me anything an interviewer
+                would. Every answer is grounded in her resume and GitHub, with
+                sources shown below each response. I can also book a real slot
+                on her calendar.
               </p>
               <div className="flex flex-col gap-2">
-                <div className="font-mono text-[11px] uppercase tracking-wider text-sub">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-mist">
                   Try asking
                 </div>
                 {CHAT_SUGGESTIONS.map((s) => (
                   <button
                     key={s.label}
                     onClick={() => send(s.send)}
-                    className="text-left text-sm rounded-lg border border-line bg-base px-3 py-2 text-ink/85 hover:border-butter/50 transition-colors"
+                    className="rounded-lg border border-line bg-night px-3 py-2 text-left text-sm text-ivory/85 transition-colors hover:border-accent/50"
                   >
                     {s.label}
                   </button>
@@ -137,13 +154,13 @@ export function ChatWindow() {
         </div>
       </div>
 
-      <div className="border-t border-line bg-base/60 backdrop-blur px-5 py-4 sm:px-6">
+      <div className="border-t border-line bg-night/60 px-5 py-4 backdrop-blur sm:px-6">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             send(input);
           }}
-          className="mx-auto max-w-prose flex gap-2"
+          className="mx-auto flex max-w-prose gap-2"
         >
           <input
             type="text"
@@ -151,12 +168,12 @@ export function ChatWindow() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={streaming ? "…thinking" : "Ask about Jiya's work, or book a chat"}
             disabled={streaming}
-            className="flex-1 rounded-xl border border-line bg-card px-4 py-3 text-[15px] text-ink placeholder:text-sub outline-none focus:border-butter/60 disabled:opacity-50"
+            className="flex-1 rounded-xl border border-line bg-panel px-4 py-3 text-[15px] text-ivory outline-none placeholder:text-mist focus:border-accent/60 disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={streaming || !input.trim()}
-            className="rounded-xl bg-butter px-5 py-3 text-ink text-sm font-medium disabled:opacity-40 hover:bg-butter/90 transition-colors"
+            className="rounded-xl bg-accent px-5 py-3 text-sm font-medium text-night transition-colors hover:bg-accent-bright disabled:opacity-40"
           >
             Send
           </button>
@@ -179,7 +196,7 @@ function Pending() {
 function Dot({ delay }: { delay: string }) {
   return (
     <span
-      className="inline-block w-1.5 h-1.5 rounded-full bg-sub animate-pulse"
+      className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-mist"
       style={{ animationDelay: delay }}
     />
   );

@@ -1,11 +1,12 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Jiya Singhal - don't just read the resume, interview it";
+export const alt =
+  "Jiya Singhal — I build systems that listen, think and respond.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default async function OpengraphImage() {
+export default function OGImage() {
   return new ImageResponse(
     (
       <div
@@ -16,64 +17,62 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          backgroundColor: "#F6EEDF",
-          color: "#33261A",
+          background: "#080B14",
+          color: "#E8E4D8",
           fontFamily: "Georgia, serif",
+          position: "relative",
         }}
       >
+        {/* moon glow */}
         <div
           style={{
-            fontSize: 30,
-            letterSpacing: 6,
-            textTransform: "uppercase",
-            color: "#7C6B54",
-            fontFamily: "monospace",
-          }}
-        >
-          jiya singhal
-        </div>
-        <div
-          style={{
-            marginTop: 36,
-            fontSize: 84,
-            lineHeight: 1.08,
+            position: "absolute",
+            right: "-120px",
+            top: "-120px",
+            width: "500px",
+            height: "500px",
+            borderRadius: "9999px",
+            background:
+              "radial-gradient(circle, rgba(157,176,255,0.18), transparent 70%)",
             display: "flex",
-            flexDirection: "column",
+          }}
+        />
+        <div
+          style={{
+            fontSize: 26,
+            letterSpacing: "0.35em",
+            color: "#8B94A7",
+            display: "flex",
           }}
         >
-          <span>Don&apos;t just read my resume.</span>
-          <span
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              fontStyle: "italic",
-              color: "#8F5B2E",
-            }}
-          >
-            <span>Interview it.</span>
-            <span
-              style={{
-                marginTop: 10,
-                width: 430,
-                height: 10,
-                borderRadius: 6,
-                backgroundColor: "#E8A87C",
-              }}
-            />
-          </span>
+          JIYA SINGHAL
         </div>
         <div
           style={{
-            marginTop: 48,
-            fontSize: 28,
-            color: "#7C6B54",
-            fontFamily: "sans-serif",
+            marginTop: 30,
+            fontSize: 64,
+            lineHeight: 1.15,
+            maxWidth: 900,
+            display: "flex",
           }}
         >
-          An AI twin that answers like her - with receipts.
+          I build systems that listen, think and respond.
+        </div>
+        <div
+          style={{
+            marginTop: 40,
+            fontSize: 24,
+            color: "#9DB0FF",
+            display: "flex",
+            gap: "40px",
+          }}
+        >
+          <span>74% ↓ latency</span>
+          <span>21,750 benchmark runs</span>
+          <span>open-source PyPI author</span>
         </div>
       </div>
     ),
-    size,
+    { ...size },
   );
 }
