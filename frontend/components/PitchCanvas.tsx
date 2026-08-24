@@ -39,7 +39,7 @@ export function PitchCanvas({ className = "" }: { className?: string }) {
     }
 
     function melody(t: number, x: number): number {
-      // Slow wandering "melody" — sum of detuned sines, normalized ~[-1, 1]
+      // Slow wandering "melody" - sum of detuned sines, normalized ~[-1, 1]
       return (
         0.45 * Math.sin(x * 4.1 + t * 0.00045) +
         0.3 * Math.sin(x * 9.7 - t * 0.0007) +
@@ -54,8 +54,8 @@ export function PitchCanvas({ className = "" }: { className?: string }) {
       const mid = h * 0.55;
       const amp = h * 0.28;
 
-      // Faint Hz gridlines — the analyzer's ruled paper
-      ctx.strokeStyle = "rgba(154, 147, 168, 0.10)";
+      // Faint Hz gridlines - the analyzer's ruled paper
+      ctx.strokeStyle = "rgba(124, 107, 84, 0.14)";
       ctx.lineWidth = 1;
       for (let i = 1; i < 4; i++) {
         const gy = (h / 4) * i;
@@ -77,11 +77,11 @@ export function PitchCanvas({ className = "" }: { className?: string }) {
         const y = mid - 14 + (melody(t, x + 0.33) * 0.5 + pull) * amp * 0.55;
         px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
       }
-      ctx.strokeStyle = "rgba(200, 80, 46, 0.28)";
+      ctx.strokeStyle = "rgba(178, 95, 81, 0.22)";
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Main f0 trace — temple gold
+      // Main f0 trace - butter catching the light
       ctx.beginPath();
       for (let px = 0; px <= w; px += 2) {
         const x = px / w;
@@ -89,7 +89,7 @@ export function PitchCanvas({ className = "" }: { className?: string }) {
         const y = mid + (melody(t, x) * 0.6 + pull) * amp;
         px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
       }
-      ctx.strokeStyle = "rgba(216, 169, 96, 0.9)";
+      ctx.strokeStyle = "rgba(143, 91, 46, 0.75)";
       ctx.lineWidth = 1.75;
       ctx.stroke();
     }

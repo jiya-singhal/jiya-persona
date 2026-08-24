@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import { GitHubIcon } from "../icons";
 import { Section } from "./Section";
+import { COPY, WORK_CARDS } from "@/content/profile";
 import projectsData from "@/content/projects.json";
 
 type Project = {
@@ -21,7 +24,9 @@ type Project = {
   frameworks: string[];
 };
 
-const projects = (projectsData as { projects: Project[] }).projects;
+const byName = new Map(
+  (projectsData as { projects: Project[] }).projects.map((p) => [p.name, p]),
+);
 
 function Chips({ items }: { items: string[] }) {
   const seen = new Set<string>();
@@ -37,7 +42,7 @@ function Chips({ items }: { items: string[] }) {
       {unique.map((s) => (
         <span
           key={s}
-          className="rounded-full border border-veil px-2.5 py-0.5 font-mono text-[11px] text-mist"
+          className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[11px] text-sub"
         >
           {s}
         </span>
@@ -46,113 +51,135 @@ function Chips({ items }: { items: string[] }) {
   );
 }
 
-function FeaturedCard({ p }: { p: Project }) {
+function ProjectCard({
+  index,
+  display,
+  oneLiner,
+  project,
+  offset,
+}: {
+  index: string;
+  display: string;
+  oneLiner: string;
+  project?: Project;
+  offset: boolean;
+}) {
   const [open, setOpen] = useState(false);
+
   return (
-    <article className="rounded-2xl border border-veil bg-curtain p-6 transition-colors hover:border-gold/40">
+    <article className={`border-t border-line pt-6 ${offset ? "md:mt-12" : ""}`}>
       <div className="flex items-start justify-between gap-4">
-        <a
-          href={p.url}
-          target="_blank"
-          rel="noreferrer"
-          className="group inline-flex items-center gap-2"
-        >
-          <h3 className="font-display text-xl text-ivory group-hover:text-gold transition-colors">
-            {p.name}
-          </h3>
-          <GitHubIcon className="h-4 w-4 text-mist group-hover:text-gold transition-colors" />
-        </a>
-        {p.complexity ? (
-          <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-gold/80">
-            {p.complexity}
+        <div>
+          <span className="font-mono text-sm text-sub/60">{index}</span>
+          <a
+            href={project?.url ?? "#"}
+            target="_blank"
+            rel="noreferrer"
+            className="group mt-1 flex items-center gap-2"
+          >
+            <h3 className="font-display text-3xl text-ink transition-colors group-hover:text-butter-deep">
+              {display}
+            </h3>
+            <GitHubIcon className="h-4 w-4 text-sub transition-colors group-hover:text-butter-deep" />
+          </a>
+        </div>
+        {project?.complexity ? (
+          <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-sage">
+            {project.complexity}
           </span>
         ) : null}
       </div>
 
-      <p className="mt-2 text-[15px] leading-relaxed text-ivory/85">{p.tagline}</p>
-      <div className="mt-4">
-        <Chips items={[...p.languages, ...p.frameworks].slice(0, 8)} />
-      </div>
+      <p className="mt-3 max-w-md text-lg leading-relaxed text-sub">{oneLiner}</p>
 
-      <button
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        className="mt-4 inline-flex items-center gap-1.5 text-sm text-gold hover:underline underline-offset-4"
-      >
-        {open ? "Less" : "Architecture & honest tradeoffs"}
-        <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+      {project ? (
+        <>
+          <div className="mt-4">
+            <Chips items={[...project.languages, ...project.frameworks].slice(0, 6)} />
+          </div>
 
-      {open ? (
-        <div className="mt-4 space-y-4 border-t border-veil pt-4 text-sm leading-relaxed">
-          {p.architecture ? (
-            <div>
-              <div className="font-mono text-[11px] uppercase tracking-wider text-mist mb-1">
-                Architecture
-              </div>
-              <p className="text-ivory/80">{p.architecture}</p>
-            </div>
-          ) : null}
-          {p.tradeoffs.length ? (
-            <div>
-              <div className="font-mono text-[11px] uppercase tracking-wider text-mist mb-1">
-                Tradeoffs — auto-extracted from the code, kept honest
-              </div>
-              <ul className="list-disc pl-5 space-y-1 text-mist">
-                {p.tradeoffs.map((t) => (
-                  <li key={t.slice(0, 32)}>{t}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {p.demonstrates ? (
-            <p className="text-gold/90 italic">{p.demonstrates}</p>
-          ) : null}
-        </div>
+          <button
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            className="mt-4 inline-flex items-center gap-1.5 text-sm text-sage underline-offset-4 hover:underline"
+          >
+            {open ? "less" : "architecture & honest tradeoffs"}
+            <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {open ? (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="mt-4 space-y-4 border-l border-line pl-5 text-sm leading-relaxed">
+                  {project.architecture ? (
+                    <div>
+                      <div className="mb-1 font-mono text-[11px] uppercase tracking-wider text-sub">
+                        architecture
+                      </div>
+                      <p className="text-ink/80">{project.architecture}</p>
+                    </div>
+                  ) : null}
+                  {project.tradeoffs.length ? (
+                    <div>
+                      <div className="mb-1 font-mono text-[11px] uppercase tracking-wider text-sub">
+                        tradeoffs - auto-extracted from the code, kept honest
+                      </div>
+                      <ul className="list-disc space-y-1 pl-5 text-sub">
+                        {project.tradeoffs.map((t) => (
+                          <li key={t.slice(0, 32)}>{t}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                  {project.demonstrates ? (
+                    <p className="italic text-sage">{project.demonstrates}</p>
+                  ) : null}
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </>
       ) : null}
     </article>
   );
 }
 
 export function Projects() {
-  const featured = projects.filter((p) => p.featured);
-  const others = projects.filter((p) => !p.featured);
-
   return (
-    <Section id="projects" eyebrow="Projects" title="Public work, honestly summarized">
-      <p className="max-w-prose text-mist -mt-4 mb-10 text-[15px] leading-relaxed">
-        Every card below is auto-generated by the same pipeline that feeds her AI
-        rep: it reads each repo&apos;s actual source and writes a structured summary —
-        including the tradeoffs. Ask the chat about any of them.
+    <Section id="projects" eyebrow={COPY.projects.eyebrow} title={COPY.projects.title}>
+      <p className="-mt-4 mb-10 max-w-prose text-[15px] leading-relaxed text-sub">
+        {COPY.projects.sub}
       </p>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        {featured.map((p) => (
-          <FeaturedCard key={p.name} p={p} />
+      <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
+        {WORK_CARDS.map((card, i) => (
+          <ProjectCard
+            key={card.repo}
+            index={`0${i + 1}`}
+            display={card.display}
+            oneLiner={card.oneLiner}
+            project={byName.get(card.repo)}
+            offset={i === 1}
+          />
         ))}
       </div>
 
-      {others.length ? (
-        <div className="mt-10">
-          <h3 className="font-mono text-xs tracking-[0.22em] uppercase text-mist">
-            Also on GitHub
-          </h3>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {others.map((p) => (
-              <a
-                key={p.name}
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-xl border border-veil px-4 py-3 transition-colors hover:border-gold/40"
-              >
-                <div className="text-sm text-ivory">{p.name}</div>
-                <div className="mt-1 text-xs text-mist line-clamp-2">{p.tagline}</div>
-              </a>
-            ))}
-          </div>
-        </div>
-      ) : null}
+      <div className="mt-14 text-right">
+        <p className="text-[15px] text-sub">{COPY.projects.outro}</p>
+        <Link
+          href="/archive"
+          className="mt-2 inline-flex items-center gap-1.5 text-sm text-sage underline-offset-4 hover:underline"
+        >
+          {COPY.projects.archiveCta}
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </Section>
   );
 }

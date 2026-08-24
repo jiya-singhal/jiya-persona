@@ -18,7 +18,7 @@ export function SourceCitation({ sources }: { sources: Source[] }) {
 
   return (
     <div className="mt-3 flex flex-col gap-2">
-      <div className="font-mono text-[11px] uppercase tracking-wider text-mist">
+      <div className="font-mono text-[11px] uppercase tracking-wider text-sub">
         Sources
       </div>
       <div className="flex flex-wrap gap-1.5">
@@ -28,8 +28,8 @@ export function SourceCitation({ sources }: { sources: Source[] }) {
             onClick={() => setOpenIdx(openIdx === i ? null : i)}
             className={`px-2 py-1 rounded-md text-xs border transition-colors ${
               openIdx === i
-                ? "bg-gold text-stage border-gold"
-                : "bg-curtain text-ivory/80 border-veil hover:border-gold/50"
+                ? "bg-butter text-ink border-butter"
+                : "bg-card text-ink/80 border-line hover:border-butter/50"
             }`}
           >
             <span className="font-mono mr-1.5 opacity-60">{i + 1}</span>
@@ -38,7 +38,7 @@ export function SourceCitation({ sources }: { sources: Source[] }) {
         ))}
       </div>
       {openIdx !== null && (
-        <div className="mt-1 rounded-md border border-veil bg-curtain p-3 text-sm leading-relaxed text-ivory/80 whitespace-pre-wrap">
+        <div className="mt-1 rounded-md border border-line bg-card p-3 text-sm leading-relaxed text-ink/80 whitespace-pre-wrap">
           {sources[openIdx].text}
         </div>
       )}

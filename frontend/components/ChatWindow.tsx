@@ -92,23 +92,23 @@ export function ChatWindow() {
         <div className="mx-auto max-w-prose space-y-5">
           {turns.length === 0 ? (
             <div className="space-y-6 pt-2">
-              <p className="text-ivory/75 leading-relaxed">
-                I&apos;m Jiya&apos;s AI rep — ask me anything an interviewer would.
+              <p className="text-ink/75 leading-relaxed">
+                I&apos;m Jiya&apos;s AI twin - ask me anything an interviewer would.
                 Every answer is grounded in her resume and GitHub, with sources
                 shown below each response. I can also book a real slot on her
                 calendar.
               </p>
               <div className="flex flex-col gap-2">
-                <div className="font-mono text-[11px] uppercase tracking-wider text-mist">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-sub">
                   Try asking
                 </div>
                 {CHAT_SUGGESTIONS.map((s) => (
                   <button
-                    key={s}
-                    onClick={() => send(s)}
-                    className="text-left text-sm rounded-lg border border-veil bg-curtain px-3 py-2 text-ivory/85 hover:border-gold/50 transition-colors"
+                    key={s.label}
+                    onClick={() => send(s.send)}
+                    className="text-left text-sm rounded-lg border border-line bg-base px-3 py-2 text-ink/85 hover:border-butter/50 transition-colors"
                   >
-                    {s}
+                    {s.label}
                   </button>
                 ))}
               </div>
@@ -137,7 +137,7 @@ export function ChatWindow() {
         </div>
       </div>
 
-      <div className="border-t border-veil bg-stage/60 backdrop-blur px-5 py-4 sm:px-6">
+      <div className="border-t border-line bg-base/60 backdrop-blur px-5 py-4 sm:px-6">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -151,12 +151,12 @@ export function ChatWindow() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={streaming ? "…thinking" : "Ask about Jiya's work, or book a chat"}
             disabled={streaming}
-            className="flex-1 rounded-xl border border-veil bg-curtain px-4 py-3 text-[15px] text-ivory placeholder:text-mist outline-none focus:border-gold/60 disabled:opacity-50"
+            className="flex-1 rounded-xl border border-line bg-card px-4 py-3 text-[15px] text-ink placeholder:text-sub outline-none focus:border-butter/60 disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={streaming || !input.trim()}
-            className="rounded-xl bg-kumkum px-5 py-3 text-ivory text-sm font-medium disabled:opacity-40 hover:bg-kumkum/85 transition-colors"
+            className="rounded-xl bg-butter px-5 py-3 text-ink text-sm font-medium disabled:opacity-40 hover:bg-butter/90 transition-colors"
           >
             Send
           </button>
@@ -179,7 +179,7 @@ function Pending() {
 function Dot({ delay }: { delay: string }) {
   return (
     <span
-      className="inline-block w-1.5 h-1.5 rounded-full bg-mist animate-pulse"
+      className="inline-block w-1.5 h-1.5 rounded-full bg-sub animate-pulse"
       style={{ animationDelay: delay }}
     />
   );

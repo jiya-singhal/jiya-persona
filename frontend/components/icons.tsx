@@ -1,4 +1,4 @@
-/** Brand icons — lucide-react removed brand marks, so these are inline SVGs. */
+/** Brand icons - lucide-react removed brand marks, so these are inline SVGs. */
 
 export function GitHubIcon({ className = "" }: { className?: string }) {
   return (

@@ -5,7 +5,7 @@
       "name": "voicequal",
       "url": "https://github.com/jiya-singhal/voicequal",
       "featured": true,
-      "tagline": "Audio-quality library on PyPI — published with its full 200-clip benchmark, not a favourable subset.",
+      "tagline": "Audio-quality library on PyPI - published with its full 200-clip benchmark, not a favourable subset.",
       "problem": "Determining if an audio recording is clean enough to process by analyzing acoustic metrics.",
       "architecture": "The system processes audio by loading files or streaming chunks from a microphone. Audio is divided into overlapping frames. For each frame, it computes acoustic metrics: RMS, spectral flatness, spectral concentration, SNR, and noise floor. These per-frame metrics feed into a `RollingStats` object that maintains historical buffers for noise floor and RMS values, enabling the calculation of temporal variance and aggregated background dBA. Finally, an `assess_quality` function uses these aggregated metrics in an SNR-gated tiered assessment logic to determine a quality tier (excellent, good, fair, or poor) and a descriptive reason. For real-time streaming, a `LiveDetector` adds a hysteresis buffer to stabilize tier changes.",
       "features": [
@@ -93,7 +93,7 @@
       "name": "KV-Cache",
       "url": "https://github.com/jiya-singhal/KV-Cache",
       "featured": true,
-      "tagline": "Distributed key-value cache — consistent hashing, synchronous primary-replica replication, bounded LRU.",
+      "tagline": "Distributed key-value cache - consistent hashing, synchronous primary-replica replication, bounded LRU.",
       "problem": "Provides a high-performance, in-memory key-value store that can handle concurrent requests, offering fast data retrieval and storage with optional time-to-live (TTL) and Least Recently Used (LRU) eviction policies.",
       "architecture": "The KV-Cache server is structured into three main layers: a Network Layer (`tcp_server.py`) utilizing `asyncio` for concurrent TCP connections; a Protocol Layer (`parser.py`, `commands.py`) responsible for parsing custom text-based commands and formatting responses; and a Cache Layer (`store.py`, `eviction.py`) that implements the core key-value storage, Time-To-Live (TTL) management, and a Least Recently Used (LRU) eviction policy. Client requests flow from a TCP socket through the protocol parser to the KV store, and responses are returned accordingly.",
       "features": [
