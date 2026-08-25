@@ -7,7 +7,6 @@ import { EASE } from "@/lib/motion";
 import { Waveform } from "@/components/primitives/Waveform";
 import { Constellation } from "@/components/primitives/Constellation";
 import { MoonGlow } from "@/components/primitives/MoonGlow";
-import { CountUp } from "@/components/primitives/CountUp";
 import { DotBurst } from "@/components/eggs/DotBurst";
 
 export function Hero() {
@@ -43,7 +42,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE, delay: 0.35 }}
-          className="mt-6 max-w-xl text-lg leading-relaxed text-mist"
+          className="mt-6 max-w-xl text-xl leading-relaxed text-mist"
         >
           {COPY.hero.sub}
         </motion.p>
@@ -81,29 +80,32 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: EASE, delay: 0.85 }}
-          className="mt-20 grid max-w-2xl grid-cols-1 gap-8 sm:grid-cols-3"
+          className="mt-20 grid max-w-4xl grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 lg:grid-cols-5"
         >
           {HERO_STATS.map((s) => {
             const number = (
-              <CountUp
-                value={s.value}
-                format={(n) =>
-                  `${s.prefix ?? ""}${Math.round(n).toLocaleString("en-US")}${s.suffix ?? ""}`
-                }
-                className="font-mono text-3xl text-ivory"
-              />
+              <span className="font-mono text-2xl text-ivory">{s.display}</span>
             );
             return (
               <div key={s.label}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd>
                   {s.egg === "dotburst" ? <DotBurst>{number}</DotBurst> : number}
-                  <p className="mt-1.5 text-sm leading-snug text-mist">{s.label}</p>
+                  <p className="mt-1.5 text-base leading-snug text-mist">{s.label}</p>
                 </dd>
               </div>
             );
           })}
         </motion.dl>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: EASE, delay: 1.1 }}
+          className="mt-6 font-mono text-sm text-faint"
+        >
+          {COPY.hero.statsNote}
+        </motion.p>
       </div>
     </section>
   );

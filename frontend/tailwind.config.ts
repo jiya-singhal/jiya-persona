@@ -24,6 +24,7 @@ const config: Config = {
         accent: v("accent"),
         "accent-bright": v("accent-bright"),
         silver: v("silver"),
+        gold: v("gold"),
         good: v("good"),
         warn: v("warn"),
         poor: v("poor"),

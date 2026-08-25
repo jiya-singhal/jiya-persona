@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { ChatWindow } from "@/components/ChatWindow";
 
 export const metadata: Metadata = {
-  title: "Jiya Singhal — AI persona",
+  title: "Jiya Singhal · AI persona",
   description:
     "Talk to Jiya's AI persona. Grounded in her resume and GitHub, with sources cited under every answer.",
 };

@@ -17,7 +17,7 @@ export function MoonGlow({ className }: { className?: string }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(600px 400px at 70% 20%, rgb(var(--accent) / 0.10), transparent 70%)",
+            "radial-gradient(700px 480px at 82% 22%, rgb(var(--accent) / 0.18), transparent 70%)",
         }}
       />
       {/* the moon itself */}
@@ -26,11 +26,12 @@ export function MoonGlow({ className }: { className?: string }) {
         onClick={toggle}
         aria-label={isTwoAM ? "Leave 2 AM mode" : "A small moon. Click it."}
         title="☾"
-        className="absolute right-[12%] top-[14%] h-8 w-8 rounded-full transition-transform duration-500 hover:scale-110 focus-visible:scale-110"
+        className="absolute right-[8%] top-[12%] h-14 w-14 rounded-full transition-transform duration-500 hover:scale-110 focus-visible:scale-110 sm:h-20 sm:w-20"
         style={{
           background:
-            "radial-gradient(circle at 38% 35%, rgb(var(--ivory) / 0.95), rgb(var(--ivory) / 0.55) 55%, rgb(var(--ivory) / 0.15) 75%, transparent 100%)",
-          boxShadow: "0 0 32px 6px rgb(var(--ivory) / 0.14)",
+            "radial-gradient(circle at 36% 34%, rgb(255 253 246 / 1), rgb(var(--ivory) / 0.85) 55%, rgb(var(--ivory) / 0.35) 80%, transparent 100%)",
+          boxShadow:
+            "0 0 40px 10px rgb(var(--ivory) / 0.30), 0 0 120px 40px rgb(var(--accent) / 0.18)",
         }}
       />
     </div>

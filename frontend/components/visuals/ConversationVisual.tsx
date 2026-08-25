@@ -41,7 +41,7 @@ export function ConversationVisual() {
       >
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">jiya ai</p>
         <p className="mt-1 text-sm leading-relaxed text-ivory">
-          Probably the cross-platform mic failure — four plausible causes, each ruled
+          Probably the cross-platform mic failure: four plausible causes, each ruled
           out with source-level proof…{" "}
           <span className="text-mist">(grounded in her resume · sources cited)</span>
         </p>

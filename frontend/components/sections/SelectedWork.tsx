@@ -44,10 +44,10 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
       <article className="group grid items-start gap-10 lg:grid-cols-2">
         {/* words */}
         <div className={flip ? "lg:order-2" : ""}>
-          <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-mist">
+          <p className="font-mono text-xs uppercase tracking-[0.24em] text-mist">
             {cs.eyebrow}
           </p>
-          <h3 className="mt-3 font-serif text-2xl font-medium leading-snug text-ivory sm:text-3xl">
+          <h3 className="mt-3 font-serif text-3xl font-medium leading-snug text-ivory sm:text-4xl">
             {cs.headline}
           </h3>
 
@@ -66,21 +66,21 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
             </div>
           )}
 
-          <dl className="mt-8 space-y-5 text-[15px] leading-relaxed">
+          <dl className="mt-8 space-y-5 text-base leading-relaxed">
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 Problem
               </dt>
               <dd className="mt-1.5 text-mist">{cs.problem}</dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 Investigation
               </dt>
               <dd className="mt-1.5 text-mist">{cs.investigation}</dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 Built
               </dt>
               <dd className="mt-2 flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 Result
               </dt>
               <dd className="mt-1.5 text-ivory">{cs.result}</dd>
@@ -105,7 +105,7 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
           {/* another layer of technical information, revealed on hover/focus */}
           <div
             tabIndex={0}
-            className="mt-6 max-h-0 overflow-hidden rounded-lg border border-transparent text-sm leading-relaxed text-mist opacity-0 transition-all duration-500 ease-out group-hover:max-h-48 group-hover:border-line group-hover:opacity-100 focus:max-h-48 focus:border-line focus:opacity-100"
+            className="mt-6 max-h-0 overflow-hidden rounded-lg border border-transparent text-base leading-relaxed text-mist opacity-0 transition-all duration-500 ease-out group-hover:max-h-48 group-hover:border-line group-hover:opacity-100 focus:max-h-48 focus:border-line focus:opacity-100"
           >
             <p className="p-4">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-silver">

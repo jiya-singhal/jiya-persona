@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { NOTES } from "@/content/profile";
 
 export const metadata: Metadata = {
-  title: "Jiya Singhal — notes",
+  title: "Jiya Singhal · notes",
   description: "Half-finished thoughts, kept honest.",
 };
 
@@ -21,7 +21,7 @@ export default function NotesPage() {
         </h1>
         <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-mist">
           Titles first, essays later. If one of these looks interesting, ask my AI
-          persona about it — or ask me directly.
+          persona about it, or ask me directly.
         </p>
 
         <ol className="mt-12 max-w-prose border-t border-line">

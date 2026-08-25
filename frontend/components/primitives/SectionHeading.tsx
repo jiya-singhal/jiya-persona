@@ -35,7 +35,7 @@ export function SectionHeading({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={viewportOnce}
         transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-        className="mt-3 font-mono text-xs uppercase tracking-[0.22em] text-accent"
+        className="mt-3 font-mono text-sm uppercase tracking-[0.22em] text-accent"
       >
         {eyebrow}
       </motion.p>
@@ -46,8 +46,8 @@ export function SectionHeading({
         transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
         className={
           serif
-            ? "mt-3 font-serif text-3xl font-medium leading-tight text-ivory sm:text-4xl"
-            : "mt-3 text-3xl font-semibold leading-tight tracking-tight text-ivory sm:text-4xl"
+            ? "mt-3 font-serif text-4xl font-medium leading-tight text-ivory sm:text-5xl"
+            : "mt-3 text-4xl font-semibold leading-tight tracking-tight text-ivory sm:text-5xl"
         }
       >
         {title}

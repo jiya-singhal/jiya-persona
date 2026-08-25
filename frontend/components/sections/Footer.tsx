@@ -24,19 +24,37 @@ export function Footer() {
         </button>
 
         <Reveal>
-          <p className="mt-8 font-serif text-2xl italic text-ivory">{COPY.footer.still}</p>
+          <p className="mt-8 font-serif text-3xl italic text-ivory sm:text-4xl">
+            {COPY.footer.still}
+          </p>
         </Reveal>
 
-        <Reveal delay={0.15}>
+        <Reveal delay={0.1}>
+          <p className="mx-auto mt-5 max-w-prose text-lg text-mist">
+            {COPY.footer.fields}{" "}
+            <span className="text-ivory">{COPY.footer.listening}</span>
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.2}>
           <Link
             href="/chat"
-            className="mt-6 inline-block rounded-full border border-accent/40 px-6 py-3 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:border-accent hover:bg-accent/10"
+            className="mt-8 inline-block rounded-full border border-accent/40 px-6 py-3 font-mono text-sm uppercase tracking-[0.16em] text-accent transition-colors hover:border-accent hover:bg-accent/10"
           >
             {COPY.footer.ask}
           </Link>
+          <p className="mt-4 text-sm text-mist">{COPY.footer.askAside}</p>
         </Reveal>
 
-        <p className="mt-14 text-sm text-mist">{COPY.footer.closing}</p>
+        <p className="mt-14 text-sm text-mist">
+          {COPY.footer.resumePrefix}{" "}
+          <a
+            href={LINKS.resume}
+            className="text-accent underline-offset-4 transition-colors hover:text-accent-bright hover:underline"
+          >
+            {COPY.footer.resumeCta}
+          </a>
+        </p>
 
         <nav className="mt-8 flex flex-wrap items-center justify-center gap-6">
           {[

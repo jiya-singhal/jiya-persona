@@ -6,8 +6,8 @@ import { ActivityFeed } from "@/components/ActivityFeed";
 import projectsData from "@/content/projects.json";
 
 export const metadata: Metadata = {
-  title: "Jiya Singhal — experiments",
-  description: "Everything public, honestly summarized — the full project index.",
+  title: "Jiya Singhal · experiments",
+  description: "Everything public, honestly summarized: the full project index.",
 };
 
 type Project = {
@@ -33,7 +33,7 @@ export default function ArchivePage() {
         <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-mist">
           The complete works, including the early questionable ones. Each entry
           is auto-generated from the repo&apos;s actual source by the same pipeline
-          that feeds my AI persona — tradeoffs included.
+          that feeds my AI persona, tradeoffs included.
         </p>
 
         <ol className="mt-12 border-t border-line">

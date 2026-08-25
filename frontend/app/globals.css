@@ -7,33 +7,35 @@
  * (bg-night/60 etc.). 2 AM mode swaps the whole set via html.two-am.
  */
 :root {
-  --night: 8 11 20; /* #080B14 page base */
-  --deep: 13 19 33; /* #0D1321 alternate section bg */
-  --panel: 17 24 39; /* #111827 cards, raised surfaces */
-  --line: 35 45 66; /* hairline borders */
-  --ivory: 232 228 216; /* primary text — soft, never sterile white */
-  --mist: 139 148 167; /* secondary text; the readable-text floor */
-  --faint: 91 100 116; /* decorative only — never carries meaning */
-  --accent: 157 176 255; /* moonlit periwinkle */
-  --accent-bright: 183 197 255;
-  --silver: 168 176 189; /* pocket-watch details */
-  --good: 127 209 174;
-  --warn: 224 192 126;
-  --poor: 224 139 139;
+  --night: 18 25 43; /* #12192B page base — deep ink blue, not black */
+  --deep: 24 33 54; /* alternate section bg */
+  --panel: 32 42 66; /* cards, raised surfaces */
+  --line: 55 67 95; /* hairline borders */
+  --ivory: 241 238 230; /* primary text — soft, never sterile white */
+  --mist: 176 184 202; /* secondary text; the readable-text floor */
+  --faint: 124 134 155; /* decorative only — never carries meaning */
+  --accent: 165 183 255; /* moonlit periwinkle */
+  --accent-bright: 191 203 255;
+  --silver: 191 198 211; /* pocket-watch details */
+  --gold: 216 186 138; /* warm accent — ghungroo brass, stage light */
+  --good: 134 216 180;
+  --warn: 228 197 132;
+  --poor: 230 147 147;
 }
 
 html.two-am {
-  --night: 4 6 12;
-  --deep: 7 11 20;
-  --panel: 10 15 26;
-  --line: 26 34 51;
-  --ivory: 217 214 204;
-  --mist: 118 127 145;
-  --accent: 135 152 224;
-  --accent-bright: 160 176 240;
+  --night: 9 13 24;
+  --deep: 14 20 34;
+  --panel: 19 26 43;
+  --line: 38 48 70;
+  --ivory: 229 226 217;
+  --mist: 157 165 183;
+  --accent: 148 165 235;
+  --accent-bright: 172 187 246;
 }
 
 html {
+  font-size: 17px; /* readable base — everything rem-scaled lifts with it */
   scroll-behavior: smooth;
   scroll-padding-top: 4.5rem;
   color-scheme: dark;
@@ -62,7 +64,7 @@ body::after {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.35;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='%23E8E4D8'%3E%3Ccircle cx='23' cy='31' r='0.7' opacity='0.35'/%3E%3Ccircle cx='71' cy='13' r='0.5' opacity='0.28'/%3E%3Ccircle cx='118' cy='47' r='0.8' opacity='0.4'/%3E%3Ccircle cx='166' cy='22' r='0.5' opacity='0.25'/%3E%3Ccircle cx='209' cy='58' r='0.7' opacity='0.32'/%3E%3Ccircle cx='38' cy='84' r='0.5' opacity='0.24'/%3E%3Ccircle cx='97' cy='95' r='0.6' opacity='0.3'/%3E%3Ccircle cx='151' cy='79' r='0.5' opacity='0.22'/%3E%3Ccircle cx='197' cy='104' r='0.9' opacity='0.42'/%3E%3Ccircle cx='16' cy='128' r='0.6' opacity='0.3'/%3E%3Ccircle cx='63' cy='141' r='0.8' opacity='0.36'/%3E%3Ccircle cx='122' cy='131' r='0.5' opacity='0.24'/%3E%3Ccircle cx='176' cy='150' r='0.6' opacity='0.28'/%3E%3Ccircle cx='227' cy='137' r='0.5' opacity='0.22'/%3E%3Ccircle cx='42' cy='183' r='0.7' opacity='0.34'/%3E%3Ccircle cx='90' cy='201' r='0.5' opacity='0.26'/%3E%3Ccircle cx='139' cy='188' r='0.9' opacity='0.4'/%3E%3Ccircle cx='187' cy='214' r='0.6' opacity='0.3'/%3E%3Ccircle cx='230' cy='192' r='0.5' opacity='0.24'/%3E%3Ccircle cx='12' cy='222' r='0.6' opacity='0.28'/%3E%3C/g%3E%3Cg fill='%239DB0FF'%3E%3Ccircle cx='143' cy='16' r='1' opacity='0.35'/%3E%3Ccircle cx='31' cy='157' r='1.1' opacity='0.3'/%3E%3Ccircle cx='205' cy='170' r='1' opacity='0.32'/%3E%3C/g%3E%3C/svg%3E");
 }
 

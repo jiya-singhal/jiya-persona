@@ -27,7 +27,7 @@ export function Toolbox() {
       setCat(false);
       requestAnimationFrame(() => setCat(true));
     } else {
-      out = TERMINAL_COMMANDS[cmd] ?? [`command not found: ${cmd} — try 'help'`];
+      out = TERMINAL_COMMANDS[cmd] ?? [`command not found: ${cmd}. try 'help'`];
     }
     setLines((prev) => [
       ...prev,

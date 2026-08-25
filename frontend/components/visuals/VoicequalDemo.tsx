@@ -40,7 +40,7 @@ export function VoicequalDemo() {
     } catch {
       setState({
         phase: "idle",
-        error: "Couldn't decode that file — try a wav, mp3 or m4a.",
+        error: "Couldn't decode that file. Try a wav, mp3 or m4a.",
       });
     }
   }, []);
@@ -81,7 +81,7 @@ export function VoicequalDemo() {
         if (rec.state !== "inactive") rec.stop();
       }, 5000);
     } catch {
-      setState({ phase: "idle", error: "Microphone unavailable — drop a file instead." });
+      setState({ phase: "idle", error: "Microphone unavailable. Drop a file instead." });
     }
   }, [analyzeArrayBuffer]);
 
@@ -119,7 +119,7 @@ export function VoicequalDemo() {
                 ≋
               </span>
               <span className="text-sm text-ivory">
-                Drop an audio file here — can software hear a bad recording?
+                Drop an audio file here. Can software hear a bad recording?
               </span>
               <span className="font-mono text-xs text-mist">
                 click to browse{canRecord ? " · or" : ""}
@@ -168,7 +168,7 @@ export function VoicequalDemo() {
               label="LEVEL"
               value={
                 state.result.levelDb === -Infinity
-                  ? "—"
+                  ? "n/a"
                   : `${state.result.levelDb.toFixed(1)} dBFS`
               }
               note="A-weighted approx"
@@ -193,7 +193,7 @@ export function VoicequalDemo() {
       )}
 
       <p className="mt-4 text-xs leading-relaxed text-mist">
-        Analyzed in your browser — nothing is uploaded. This is a browser
+        Analyzed in your browser; nothing is uploaded. This is a browser
         re-implementation of{" "}
         <a
           href={LINKS.pypi}

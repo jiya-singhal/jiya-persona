@@ -33,7 +33,7 @@ export function DotBurst({ children }: { children: React.ReactNode }) {
       onFocus={() => setBurst(true)}
       onBlur={() => setBurst(false)}
       tabIndex={0}
-      aria-label="21,750 benchmark runs — imagine each of these dots times about a hundred"
+      aria-label="21,750 benchmark runs. Imagine each of these dots times about a hundred"
     >
       {children}
       {!reduced && (

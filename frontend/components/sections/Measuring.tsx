@@ -17,12 +17,15 @@ export function Measuring() {
           {MEASURING.map((m, i) => (
             <Reveal key={m.thing} delay={i * 0.06} className="bg-night">
               <div className="h-full px-6 py-8">
-                <h3 className="text-[15px] font-semibold text-ivory">{m.thing}</h3>
-                <p className="mt-2 font-mono text-sm text-accent">{m.detail}</p>
+                <h3 className="text-lg font-semibold text-ivory">{m.thing}</h3>
+                <p className="mt-2 font-mono text-base text-accent">{m.detail}</p>
               </div>
             </Reveal>
           ))}
         </div>
+        <Reveal>
+          <p className="mt-6 font-mono text-sm text-faint">{COPY.measuring.tagline}</p>
+        </Reveal>
       </div>
     </section>
   );

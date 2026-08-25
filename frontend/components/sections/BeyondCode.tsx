@@ -16,7 +16,7 @@ export function BeyondCode() {
         <p className="font-mono text-sm tracking-[0.3em] text-faint" aria-hidden="true">
           {COPY.beyond.number}
         </p>
-        <p className="mt-3 font-mono text-xs uppercase tracking-[0.22em] text-accent">
+        <p className="mt-3 font-mono text-sm uppercase tracking-[0.22em] text-gold">
           {COPY.beyond.eyebrow}
         </p>
 
@@ -36,11 +36,11 @@ export function BeyondCode() {
           </Reveal>
           <Reveal delay={0.35}>
             <div className="max-w-prose">
-              <p className="text-lg leading-relaxed text-mist">{COPY.beyond.line}</p>
+              <p className="text-xl leading-relaxed text-mist">{COPY.beyond.line}</p>
               <p className="mt-6 font-mono text-sm uppercase tracking-[0.2em] text-ivory">
                 {COPY.beyond.credential}
               </p>
-              <p className="mt-1 font-serif text-2xl text-silver" lang="hi">
+              <p className="mt-1 font-serif text-2xl text-gold" lang="hi">
                 घुंघरू · rhythm / timing / precision
               </p>
             </div>
@@ -51,7 +51,7 @@ export function BeyondCode() {
         <Reveal delay={0.5}>
           <div className="mt-20 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6">
             {COPY.beyond.quiet.map((q) => (
-              <span key={q} className="font-mono text-xs tracking-[0.14em] text-mist">
+              <span key={q} className="font-mono text-sm tracking-[0.14em] text-mist">
                 {q}
               </span>
             ))}
@@ -70,7 +70,7 @@ function GhungrooArt() {
   return (
     <svg
       viewBox="0 0 160 120"
-      className="h-36 w-48 text-silver"
+      className="h-36 w-48 text-gold"
       fill="none"
       stroke="currentColor"
       strokeWidth="1"

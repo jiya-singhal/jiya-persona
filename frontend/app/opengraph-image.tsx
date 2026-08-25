@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 export const alt =
-  "Jiya Singhal — I build systems that listen, think and respond.";
+  "Jiya Singhal · I like figuring out why things behave the way they do.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -17,7 +17,7 @@ export default function OGImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#080B14",
+          background: "#12192B",
           color: "#E8E4D8",
           fontFamily: "Georgia, serif",
           position: "relative",
@@ -56,7 +56,7 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          I build systems that listen, think and respond.
+          I like figuring out why things behave the way they do.
         </div>
         <div
           style={{

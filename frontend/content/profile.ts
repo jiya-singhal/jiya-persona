@@ -28,11 +28,12 @@ export const COPY = {
   },
   hero: {
     name: "JIYA SINGHAL",
-    headline: "I build systems that listen, think and respond.",
-    sub: "Software engineer working across voice, AI, backend systems and product engineering.",
-    current: "currently building voice experiences @ Sing One Song",
-    ctaPrimary: "Explore my work",
-    ctaSecondary: "Talk to my AI ↗",
+    headline: "I like figuring out why things behave the way they do.",
+    sub: "I build voice, AI and backend systems, usually somewhere between making something work and understanding why it didn't.",
+    current: "Software Engineer · Voice / AI / Systems · currently building @ Sing One Song",
+    ctaPrimary: "See what I've been building",
+    ctaSecondary: "Ask my AI persona ↗",
+    statsNote: "numbers are nicer when they mean something.",
   },
   work: {
     number: "01",
@@ -44,12 +45,13 @@ export const COPY = {
     eyebrow: "how I think",
     title: "I like problems where the first explanation is usually wrong.",
     body:
-      "I build voice, AI and backend systems, and I tend to enjoy the part where something is slow, unreliable or behaving strangely — and you have to figure out why. My work has taken me from audio pipelines and model benchmarking to retrieval systems, mobile debugging and distributed infrastructure.",
+      "I build voice, AI and backend systems, and I especially like the part where something is slow, flaky or just weird, and you get to find out why.",
   },
   measuring: {
     number: "03",
     eyebrow: "instead of a skills section",
     title: "Things I like measuring.",
+    tagline: "Measured, because vibes were inconclusive.",
   },
   beyond: {
     number: "04",
@@ -63,25 +65,41 @@ export const COPY = {
     number: "05",
     eyebrow: "AI Jiya",
     title: "An AI that can actually answer questions about me.",
-    sub: "Not a bolted-on chatbot — the persona is itself a portfolio project: RAG over my resume and repos, MMR retrieval, and grounding tested with adversarial prompts.",
+    sub: "The persona is itself a portfolio project: RAG over my resume and repos, tested with adversarial prompts.",
   },
   footer: {
-    still: "still curious?",
+    still: "Got a problem worth thinking about?",
+    fields: "Voice systems. AI. Backend. Strange bugs. Good questions.",
+    listening: "I'm listening.",
     ask: "Ask Jiya anything",
-    closing: "Let's build something worth listening to.",
+    askAside: "Or ask my AI first. It has read more of my GitHub than most people should.",
+    resumePrefix: "Need the formal version?",
+    resumeCta: "Less personal, more PDF ↗",
   },
 } as const;
 
 export const HERO_STATS: {
-  value: number;
-  prefix?: string;
-  suffix?: string;
+  display: string;
   label: string;
   egg?: "dotburst";
 }[] = [
-  { value: 74, suffix: "%", label: "lower onboarding latency" },
-  { value: 21750, label: "benchmark runs", egg: "dotburst" },
-  { value: 75, label: "tests in my open-source PyPI library" },
+  { display: "57s → 15s", label: "voice onboarding latency" },
+  { display: "21,750", label: "benchmark runs", egg: "dotburst" },
+  { display: "89% → 96%", label: "retrieval relevance" },
+  { display: "75 tests", label: "open-source voicequal" },
+  { display: "top ~5%", label: "LeetCode Knight" },
+];
+
+/** Quick-fire personality cards — brief §10, lightly playful, never meme-y. */
+export const BRAIN: { q: string; a: string; egg?: "benchmark" }[] = [
+  { q: "when something breaks", a: "observe → isolate → measure → fix" },
+  { q: "favourite question", a: "but why?" },
+  { q: "before optimising", a: "measure it" },
+  { q: "after optimising", a: "measure it again" },
+  { q: "comfort zone", a: "problems with unclear causes" },
+  { q: "suspicious phrase", a: "“works on my machine”" },
+  { q: "weak signal", a: "probably fine.", egg: "benchmark" },
+  { q: "rabbit-hole tolerance", a: "concerningly high" },
 ];
 
 export type CaseStudy = {
@@ -104,28 +122,28 @@ export const CASE_STUDIES: CaseStudy[] = [
     headline: "Making a voice onboarding flow feel instant.",
     metric: { from: "57 sec", to: "15 sec", delta: "74% lower p50 latency" },
     problem:
-      "Every new user hit an onboarding pipeline whose serialized execution created nearly a minute of waiting — on the very first thing they experience.",
+      "New users waited almost a minute inside voice onboarding, on the very first thing they experience.",
     investigation:
-      "Traced the wait to independent I/O-bound steps running one after another: audio preprocessing, silence handling, uploads and orchestration all queuing politely behind each other.",
+      "Nothing was slow. Independent I/O steps were just queuing politely behind each other.",
     built: ["FastAPI", "Firebase", "Cloud Run", "asyncio", "Silero VAD", "Cloud Tasks"],
     result:
-      "Concurrent orchestration with asyncio.gather(), VAD-trimmed silence and retry-safe (idempotent) handlers — p50 latency 57s → 15s on the flow every new user hits first.",
+      "Concurrent orchestration, VAD-trimmed silence, retry-safe handlers: p50 latency 57s → 15s.",
     hoverDetail:
-      "Every handler survives Cloud Tasks redelivery: same input → same end state, no double side-effects. p50/p95 probes shipped with the fix, so the improvement is monitored, not remembered.",
+      "Every handler survives Cloud Tasks redelivery: same input, same end state, no double side-effects. p50/p95 probes shipped with the fix, so the win stays measured.",
   },
   {
     id: "voicequal",
     eyebrow: "OPEN SOURCE · PYTHON / PYPI",
     headline: "How do you decide whether a recording is actually usable?",
     problem:
-      "Voice apps ingest audio that is sometimes unusable — too noisy, too quiet, clipped. Rejecting good recordings punishes users; accepting bad ones wastes every downstream step.",
+      "Reject good recordings and you punish users. Accept bad ones and you waste every downstream step.",
     investigation:
-      "Framed it as measurement: SNR, spectral flatness, temporal variance and background level per frame, rolled up with hysteresis for live streams — then benchmarked against a labeled test set instead of trusting my own ears.",
+      "Turned “sounds bad” into numbers (SNR, spectral flatness, background level), then benchmarked against 200 labeled clips instead of my own ears.",
     built: ["Python", "numpy / scipy", "rolling stats", "hysteresis", "CLI", "PyPI"],
     result:
-      "voicequal — an audio-quality library published with its full 200-clip benchmark: 46% exact-tier accuracy, 82% within one tier. The honest number shipped; the flattering subset didn't.",
+      "voicequal, on PyPI with its full benchmark: 46% exact-tier, 82% within one tier. The honest number shipped.",
     hoverDetail:
-      "The weak spot is documented too: spectral SNR reads high for loud vocals buried in noise. v0.2.0 plans VAD-gated SNR to fix exactly that. A benchmark you can't trust is decoration.",
+      "The weak spot is documented too: spectral SNR overrates loud vocals buried in noise. v0.2.0 plans VAD-gated SNR to fix exactly that.",
     links: [
       { label: "PyPI", url: "https://pypi.org/project/voicequal/" },
       { label: "GitHub", url: "https://github.com/jiya-singhal/voicequal" },
@@ -136,28 +154,28 @@ export const CASE_STUDIES: CaseStudy[] = [
     eyebrow: "AI SYSTEMS · RAG",
     headline: "An AI that can actually answer questions about me.",
     problem:
-      "Portfolio chatbots usually hallucinate their owner's accomplishments. Mine had to answer only with things I can defend — it speaks to recruiters on my behalf.",
+      "Portfolio chatbots love inventing their owner's accomplishments. Mine speaks to recruiters, so it only says things I can defend.",
     investigation:
-      "Grounded generation in a corpus built from my resume and auto-summarized GitHub repo cards; tuned retrieval with MMR so five near-identical chunks don't crowd out the one useful different one.",
+      "Grounded it in my resume and auto-summarized repo cards, with MMR retrieval so near-identical chunks don't crowd out the useful one.",
     built: ["FastAPI", "ChromaDB", "Voyage embeddings", "MMR retrieval", "LLM-as-judge", "Vapi voice"],
     result:
-      "A voice/chat persona whose grounding is tested with 20+ adversarial prompts written to break it — an eval designed by an attacker, not a fan. You're on its portfolio right now.",
+      "A voice + chat persona tested with 20+ adversarial prompts written to break it. You're on its portfolio right now.",
     hoverDetail:
-      "The judge rubric scores groundedness against retrieved sources; the eval harness runs as a gate, and the latest scores are committed to the repo. Ask it something — sources are cited under every answer.",
+      "An LLM judge scores every answer for groundedness against retrieved sources, and the eval runs as a gate. Ask it something: sources are cited under every answer.",
   },
   {
     id: "kv-cache",
     eyebrow: "DISTRIBUTED SYSTEMS",
     headline: "Three nodes, one consistent view.",
     problem:
-      "A cache is easy until it's distributed: keys must survive nodes joining and leaving, reads must agree, and memory can't grow forever.",
+      "A cache is easy until it's distributed: keys must survive nodes leaving, reads must agree, memory can't grow forever.",
     investigation:
-      "Chose consistent hashing so keys remap minimally on topology change, and synchronous primary-replica replication — paying write latency for strong consistency, the right trade for a read-heavy cache.",
+      "Consistent hashing so keys barely move when topology changes; synchronous replication, paying write latency for reads that always agree.",
     built: ["consistent hashing", "primary-replica replication", "TTL", "LRU eviction"],
     result:
-      "A three-node sharded KV cache with strong consistency, TTL expiry and bounded LRU memory — proof the systems instinct isn't limited to AI pipelines.",
+      "Three nodes, strong consistency, TTL expiry, bounded LRU memory. The systems instinct isn't limited to AI.",
     hoverDetail:
-      "Strong consistency via synchronous replication was a deliberate cost: every write waits for the replica. For a cache serving reads, that trade-off is the right one — and I can argue it.",
+      "Every write waits for the replica, a deliberate cost. For a read-heavy cache that trade is the right one, and I can argue it.",
     links: [{ label: "GitHub", url: "https://github.com/jiya-singhal/KV-Cache" }],
   },
 ];
@@ -166,27 +184,27 @@ export const PHILOSOPHY: { title: string; body: string }[] = [
   {
     title: "Make the invisible visible first.",
     body:
-      "A renderer and an engine each kept their own cursor, integrating error independently — riders drifted mid-air for weeks because nobody could see the gap. A debug overlay surfacing |visual − engine| made it real: worst-case desync 53px → 16px after reconciliation.",
+      "Two systems each kept their own cursor, and riders drifted mid-air for weeks. A debug overlay made the gap visible: worst-case desync fell 53px → 16px.",
   },
   {
-    title: "Diagnose differentially, prove at the source.",
+    title: "Diagnose differentially.",
     body:
-      "Mic capture died across a WebView boundary on both iOS and Android. Four plausible causes; each eliminated with an observation that split the hypothesis space, until source-level proof remained: native audio state outliving the WebView that configured it.",
+      "One dead microphone, four plausible causes. Each eliminated with an observation that split the hypothesis space, until only the real one survived.",
   },
   {
     title: "Orphaned state needs a reaper.",
     body:
-      "Any object whose only destroyer is an animation callback will eventually leak — kill the animation and the cleanup dies with it. A watchdog with a hard deadline reaps whatever the happy path forgot, and a regression test keeps it honest.",
+      "If cleanup only happens in an animation callback, killing the animation kills the cleanup. A watchdog with a hard deadline reaps what the happy path forgot.",
   },
   {
     title: "A check nobody runs is decoration.",
     body:
-      "Two repos mirrored generated code with a drift check that existed but wasn't in CI — so they drifted anyway. Git archaeology restored the canonical version; wiring the check into CI made drift impossible instead of merely detectable.",
+      "Two repos had a drift check that wasn't wired into CI, so they drifted. Putting it in CI made drift impossible instead of merely detectable.",
   },
   {
     title: "Blast radius before cleverness.",
     body:
-      "The input-lag fix shipped behind URL-toggled A/B variants with a p50/p95 probe, scoped so nine other games on the shared runtime stayed untouched. Measure before, measure after, and make the worst case boring.",
+      "The input-lag fix shipped behind an A/B toggle with p50/p95 probes, scoped so nine other games stayed untouched. Make the worst case boring.",
   },
 ];
 
