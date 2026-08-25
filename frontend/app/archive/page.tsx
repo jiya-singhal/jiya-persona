@@ -6,8 +6,8 @@ import { ActivityFeed } from "@/components/ActivityFeed";
 import projectsData from "@/content/projects.json";
 
 export const metadata: Metadata = {
-  title: "Jiya Singhal - archive",
-  description: "Everything public, honestly summarized - the full project index.",
+  title: "Jiya Singhal · experiments",
+  description: "Everything public, honestly summarized: the full project index.",
 };
 
 type Project = {
@@ -24,16 +24,16 @@ export default function ArchivePage() {
     <>
       <Header />
       <main className="mx-auto w-full max-w-shell px-6 pb-24 pt-16">
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-sub">
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">
           the full index
         </p>
-        <h1 className="mt-3 font-display text-4xl tracking-tight text-ink sm:text-5xl">
-          Archive.
+        <h1 className="mt-3 font-serif text-4xl font-medium text-ivory sm:text-5xl">
+          Experiments.
         </h1>
-        <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-sub">
+        <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-mist">
           The complete works, including the early questionable ones. Each entry
           is auto-generated from the repo&apos;s actual source by the same pipeline
-          that feeds my AI twin - tradeoffs included.
+          that feeds my AI persona, tradeoffs included.
         </p>
 
         <ol className="mt-12 border-t border-line">
@@ -45,19 +45,19 @@ export default function ArchivePage() {
                 rel="noreferrer"
                 className="group grid grid-cols-[3rem_1fr_auto] items-baseline gap-4 py-4 md:grid-cols-[3rem_16rem_1fr_auto]"
               >
-                <span className="font-mono text-sm text-sub/60">
+                <span className="font-mono text-sm text-faint">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <span className="font-display text-xl text-ink transition-colors group-hover:text-butter-deep">
+                  <span className="font-serif text-xl text-ivory transition-colors group-hover:text-accent">
                     {p.name}
                   </span>
-                  <ExternalLink className="h-3.5 w-3.5 text-sub opacity-0 transition-opacity group-hover:opacity-100" />
+                  <ExternalLink className="h-3.5 w-3.5 text-mist opacity-0 transition-opacity group-hover:opacity-100" />
                 </span>
-                <span className="col-span-3 line-clamp-2 text-sm text-sub md:col-span-1">
+                <span className="col-span-3 line-clamp-2 text-sm text-mist md:col-span-1">
                   {p.tagline}
                 </span>
-                <span className="hidden font-mono text-[11px] text-sage md:inline">
+                <span className="hidden font-mono text-[11px] text-accent md:inline">
                   {p.languages[0] ?? ""}
                 </span>
               </a>
@@ -72,7 +72,7 @@ export default function ArchivePage() {
         <div className="mt-12">
           <Link
             href="/"
-            className="text-sm text-sub transition-colors hover:text-butter-deep"
+            className="font-mono text-xs uppercase tracking-[0.16em] text-mist transition-colors hover:text-accent"
           >
             ← back home
           </Link>

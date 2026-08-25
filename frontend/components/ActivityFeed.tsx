@@ -32,26 +32,26 @@ export function ActivityFeed() {
 
   return (
     <div>
-      <h2 className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-sub">
+      <h2 className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-mist">
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sage opacity-60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-sage" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-good opacity-60" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-good" />
         </span>
         recently pushed - live from GitHub
       </h2>
 
       {items === null ? (
-        <div className="mt-5 font-mono text-sm text-sub">reading the commit stream…</div>
+        <div className="mt-5 font-mono text-sm text-mist">reading the commit stream…</div>
       ) : items.length === 0 ? (
-        <div className="mt-5 font-mono text-sm text-sub">
+        <div className="mt-5 font-mono text-sm text-mist">
           Feed unavailable right now -{" "}
-          <a className="text-butter-deep underline-offset-4 hover:underline" href={LINKS.github}>
+          <a className="text-accent underline-offset-4 hover:underline" href={LINKS.github}>
             see everything on GitHub
           </a>
           .
         </div>
       ) : (
-        <ol className="mt-5 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-card/60">
+        <ol className="mt-5 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel/60">
           {items.map((it, i) => (
             <li key={`${it.url}-${i}`}>
               <a
@@ -60,14 +60,14 @@ export function ActivityFeed() {
                 rel="noreferrer"
                 className="flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-line/30"
               >
-                <GitCommitHorizontal className="h-4 w-4 shrink-0 text-butter-deep" />
+                <GitCommitHorizontal className="h-4 w-4 shrink-0 text-accent" />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm text-ink">{it.message}</span>
-                  <span className="mt-0.5 block font-mono text-xs text-sub">
+                  <span className="block truncate text-sm text-ivory">{it.message}</span>
+                  <span className="mt-0.5 block font-mono text-xs text-mist">
                     {it.repo} · {it.sha}
                   </span>
                 </span>
-                <span className="shrink-0 font-mono text-xs text-sub">{ago(it.at)}</span>
+                <span className="shrink-0 font-mono text-xs text-mist">{ago(it.at)}</span>
               </a>
             </li>
           ))}

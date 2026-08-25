@@ -15,8 +15,8 @@ export function MessageBubble({
       <div
         className={`max-w-prose rounded-2xl px-4 py-3 ${
           isUser
-            ? "bg-butter text-ink"
-            : "bg-card border border-line text-ink"
+            ? "bg-accent text-night"
+            : "bg-panel border border-line text-ivory"
         }`}
       >
         <div className="text-[15px] leading-relaxed whitespace-pre-wrap">

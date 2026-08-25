@@ -1,61 +1,85 @@
 "use client";
 
-import { Mail, FileText } from "lucide-react";
-import { GitHubIcon, LinkedInIcon } from "../icons";
-import { Annotation } from "../doodles/Annotation";
-import { Doodle } from "../doodles/Doodle";
+import Link from "next/link";
 import { COPY, LINKS } from "@/content/profile";
-
-const FOOTER_LINKS = [
-  { label: "GitHub", href: LINKS.github, Icon: GitHubIcon },
-  { label: "LinkedIn", href: LINKS.linkedin, Icon: LinkedInIcon },
-  { label: "Email", href: LINKS.email, Icon: Mail },
-  { label: "Resume", href: LINKS.resume, Icon: FileText },
-];
+import { useTwoAM } from "@/components/eggs/useTwoAM";
+import { Constellation } from "@/components/primitives/Constellation";
+import { Reveal } from "@/components/primitives/Reveal";
 
 export function Footer() {
-  return (
-    <footer id="contact" className="border-t border-line">
-      <div className="mx-auto w-full max-w-shell px-6 py-20">
-        <div className="flex flex-col items-start justify-between gap-10 sm:flex-row sm:items-center">
-          <p className="max-w-2xl font-display text-4xl leading-tight text-ink sm:text-5xl">
-            {COPY.footer.closing}
-          </p>
-          <a
-            href="#chat"
-            className="shrink-0 rounded-full bg-butter px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-butter/90"
-          >
-            Book a 30-min chat
-          </a>
-        </div>
+  const { toggle } = useTwoAM();
 
-        <div className="mt-14 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-8">
-          <nav className="flex flex-wrap gap-5">
-            {FOOTER_LINKS.map(({ label, href, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("/") ? undefined : "_blank"}
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-sub transition-colors hover:text-butter-deep"
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-4">
-            <p className="font-mono text-xs text-sub">
-              Jiya Singhal · Bangalore · site + AI twin built by her
-            </p>
-            <span className="inline-flex items-center gap-1.5">
-              <Annotation rotate={-3} className="text-butter-deep">
-                {COPY.footer.signoff}
-              </Annotation>
-              <Doodle kind="star" delay={0.4} className="h-5 w-5 text-butter-deep" strokeWidth={2.5} />
-            </span>
-          </div>
-        </div>
+  return (
+    <footer id="contact" className="relative overflow-hidden border-t border-line">
+      <Constellation className="pointer-events-none absolute -bottom-10 left-1/2 w-[30rem] -translate-x-1/2 opacity-25" />
+
+      <div className="relative mx-auto w-full max-w-shell px-6 py-24 text-center">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label="The moon again. It still works."
+          className="mx-auto block font-serif text-3xl text-silver transition-colors hover:text-ivory"
+        >
+          ☾
+        </button>
+
+        <Reveal>
+          <p className="mt-8 font-serif text-3xl italic text-ivory sm:text-4xl">
+            {COPY.footer.still}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <p className="mx-auto mt-5 max-w-prose text-lg text-mist">
+            {COPY.footer.fields}{" "}
+            <span className="text-ivory">{COPY.footer.listening}</span>
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.2}>
+          <Link
+            href="/chat"
+            className="mt-8 inline-block rounded-full border border-accent/40 px-6 py-3 font-mono text-sm uppercase tracking-[0.16em] text-accent transition-colors hover:border-accent hover:bg-accent/10"
+          >
+            {COPY.footer.ask}
+          </Link>
+          <p className="mt-4 text-sm text-mist">{COPY.footer.askAside}</p>
+        </Reveal>
+
+        <p className="mt-14 text-sm text-mist">
+          {COPY.footer.resumePrefix}{" "}
+          <a
+            href={LINKS.resume}
+            className="text-accent underline-offset-4 transition-colors hover:text-accent-bright hover:underline"
+          >
+            {COPY.footer.resumeCta}
+          </a>
+        </p>
+
+        <nav className="mt-8 flex flex-wrap items-center justify-center gap-6">
+          {[
+            { label: "GitHub", href: LINKS.github },
+            { label: "LinkedIn", href: LINKS.linkedin },
+            { label: "PyPI", href: LINKS.pypi },
+            { label: "LeetCode", href: LINKS.leetcode },
+            { label: "Email", href: LINKS.email },
+            { label: "Resume", href: LINKS.resume },
+          ].map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target={l.href.startsWith("http") ? "_blank" : undefined}
+              rel="noreferrer"
+              className="font-mono text-[11px] uppercase tracking-[0.16em] text-mist transition-colors hover:text-accent"
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
+
+        <p className="mt-10 font-mono text-[10px] tracking-[0.2em] text-faint">
+          © {new Date().getFullYear()} JIYA SINGHAL · BUILT AT NIGHT, MEASURED BY DAY
+        </p>
       </div>
     </footer>
   );

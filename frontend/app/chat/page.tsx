@@ -1,36 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { ChatWindow } from "@/components/ChatWindow";
 
 export const metadata: Metadata = {
-  title: "Jiya Singhal - AI twin",
+  title: "Jiya Singhal · AI persona",
   description:
-    "Talk to Jiya's AI twin. Grounded in her resume and GitHub - she has the receipts.",
+    "Talk to Jiya's AI persona. Grounded in her resume and GitHub, with sources cited under every answer.",
 };
 
 export default function ChatPage() {
   return (
-    <main className="h-screen flex flex-col">
+    <main className="flex h-screen flex-col">
       <header className="border-b border-line px-6 py-5">
-        <div className="mx-auto max-w-prose flex items-end justify-between gap-4">
+        <div className="mx-auto flex max-w-prose items-end justify-between gap-4">
           <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-sub">
-              AI twin
+            <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+              AI persona
             </div>
-            <h1 className="mt-1 font-display text-2xl tracking-tight">
-              Jiya Singhal
-            </h1>
+            <h1 className="mt-1 font-serif text-2xl text-ivory">Jiya Singhal</h1>
           </div>
           <Link
             href="/"
-            className="text-sm text-sub hover:text-butter-deep transition-colors"
+            className="font-mono text-xs uppercase tracking-[0.14em] text-mist transition-colors hover:text-accent"
           >
             ← Portfolio
           </Link>
         </div>
       </header>
-      <div className="flex-1 min-h-0">
-        <ChatWindow />
+      <div className="min-h-0 flex-1">
+        <Suspense>
+          <ChatWindow autosendFromQuery />
+        </Suspense>
       </div>
     </main>
   );
