@@ -37,26 +37,26 @@ export function Toolbox() {
   }
 
   return (
-    <section id="toolbox" className="bg-deep">
+    <section id="toolbox" className="relative">
       <div className="mx-auto w-full max-w-shell px-6 py-24">
         <Reveal>
           <TerminalBlock title="jiya@midnight-lab: ~/toolbox">
             <div className="grid gap-x-12 gap-y-4 md:grid-cols-2">
               {TOOLBOX.map((t) => (
                 <div key={t.group}>
-                  <span className="text-accent">{t.group}</span>
-                  <p className="mt-0.5 text-mist">{t.items}</p>
+                  <span className="font-medium text-grape">{t.group}</span>
+                  <p className="mt-0.5 text-ink-muted">{t.items}</p>
                 </div>
               ))}
             </div>
 
             {/* the quiet part: it's a real prompt */}
             <div
-              className="mt-8 cursor-text border-t border-line pt-4"
+              className="mt-8 cursor-text border-t-1.5 border-dashed border-outline/40 pt-4"
               onClick={() => inputRef.current?.focus()}
             >
               {lines.map((l, i) => (
-                <p key={i} className={l.kind === "cmd" ? "text-ivory" : "text-mist"}>
+                <p key={i} className={l.kind === "cmd" ? "text-ink" : "text-ink-muted"}>
                   {l.text}
                 </p>
               ))}
@@ -68,7 +68,7 @@ export function Toolbox() {
                 }}
                 className="flex items-center gap-2"
               >
-                <span className="text-accent" aria-hidden="true">
+                <span className="text-berry" aria-hidden="true">
                   $
                 </span>
                 <input
@@ -79,7 +79,7 @@ export function Toolbox() {
                   placeholder="try 'whoami'"
                   autoComplete="off"
                   spellCheck={false}
-                  className="w-full bg-transparent font-mono text-sm text-ivory outline-none placeholder:text-faint"
+                  className="w-full bg-transparent font-mono text-sm text-ink outline-none placeholder:text-ink-faint"
                 />
               </form>
             </div>

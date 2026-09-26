@@ -3,55 +3,67 @@
 import { BRAIN, COPY, PHILOSOPHY } from "@/content/profile";
 import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { Reveal } from "@/components/primitives/Reveal";
+import { Doodle } from "@/components/primitives/Doodle";
+
+/* Sticky notes cycle the pastels and alternate their tilt. */
+const NOTE_STYLE = [
+  "bg-butter -rotate-2",
+  "bg-blush rotate-1",
+  "bg-mint -rotate-1",
+  "bg-sky rotate-2",
+  "bg-lilac rotate-1",
+  "bg-peach -rotate-2",
+  "bg-mint rotate-2",
+  "bg-butter -rotate-1",
+];
 
 export function HowIThink() {
   return (
-    <section id="think" className="bg-deep">
+    <section id="think" className="relative">
+      <Doodle shape="cloud" color="sky" size={56} className="absolute right-[6%] top-16 hidden md:block" />
       <div className="mx-auto w-full max-w-shell px-6 py-24">
         <SectionHeading
           number={COPY.think.number}
           eyebrow={COPY.think.eyebrow}
           title={COPY.think.title}
-          serif
+          color="butter"
         />
         <Reveal>
-          <p className="max-w-prose text-xl leading-relaxed text-mist">{COPY.think.body}</p>
+          <p className="max-w-prose text-xl font-medium leading-relaxed text-ink-muted">{COPY.think.body}</p>
         </Reveal>
 
-        <div className="mt-14 grid gap-x-10 gap-y-10 md:grid-cols-2">
+        <div className="mt-14 grid gap-6 md:grid-cols-2">
           {PHILOSOPHY.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
-              <div className="border-l border-line pl-6">
+              <div className="sticker h-full rounded-[20px] bg-card p-6">
                 <span
-                  className="font-mono text-xs tracking-[0.24em] text-faint"
+                  className="inline-grid h-8 w-8 place-items-center rounded-full border-1.5 border-outline bg-butter font-mono text-xs text-on-pastel"
                   aria-hidden="true"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-2 text-xl font-semibold text-ivory">{p.title}</h3>
-                <p className="mt-2 text-base leading-relaxed text-mist">{p.body}</p>
+                <h3 className="mt-3 font-display text-2xl font-semibold text-ink">{p.title}</h3>
+                <p className="mt-2 text-base leading-relaxed text-ink-muted">{p.body}</p>
               </div>
             </Reveal>
           ))}
         </div>
 
-        {/* quick-fire field notes — the lightly playful layer */}
-        <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-4">
+        {/* quick-fire field notes: a wall of sticky notes */}
+        <div className="mt-16 grid grid-cols-2 gap-5 lg:grid-cols-4">
           {BRAIN.map((b, i) => (
-            <Reveal key={b.q} delay={i * 0.04} className="bg-deep">
-              <div className="h-full px-5 py-5">
-                <p className="font-mono text-xs uppercase tracking-[0.14em] text-mist">
-                  {b.q}
-                </p>
+            <Reveal key={b.q} delay={i * 0.04}>
+              <div
+                className={`sticker h-full rounded-[14px] px-5 py-5 text-on-pastel transition-transform duration-200 ease-bounce hover:rotate-0 hover:scale-[1.03] ${NOTE_STYLE[i % NOTE_STYLE.length]}`}
+              >
+                <p className="font-hand text-xl leading-tight">{b.q}</p>
                 {b.egg === "benchmark" ? (
-                  <p className="group/pf mt-1.5 cursor-help text-base text-ivory">
+                  <p className="group/pf mt-1.5 cursor-help text-base font-bold">
                     <span className="group-hover/pf:hidden">{b.a}</span>
-                    <span className="hidden text-warn group-hover/pf:inline">
-                      needs another benchmark
-                    </span>
+                    <span className="hidden group-hover/pf:inline">needs another benchmark</span>
                   </p>
                 ) : (
-                  <p className="mt-1.5 text-base text-ivory">{b.a}</p>
+                  <p className="mt-1.5 text-base font-bold">{b.a}</p>
                 )}
               </div>
             </Reveal>

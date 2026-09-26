@@ -80,13 +80,13 @@ export function CommandPalette() {
 
   const commands = [
     { label: "→ Explore work", run: () => { setOpen(false); router.push("/#work"); } },
-    { label: isTwoAM ? "☀ Leave 2 AM mode" : "☾ Enter 2 AM mode", run: () => { setOpen(false); toggleTwoAM(); } },
+    { label: isTwoAM ? "☀ Back to daydream" : "☾ Go stargazing", run: () => { setOpen(false); toggleTwoAM(); } },
     { label: "📄 Open resume", run: () => { setOpen(false); window.open("/resume.pdf", "_blank"); } },
   ];
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-start justify-center bg-night/70 px-4 pt-[18vh] backdrop-blur-sm"
+      className="fixed inset-0 z-[80] flex items-start justify-center bg-paper/70 px-4 pt-[18vh] backdrop-blur-sm"
       onClick={() => setOpen(false)}
       role="presentation"
     >
@@ -95,7 +95,7 @@ export function CommandPalette() {
         role="dialog"
         aria-modal="true"
         aria-label="Ask Jiya anything"
-        className="w-full max-w-lg overflow-hidden rounded-xl border border-line bg-panel shadow-glow"
+        className="sticker w-full max-w-lg overflow-hidden rounded-[20px] bg-card"
         onClick={(e) => e.stopPropagation()}
       >
         <form
@@ -103,10 +103,10 @@ export function CommandPalette() {
             e.preventDefault();
             go(value.trim());
           }}
-          className="border-b border-line"
+          className="border-b-1.5 border-outline bg-lilac"
         >
           <label className="flex items-center gap-3 px-4">
-            <span className="font-serif text-lg text-silver" aria-hidden="true">
+            <span className="text-lg text-on-pastel" aria-hidden="true">
               ☾
             </span>
             <input
@@ -114,9 +114,9 @@ export function CommandPalette() {
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="Ask Jiya anything…"
-              className="w-full bg-transparent py-4 text-[15px] text-ivory outline-none placeholder:text-mist"
+              className="w-full bg-transparent py-4 text-[15px] font-semibold text-on-pastel outline-none placeholder:text-on-pastel/60"
             />
-            <kbd className="rounded border border-line px-1.5 py-0.5 font-mono text-[10px] text-mist">
+            <kbd className="rounded-[10px] border-1.5 border-b-[3px] border-on-pastel bg-white px-1.5 py-0.5 font-mono text-[10px] text-on-pastel">
               esc
             </kbd>
           </label>
@@ -127,14 +127,14 @@ export function CommandPalette() {
               <button
                 type="button"
                 onClick={c.run}
-                className="w-full px-4 py-2.5 text-left text-sm text-mist transition-colors hover:bg-night/60 hover:text-ivory"
+                className="w-full px-4 py-2.5 text-left text-sm font-semibold text-ink-muted transition-colors hover:bg-butter hover:text-on-pastel"
               >
                 {c.label}
               </button>
             </li>
           ))}
         </ul>
-        <p className="border-t border-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
+        <p className="border-t-1.5 border-dashed border-outline/30 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
           enter → ask the AI persona · answers cite sources
         </p>
       </div>

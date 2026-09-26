@@ -4,43 +4,56 @@ import { motion } from "framer-motion";
 import { COPY } from "@/content/profile";
 import { EASE, viewportOnce } from "@/lib/motion";
 import { Reveal } from "@/components/primitives/Reveal";
+import { Doodle } from "@/components/primitives/Doodle";
+import { Sticker } from "@/components/primitives/Sticker";
 
 /*
- * The site gets quieter here. Big serif statement, a ghungroo drawn in
- * thin lines, one jasmine sprig — and no forced inspirational story.
+ * The personal page of the notebook, in lilac and grape. A big soft
+ * statement, the ghungroo drawn in ink on a card, a few stickers for the
+ * small facts, and no forced inspirational story.
  */
 export function BeyondCode() {
   return (
     <section id="beyond" className="relative overflow-hidden">
       <div className="mx-auto w-full max-w-shell px-6 py-32">
-        <p className="font-mono text-sm tracking-[0.3em] text-faint" aria-hidden="true">
-          {COPY.beyond.number}
-        </p>
-        <p className="mt-3 font-mono text-sm uppercase tracking-[0.22em] text-gold">
-          {COPY.beyond.eyebrow}
-        </p>
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="sticker inline-grid h-10 w-10 -rotate-6 place-items-center rounded-full bg-lilac font-mono text-sm text-on-pastel"
+          >
+            {COPY.beyond.number}
+          </span>
+          <p className="font-hand text-2xl font-semibold leading-none text-grape">
+            {COPY.beyond.eyebrow} ↘
+          </p>
+        </div>
 
         <motion.h2
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
           transition={{ duration: 1.1, ease: EASE }}
-          className="mt-10 max-w-3xl font-serif text-4xl font-medium italic leading-[1.15] text-ivory sm:text-5xl"
+          className="mt-8 max-w-3xl font-display text-4xl font-semibold italic leading-[1.1] text-ink sm:text-5xl"
         >
           {COPY.beyond.statement}
         </motion.h2>
 
         <div className="mt-16 grid items-center gap-12 md:grid-cols-[auto_1fr]">
           <Reveal delay={0.2}>
-            <GhungrooArt />
+            <div className="sticker relative -rotate-2 rounded-[20px] bg-lilac p-5">
+              <GhungrooArt />
+              <Doodle shape="sparkle" color="butter" size={26} rotate={12} className="absolute -right-3 -top-3" />
+            </div>
           </Reveal>
           <Reveal delay={0.35}>
             <div className="max-w-prose">
-              <p className="text-xl leading-relaxed text-mist">{COPY.beyond.line}</p>
-              <p className="mt-6 font-mono text-sm uppercase tracking-[0.2em] text-ivory">
-                {COPY.beyond.credential}
+              <p className="text-xl font-medium leading-relaxed text-ink-muted">{COPY.beyond.line}</p>
+              <p className="mt-6">
+                <Sticker color="lilac" rotate={-2}>
+                  {COPY.beyond.credential}
+                </Sticker>
               </p>
-              <p className="mt-1 font-serif text-2xl text-gold" lang="hi">
+              <p className="mt-4 font-hand text-2xl text-grape" lang="hi">
                 घुंघरू · rhythm / timing / precision
               </p>
             </div>
@@ -49,17 +62,17 @@ export function BeyondCode() {
 
         {/* quiet achievement strip */}
         <Reveal delay={0.5}>
-          <div className="mt-20 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6">
-            {COPY.beyond.quiet.map((q) => (
-              <span key={q} className="font-mono text-sm tracking-[0.14em] text-mist">
+          <div className="mt-16 flex flex-wrap gap-4">
+            {COPY.beyond.quiet.map((q, i) => (
+              <Sticker key={q} color={(["butter", "mint", "peach"] as const)[i % 3]} rotate={[2, -3, 1][i % 3]}>
                 {q}
-              </span>
+              </Sticker>
             ))}
           </div>
         </Reveal>
 
         {/* one extremely small jasmine sprig, bottom corner */}
-        <JasmineSprig className="pointer-events-none absolute bottom-8 right-8 h-16 w-16 opacity-30" />
+        <JasmineSprig className="pointer-events-none absolute bottom-8 right-8 h-20 w-20" />
       </div>
     </section>
   );
@@ -70,10 +83,11 @@ function GhungrooArt() {
   return (
     <svg
       viewBox="0 0 160 120"
-      className="h-36 w-48 text-gold"
+      className="h-36 w-48 text-on-pastel"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1"
+      strokeWidth="1.5"
+      strokeLinecap="round"
       role="img"
       aria-label="Line drawing of ghungroo, the ankle bells worn in Bharatanatyam"
     >
@@ -109,8 +123,8 @@ function JasmineSprig({ className }: { className?: string }) {
       viewBox="0 0 64 64"
       className={className}
       fill="none"
-      stroke="rgb(var(--silver))"
-      strokeWidth="0.9"
+      stroke="rgb(var(--outline))"
+      strokeWidth="1.2"
       aria-hidden="true"
     >
       <path d="M8 58 C 20 44, 28 32, 40 18" />
@@ -126,9 +140,10 @@ function JasmineSprig({ className }: { className?: string }) {
             rx="3"
             ry="5.5"
             transform={`rotate(${deg})`}
+            fill="rgb(var(--card))"
           />
         ))}
-        <circle cx="0" cy="0" r="1.4" fill="rgb(var(--silver))" stroke="none" />
+        <circle cx="0" cy="0" r="2" fill="rgb(var(--butter))" />
       </g>
     </svg>
   );

@@ -8,6 +8,26 @@ import { PipelineDiagram } from "@/components/visuals/PipelineDiagram";
 import { KVCacheVisual } from "@/components/visuals/KVCacheVisual";
 import { ConversationVisual } from "@/components/visuals/ConversationVisual";
 import { VoicequalDemo } from "@/components/visuals/VoicequalDemo";
+import { Highlight } from "@/components/primitives/Highlight";
+import { Sticker } from "@/components/primitives/Sticker";
+import { WashiTape } from "@/components/primitives/WashiTape";
+import { Doodle, type Pastel } from "@/components/primitives/Doodle";
+
+/* Each case study gets its own pastel for the tape and the visual card. */
+const CARD_COLORS: Pastel[] = ["blush", "mint", "sky", "lilac"];
+/* Built-with tags cycle through all six pastels, like a sheet of stickers. */
+const TAG_COLORS = ["bg-blush", "bg-butter", "bg-mint", "bg-sky", "bg-lilac", "bg-peach"];
+
+/** Marker-highlights the last word of the section title. */
+function lastWordHighlighted(title: string) {
+  const i = title.lastIndexOf(" ");
+  return (
+    <>
+      {title.slice(0, i + 1)}
+      <Highlight color="blush">{title.slice(i + 1)}</Highlight>
+    </>
+  );
+}
 
 const VISUALS: Record<CaseStudyT["id"], React.ComponentType> = {
   "voice-pipeline": PipelineDiagram,
@@ -23,7 +43,8 @@ export function SelectedWork() {
         <SectionHeading
           number={COPY.work.number}
           eyebrow={COPY.work.eyebrow}
-          title={COPY.work.title}
+          title={lastWordHighlighted(COPY.work.title)}
+          color="blush"
         />
         <div className="space-y-24">
           {CASE_STUDIES.map((cs, i) => (
@@ -38,56 +59,53 @@ export function SelectedWork() {
 function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
   const Visual = VISUALS[cs.id];
   const flip = index % 2 === 1;
+  const color = CARD_COLORS[index % CARD_COLORS.length];
 
   return (
     <Reveal>
       <article className="group grid items-start gap-10 lg:grid-cols-2">
         {/* words */}
         <div className={flip ? "lg:order-2" : ""}>
-          <p className="font-mono text-xs uppercase tracking-[0.24em] text-mist">
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
             {cs.eyebrow}
           </p>
-          <h3 className="mt-3 font-serif text-3xl font-medium leading-snug text-ivory sm:text-4xl">
+          <h3 className="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
             {cs.headline}
           </h3>
 
           {cs.metric && (
-            <div className="mt-6 flex items-baseline gap-4 font-mono">
-              <span className="text-2xl text-mist line-through decoration-poor/60 sm:text-3xl">
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <span className="font-mono text-2xl text-ink-muted line-through decoration-berry decoration-2">
                 {cs.metric.from}
               </span>
-              <span className="text-accent" aria-hidden="true">
+              <span className="text-2xl text-berry" aria-hidden="true">
                 →
               </span>
-              <span className="text-3xl text-ivory sm:text-4xl">{cs.metric.to}</span>
-              <span className="ml-2 text-xs uppercase tracking-[0.14em] text-good">
-                {cs.metric.delta}
+              <span className="font-display text-4xl font-bold leading-none text-ink sm:text-5xl">
+                <Highlight color="butter">{cs.metric.to}</Highlight>
               </span>
+              <Sticker color="mint" rotate={4}>
+                {cs.metric.delta}
+              </Sticker>
             </div>
           )}
 
           <dl className="mt-8 space-y-5 text-base leading-relaxed">
             <div>
-              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                Problem
-              </dt>
-              <dd className="mt-1.5 text-mist">{cs.problem}</dd>
+              <dt className="font-hand text-2xl leading-none text-berry">problem</dt>
+              <dd className="mt-1.5 text-ink-muted">{cs.problem}</dd>
             </div>
             <div>
-              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                Investigation
-              </dt>
-              <dd className="mt-1.5 text-mist">{cs.investigation}</dd>
+              <dt className="font-hand text-2xl leading-none text-berry">investigation</dt>
+              <dd className="mt-1.5 text-ink-muted">{cs.investigation}</dd>
             </div>
             <div>
-              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                Built
-              </dt>
+              <dt className="font-hand text-2xl leading-none text-berry">built</dt>
               <dd className="mt-2 flex flex-wrap gap-2">
-                {cs.built.map((b) => (
+                {cs.built.map((b, i) => (
                   <span
                     key={b}
-                    className="rounded-md border border-line bg-panel px-2.5 py-1 font-mono text-xs text-ivory"
+                    className={`rounded-full border-1.5 border-outline px-3 py-1 text-[0.8125rem] font-bold text-on-pastel ${TAG_COLORS[i % TAG_COLORS.length]}`}
                   >
                     {b}
                   </span>
@@ -95,22 +113,18 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                Result
-              </dt>
-              <dd className="mt-1.5 text-ivory">{cs.result}</dd>
+              <dt className="font-hand text-2xl leading-none text-berry">result</dt>
+              <dd className="mt-1.5 font-semibold text-ink">{cs.result}</dd>
             </div>
           </dl>
 
           {/* another layer of technical information, revealed on hover/focus */}
           <div
             tabIndex={0}
-            className="mt-6 max-h-0 overflow-hidden rounded-lg border border-transparent text-base leading-relaxed text-mist opacity-0 transition-all duration-500 ease-out group-hover:max-h-48 group-hover:border-line group-hover:opacity-100 focus:max-h-48 focus:border-line focus:opacity-100"
+            className="mt-6 max-h-0 overflow-hidden rounded-[14px] border-1.5 border-dashed border-transparent bg-card text-base leading-relaxed text-ink-muted opacity-0 transition-all duration-500 ease-out group-hover:max-h-48 group-hover:border-outline group-hover:opacity-100 focus:max-h-48 focus:border-outline focus:opacity-100"
           >
             <p className="p-4">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-silver">
-                deeper ·{" "}
-              </span>
+              <span className="font-hand text-xl text-grape">deeper ↘ </span>
               {cs.hoverDetail}
             </p>
           </div>
@@ -123,7 +137,7 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
                   href={l.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-xs uppercase tracking-[0.16em] text-accent underline-offset-4 transition-colors hover:text-accent-bright hover:underline"
+                  className="link-wavy"
                 >
                   {l.label} ↗
                 </a>
@@ -134,10 +148,18 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
 
         {/* visual */}
         <div
-          className={`rounded-xl border border-line bg-deep/60 p-6 shadow-panel sm:p-8 ${
-            flip ? "lg:order-1" : ""
+          className={`sticker relative rounded-[20px] bg-card p-6 sm:p-8 ${
+            flip ? "lg:order-1 lg:rotate-1" : "lg:-rotate-1"
           }`}
         >
+          <WashiTape color={color} rotate={flip ? 5 : -4} className="absolute -top-3 left-1/2 -ml-12" />
+          <Doodle
+            shape={flip ? "star" : "sparkle"}
+            color="butter"
+            size={30}
+            rotate={flip ? 10 : -10}
+            className="absolute -right-3 -top-4"
+          />
           <Visual />
         </div>
       </article>

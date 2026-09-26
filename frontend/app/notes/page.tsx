@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { NOTES } from "@/content/profile";
+import { Doodle } from "@/components/primitives/Doodle";
+import { Highlight } from "@/components/primitives/Highlight";
 
 export const metadata: Metadata = {
   title: "Jiya Singhal · notes",
@@ -13,27 +15,28 @@ export default function NotesPage() {
     <>
       <Header />
       <main className="mx-auto w-full max-w-shell px-6 pb-24 pt-16">
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent">
-          half-finished thoughts
-        </p>
-        <h1 className="mt-3 font-serif text-4xl font-medium text-ivory sm:text-5xl">
-          Things I&apos;m figuring out.
+        <p className="font-hand text-2xl text-grape">half-finished thoughts ↘</p>
+        <h1 className="mt-3 inline-flex flex-wrap items-center gap-3 font-display text-4xl font-semibold text-ink sm:text-5xl">
+          <span>
+            Things I&apos;m <Highlight color="lilac">figuring out.</Highlight>
+          </span>
+          <Doodle shape="cloud" color="sky" size={40} />
         </h1>
-        <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-mist">
+        <p className="mt-4 max-w-prose text-base font-medium leading-relaxed text-ink-muted">
           Titles first, essays later. If one of these looks interesting, ask my AI
           persona about it, or ask me directly.
         </p>
 
-        <ol className="mt-12 max-w-prose border-t border-line">
+        <ol className="sticker mt-12 max-w-prose overflow-hidden rounded-[20px] bg-card">
           {NOTES.map((n, i) => (
             <li
               key={n.title}
-              className="flex items-baseline gap-5 border-b border-line py-5"
+              className="flex items-baseline gap-5 border-b-1.5 border-dashed border-outline/30 px-6 py-5 last:border-b-0"
             >
-              <span className="font-mono text-sm text-faint">
+              <span className="font-hand text-2xl text-grape">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className="text-lg text-ivory">{n.title}</span>
+              <span className="text-lg font-semibold text-ink">{n.title}</span>
             </li>
           ))}
         </ol>
@@ -41,7 +44,7 @@ export default function NotesPage() {
         <div className="mt-12">
           <Link
             href="/"
-            className="font-mono text-xs uppercase tracking-[0.16em] text-mist transition-colors hover:text-accent"
+            className="btn btn-ghost"
           >
             ← back home
           </Link>

@@ -11,10 +11,10 @@ type State =
   | { phase: "done"; result: AnalysisResult; sourceName: string };
 
 const VERDICT_STYLE: Record<AnalysisResult["verdict"], string> = {
-  CLEAN: "text-good",
-  USABLE: "text-warn",
-  NOISY: "text-poor",
-  "TOO QUIET": "text-mist",
+  CLEAN: "bg-mint",
+  USABLE: "bg-butter",
+  NOISY: "bg-blush",
+  "TOO QUIET": "bg-lilac",
 };
 
 export function VoicequalDemo() {
@@ -99,8 +99,8 @@ export function VoicequalDemo() {
             setDragOver(false);
             void onFile(e.dataTransfer.files?.[0]);
           }}
-          className={`flex min-h-[190px] cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed px-6 py-8 text-center transition-colors ${
-            dragOver ? "border-accent bg-accent/5" : "border-line hover:border-accent/50"
+          className={`flex min-h-[190px] cursor-pointer flex-col items-center justify-center gap-3 rounded-[14px] border-1.5 border-dashed border-outline px-6 py-8 text-center transition-colors ${
+            dragOver ? "bg-sky/60" : "bg-paper hover:bg-paper-alt"
           }`}
         >
           <input
@@ -110,18 +110,18 @@ export function VoicequalDemo() {
             onChange={(e) => void onFile(e.target.files?.[0] ?? undefined)}
           />
           {state.phase === "analyzing" ? (
-            <span className="font-mono text-sm text-accent">analyzing…</span>
+            <span className="font-hand text-2xl text-cobalt">analyzing…</span>
           ) : state.phase === "recording" ? (
-            <span className="font-mono text-sm text-poor">● recording 5s…</span>
+            <span className="font-hand text-2xl text-berry">● recording 5s…</span>
           ) : (
             <>
-              <span className="font-mono text-2xl text-mist" aria-hidden="true">
+              <span className="font-mono text-3xl text-berry" aria-hidden="true">
                 ≋
               </span>
-              <span className="text-sm text-ivory">
+              <span className="text-sm font-semibold text-ink">
                 Drop an audio file here. Can software hear a bad recording?
               </span>
-              <span className="font-mono text-xs text-mist">
+              <span className="font-mono text-xs text-ink-muted">
                 click to browse{canRecord ? " · or" : ""}
               </span>
               {canRecord && (
@@ -131,7 +131,7 @@ export function VoicequalDemo() {
                     e.preventDefault();
                     void record();
                   }}
-                  className="rounded-full border border-line px-4 py-1.5 font-mono text-xs text-ivory transition-colors hover:border-accent/60 hover:text-accent"
+                  className="btn btn-cta"
                 >
                   record 5s from your mic
                 </button>
@@ -139,14 +139,14 @@ export function VoicequalDemo() {
             </>
           )}
           {state.phase === "idle" && state.error && (
-            <span className="font-mono text-xs text-poor">{state.error}</span>
+            <span className="font-mono text-xs text-berry">{state.error}</span>
           )}
         </label>
       )}
 
       {state.phase === "done" && (
-        <div className="rounded-lg border border-line bg-night/50 p-5 font-mono text-sm">
-          <p className="text-xs text-mist">{state.sourceName}</p>
+        <div className="rounded-[14px] border-1.5 border-outline bg-paper p-5 font-mono text-sm">
+          <p className="text-xs text-ink-muted">{state.sourceName}</p>
           <dl className="mt-4 space-y-2.5">
             <Metric
               label="SNR"
@@ -176,30 +176,32 @@ export function VoicequalDemo() {
             />
           </dl>
           <p className="mt-5 text-base">
-            <span className="text-mist">QUALITY </span>
-            <span className={VERDICT_STYLE[state.result.verdict]}>
-              ● {state.result.verdict}
+            <span className="text-ink-muted">QUALITY </span>
+            <span
+              className={`ml-1 inline-block -rotate-2 rounded-full border-1.5 border-outline px-3 py-1 text-sm font-medium text-on-pastel ${VERDICT_STYLE[state.result.verdict]}`}
+            >
+              {state.result.verdict}
             </span>
           </p>
-          <p className="mt-1 text-xs leading-relaxed text-mist">{state.result.reason}</p>
+          <p className="mt-2 text-xs leading-relaxed text-ink-muted">{state.result.reason}</p>
           <button
             type="button"
             onClick={() => setState({ phase: "idle" })}
-            className="mt-4 rounded-full border border-line px-4 py-1.5 text-xs text-ivory transition-colors hover:border-accent/60 hover:text-accent"
+            className="btn btn-cta mt-4"
           >
             try another
           </button>
         </div>
       )}
 
-      <p className="mt-4 text-xs leading-relaxed text-mist">
+      <p className="mt-4 text-xs leading-relaxed text-ink-muted">
         Analyzed in your browser; nothing is uploaded. This is a browser
         re-implementation of{" "}
         <a
           href={LINKS.pypi}
           target="_blank"
           rel="noreferrer"
-          className="text-accent underline-offset-2 hover:underline"
+          className="link-wavy"
         >
           voicequal
         </a>
@@ -224,16 +226,16 @@ function Metric({
 }) {
   return (
     <div className="grid grid-cols-[5.5rem_1fr_auto] items-center gap-3">
-      <dt className="text-xs text-mist">{label}</dt>
-      <dd className="h-1 overflow-hidden rounded-full bg-line/60">
+      <dt className="text-xs text-ink-muted">{label}</dt>
+      <dd className="h-2.5 overflow-hidden rounded-full border-1.5 border-outline bg-card">
         <div
-          className="h-full rounded-full bg-accent transition-all duration-700"
+          className="h-full rounded-full bg-berry transition-all duration-700"
           style={{ width: `${Math.round(Math.min(1, Math.max(0, bar)) * 100)}%` }}
         />
       </dd>
-      <dd className="text-right text-ivory">
+      <dd className="text-right text-ink">
         {value}
-        {note && <span className="ml-1.5 text-[10px] text-faint">{note}</span>}
+        {note && <span className="ml-1.5 text-[10px] text-ink-faint">{note}</span>}
       </dd>
     </div>
   );

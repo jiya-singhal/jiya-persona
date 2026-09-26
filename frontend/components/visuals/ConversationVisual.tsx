@@ -24,10 +24,10 @@ export function ConversationVisual() {
           hidden: { opacity: 0, y: 12 },
           visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
         }}
-        className="max-w-[85%] rounded-2xl rounded-bl-sm border border-line bg-deep px-4 py-3"
+        className="max-w-[85%] rounded-[20px] rounded-bl-[4px] border-1.5 border-outline bg-sky px-4 py-3 text-on-pastel"
       >
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-mist">you</p>
-        <p className="mt-1 text-sm leading-relaxed text-ivory">
+        <p className="font-hand text-lg leading-none">you</p>
+        <p className="mt-1 text-sm font-medium leading-relaxed">
           What was the hardest engineering problem Jiya solved?
         </p>
       </motion.div>
@@ -37,13 +37,13 @@ export function ConversationVisual() {
           hidden: { opacity: 0, y: 12 },
           visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
         }}
-        className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm border border-accent/30 bg-panel px-4 py-3"
+        className="ml-auto max-w-[85%] rounded-[20px] rounded-br-[4px] border-1.5 border-outline bg-card px-4 py-3 shadow-sticker"
       >
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">jiya ai</p>
-        <p className="mt-1 text-sm leading-relaxed text-ivory">
+        <p className="font-hand text-lg leading-none text-grape">jiya ai ✦</p>
+        <p className="mt-1 text-sm font-medium leading-relaxed text-ink">
           Probably the cross-platform mic failure: four plausible causes, each ruled
           out with source-level proof…{" "}
-          <span className="text-mist">(grounded in her resume · sources cited)</span>
+          <span className="text-ink-muted">(grounded in her resume · sources cited)</span>
         </p>
       </motion.div>
 
@@ -54,10 +54,12 @@ export function ConversationVisual() {
         }}
         className="flex flex-wrap gap-2 pt-2"
       >
-        {TAGS.map((t) => (
+        {TAGS.map((t, i) => (
           <span
             key={t}
-            className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-mist"
+            className={`rounded-full border-1.5 border-outline px-3 py-1 text-xs font-bold text-on-pastel ${
+              ["bg-blush", "bg-butter", "bg-mint", "bg-sky", "bg-lilac"][i % 5]
+            }`}
           >
             {t}
           </span>
