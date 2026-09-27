@@ -17,31 +17,51 @@ export default function OGImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#12192B",
-          color: "#E8E4D8",
+          background: "#FFFAF3",
+          backgroundImage: "radial-gradient(circle, #ECDCCD 2px, transparent 2.5px)",
+          backgroundSize: "30px 30px",
+          color: "#2D2640",
           fontFamily: "Georgia, serif",
           position: "relative",
         }}
       >
-        {/* moon glow */}
+        {/* a waveform drawn in pastel bars, top right */}
         <div
           style={{
             position: "absolute",
-            right: "-120px",
-            top: "-120px",
-            width: "500px",
-            height: "500px",
-            borderRadius: "9999px",
-            background:
-              "radial-gradient(circle, rgba(157,176,255,0.18), transparent 70%)",
+            right: "80px",
+            top: "80px",
             display: "flex",
+            alignItems: "center",
+            gap: "12px",
           }}
-        />
+        >
+          {[40, 90, 150, 70, 180, 110, 60, 130, 50].map((h, i) => (
+            <div
+              key={i}
+              style={{
+                width: "22px",
+                height: `${h}px`,
+                borderRadius: "9999px",
+                background: ["#FFC6D5", "#FFE38F", "#BFE9D2", "#BCDCFF", "#DCCFFF"][i % 5],
+                border: "3px solid #2D2640",
+                display: "flex",
+              }}
+            />
+          ))}
+        </div>
         <div
           style={{
-            fontSize: 26,
-            letterSpacing: "0.35em",
-            color: "#8B94A7",
+            fontSize: 24,
+            fontFamily: "monospace",
+            letterSpacing: "0.16em",
+            fontWeight: 700,
+            color: "#2D2640",
+            background: "#FFCFAE",
+            border: "3px solid #2D2640",
+            borderRadius: "9999px",
+            padding: "8px 24px",
+            alignSelf: "flex-start",
             display: "flex",
           }}
         >
@@ -49,27 +69,36 @@ export default function OGImage() {
         </div>
         <div
           style={{
-            marginTop: 30,
-            fontSize: 64,
-            lineHeight: 1.15,
-            maxWidth: 900,
+            marginTop: 34,
+            fontSize: 68,
+            lineHeight: 1.1,
+            maxWidth: 880,
+            fontWeight: 700,
             display: "flex",
           }}
         >
           I like figuring out why things behave the way they do.
         </div>
-        <div
-          style={{
-            marginTop: 40,
-            fontSize: 24,
-            color: "#9DB0FF",
-            display: "flex",
-            gap: "40px",
-          }}
-        >
-          <span>74% ↓ latency</span>
-          <span>21,750 benchmark runs</span>
-          <span>open-source PyPI author</span>
+        <div style={{ marginTop: 40, display: "flex", gap: "20px", fontFamily: "sans-serif", fontWeight: 700 }}>
+          {[
+            ["74% ↓ latency", "#BFE9D2"],
+            ["21,750 benchmark runs", "#BCDCFF"],
+            ["open-source PyPI author", "#DCCFFF"],
+          ].map(([t, c]) => (
+            <span
+              key={t}
+              style={{
+                fontSize: 24,
+                background: c,
+                border: "3px solid #2D2640",
+                borderRadius: "9999px",
+                padding: "8px 20px",
+                display: "flex",
+              }}
+            >
+              {t}
+            </span>
+          ))}
         </div>
       </div>
     ),

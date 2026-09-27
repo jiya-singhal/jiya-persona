@@ -109,21 +109,19 @@ export function ChatWindow({
         <div className="mx-auto max-w-prose space-y-5">
           {turns.length === 0 ? (
             <div className="space-y-6 pt-2">
-              <p className="leading-relaxed text-ivory/80">
+              <p className="font-medium leading-relaxed text-ink-muted">
                 I&apos;m Jiya&apos;s AI persona - ask me anything an interviewer
                 would. Every answer is grounded in her resume and GitHub, with
                 sources shown below each response. I can also book a real slot
                 on her calendar.
               </p>
               <div className="flex flex-col gap-2">
-                <div className="font-mono text-[11px] uppercase tracking-wider text-mist">
-                  Try asking
-                </div>
+                <div className="font-mono text-xs uppercase tracking-[0.14em] text-cobalt">try asking</div>
                 {CHAT_SUGGESTIONS.map((s) => (
                   <button
                     key={s.label}
                     onClick={() => send(s.send)}
-                    className="rounded-lg border border-line bg-night px-3 py-2 text-left text-sm text-ivory/85 transition-colors hover:border-accent/50"
+                    className="rounded-full border-1.5 border-outline bg-paper px-4 py-2 text-left text-sm font-semibold text-ink transition-[transform,background-color] duration-200 ease-bounce hover:-translate-y-0.5 hover:bg-butter hover:text-on-pastel"
                   >
                     {s.label}
                   </button>
@@ -154,7 +152,7 @@ export function ChatWindow({
         </div>
       </div>
 
-      <div className="border-t border-line bg-night/60 px-5 py-4 backdrop-blur sm:px-6">
+      <div className="border-t-1.5 border-outline bg-paper-alt px-5 py-4 sm:px-6">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -168,12 +166,12 @@ export function ChatWindow({
             onChange={(e) => setInput(e.target.value)}
             placeholder={streaming ? "…thinking" : "Ask about Jiya's work, or book a chat"}
             disabled={streaming}
-            className="flex-1 rounded-xl border border-line bg-panel px-4 py-3 text-[15px] text-ivory outline-none placeholder:text-mist focus:border-accent/60 disabled:opacity-50"
+            className="flex-1 rounded-full border-1.5 border-outline bg-card px-5 py-3 text-[15px] font-medium text-ink outline-none placeholder:text-ink-muted focus:ring-[3px] focus:ring-sky disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={streaming || !input.trim()}
-            className="rounded-xl bg-accent px-5 py-3 text-sm font-medium text-night transition-colors hover:bg-accent-bright disabled:opacity-40"
+            className="btn btn-primary"
           >
             Send
           </button>
@@ -196,7 +194,7 @@ function Pending() {
 function Dot({ delay }: { delay: string }) {
   return (
     <span
-      className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-mist"
+      className="inline-block h-2 w-2 animate-bounce rounded-full bg-grape"
       style={{ animationDelay: delay }}
     />
   );

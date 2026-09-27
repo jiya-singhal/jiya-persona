@@ -9,22 +9,22 @@ import { ChatWindow } from "../ChatWindow";
 
 export function ChatSection() {
   return (
-    <section id="chat" className="bg-deep">
+    <section id="chat" className="relative">
       <div className="mx-auto w-full max-w-shell px-6 py-24">
         <SectionHeading
           number={COPY.chat.number}
           eyebrow={COPY.chat.eyebrow}
           title={COPY.chat.title}
-          serif
+          color="sky"
         />
         <Reveal>
-          <p className="-mt-4 mb-10 max-w-prose text-lg leading-relaxed text-mist">
+          <p className="-mt-4 mb-10 max-w-prose text-lg font-medium leading-relaxed text-ink-muted">
             {COPY.chat.sub}
           </p>
         </Reveal>
 
         <Reveal delay={0.15}>
-          <div className="h-[36rem] overflow-hidden rounded-2xl border border-line bg-panel/70 shadow-panel">
+          <div className="sticker h-[36rem] overflow-hidden rounded-[20px] bg-card">
             <ChatWindow />
           </div>
         </Reveal>
@@ -32,7 +32,7 @@ export function ChatSection() {
         <div className="mt-3 text-right">
           <Link
             href="/chat"
-            className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-mist transition-colors hover:text-accent"
+            className="link-wavy inline-flex items-center gap-1.5 text-sm"
           >
             Open full-screen
             <ExternalLink className="h-3.5 w-3.5" />

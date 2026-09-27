@@ -11,37 +11,53 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // "Midnight Lab" palette — deep blue-black night, soft ivory ink,
-        // one periwinkle accent, silver details. All values live as RGB
-        // triplets in globals.css so 2 AM mode can swap them wholesale.
-        night: v("night"),
-        deep: v("deep"),
-        panel: v("panel"),
-        line: v("line"),
-        ivory: v("ivory"),
-        mist: v("mist"),
-        faint: v("faint"),
-        accent: v("accent"),
-        "accent-bright": v("accent-bright"),
-        silver: v("silver"),
-        gold: v("gold"),
-        good: v("good"),
-        warn: v("warn"),
-        poor: v("poor"),
+        // "Daydream" palette: a pastel notebook. Cream dot-grid paper, ink
+        // outlines, six candy pastels for fills, five pops for coloured text.
+        // All values live as RGB triplets in globals.css so the moon can swap
+        // to the "stargazing" night theme wholesale.
+        paper: v("paper"),
+        "paper-alt": v("paper-alt"),
+        card: v("card"),
+        grid: v("grid"),
+        ink: v("ink"),
+        "ink-muted": v("ink-muted"),
+        "ink-faint": v("ink-faint"),
+        outline: v("outline"),
+        "on-pastel": v("on-pastel"),
+        // pastels: fills only, identical in both themes, text on them is on-pastel
+        butter: v("butter"),
+        blush: v("blush"),
+        sky: v("sky"),
+        mint: v("mint"),
+        lilac: v("lilac"),
+        peach: v("peach"),
+        // pops: coloured text, 4.7:1+ on every paper in both themes
+        berry: v("berry"),
+        cobalt: v("cobalt"),
+        fern: v("fern"),
+        grape: v("grape"),
+        honey: v("honey"),
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["var(--font-fraunces)", "Georgia", "serif"],
-        mono: ["var(--font-jetbrains)", "ui-monospace", "monospace"],
+        sans: ["var(--font-nunito)", "ui-rounded", "system-ui", "sans-serif"],
+        display: ["var(--font-fraunces)", "Georgia", "serif"],
+        hand: ["var(--font-caveat)", "cursive"],
+        mono: ["var(--font-dm-mono)", "ui-monospace", "monospace"],
       },
       maxWidth: {
         prose: "44rem",
         shell: "72rem",
       },
+      borderWidth: {
+        "1.5": "1.5px",
+      },
       boxShadow: {
-        glow: "0 0 40px -12px rgb(var(--accent) / 0.25)",
-        panel:
-          "0 1px 2px rgb(0 0 0 / 0.4), 0 24px 60px -30px rgb(0 0 0 / 0.6)",
+        sticker: "3px 3px 0 0 rgb(var(--shadow-ink))",
+        "sticker-lift": "5px 5px 0 0 rgb(var(--shadow-ink))",
+        soft: "0 12px 32px -14px rgb(45 38 64 / 0.28)",
+      },
+      transitionTimingFunction: {
+        bounce: "cubic-bezier(0.34, 1.56, 0.64, 1)",
       },
     },
   },

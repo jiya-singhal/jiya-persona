@@ -40,8 +40,9 @@ export function KVCacheVisual() {
         y1={60}
         x2={500}
         y2={60}
-        stroke="rgb(var(--line))"
-        strokeWidth={1}
+        stroke="rgb(var(--ink-faint))"
+        strokeWidth={1.5}
+        strokeLinecap="round"
         variants={{
           hidden: { pathLength: 0 },
           visible: { pathLength: 1, transition: { duration: 1.1, ease: EASE } },
@@ -60,18 +61,18 @@ export function KVCacheVisual() {
             y={n.y - 22}
             width={84}
             height={44}
-            rx={8}
-            fill="rgb(var(--panel))"
-            stroke="rgb(var(--accent))"
-            strokeOpacity={0.4}
+            rx={14}
+            fill={`rgb(var(--${["blush", "butter", "lilac"][NODES.indexOf(n)]}))`}
+            stroke="rgb(var(--outline))"
+            strokeWidth={1.5}
           />
           <text
             x={n.x}
             y={n.y + 4}
             textAnchor="middle"
-            fill="rgb(var(--ivory))"
+            fill="rgb(var(--on-pastel))"
             fontSize={11}
-            fontFamily="var(--font-jetbrains), monospace"
+            fontFamily="var(--font-dm-mono), monospace"
             letterSpacing="0.14em"
           >
             {n.label}
@@ -93,7 +94,7 @@ export function KVCacheVisual() {
             : { duration: 0 }
         }
       >
-        <circle r={4} cx={0} cy={60} fill="rgb(var(--accent-bright))" />
+        <circle r={6} cx={0} cy={60} fill="rgb(var(--mint))" stroke="rgb(var(--outline))" strokeWidth={1.5} />
       </motion.g>
 
       {/* replica write: primary → replica pulse under node 1→2 */}
@@ -102,9 +103,8 @@ export function KVCacheVisual() {
         y1={92}
         x2={270}
         y2={92}
-        stroke="rgb(var(--good))"
-        strokeOpacity={0.5}
-        strokeWidth={1}
+        stroke="rgb(var(--fern))"
+        strokeWidth={1.5}
         strokeDasharray="3 5"
         animate={animateKeys ? { strokeDashoffset: [0, -32] } : {}}
         transition={animateKeys ? { duration: 2.5, repeat: Infinity, ease: "linear" } : {}}
@@ -113,10 +113,9 @@ export function KVCacheVisual() {
         x={180}
         y={108}
         textAnchor="middle"
-        fill="rgb(var(--mist))"
-        fillOpacity={0.8}
-        fontSize={9.5}
-        fontFamily="var(--font-jetbrains), monospace"
+        fill="rgb(var(--fern))"
+        fontSize={10}
+        fontFamily="var(--font-dm-mono), monospace"
         letterSpacing="0.08em"
       >
         sync replication

@@ -57,9 +57,9 @@ function Edge(props: { x1: number; y1: number; x2: number; y2: number }) {
   return (
     <motion.line
       {...props}
-      stroke="rgb(var(--accent))"
-      strokeOpacity={0.35}
-      strokeWidth={1}
+      stroke="rgb(var(--ink-faint))"
+      strokeWidth={1.5}
+      strokeLinecap="round"
       variants={{
         hidden: { pathLength: 0, opacity: 0 },
         visible: { pathLength: 1, opacity: 1, transition: { duration: 0.9, ease: EASE } },
@@ -91,19 +91,19 @@ function Node({
       <circle
         cx={x}
         cy={y}
-        r={small ? 4 : 6}
-        fill={accent ? "rgb(var(--good))" : "rgb(var(--accent))"}
-        fillOpacity={accent ? 1 : 0.9}
+        r={small ? 7 : 11}
+        fill={accent ? "rgb(var(--mint))" : small ? "rgb(var(--butter))" : "rgb(var(--sky))"}
+        stroke="rgb(var(--outline))"
+        strokeWidth={1.5}
       />
-      <circle cx={x} cy={y} r={small ? 9 : 12} fill="rgb(var(--accent))" fillOpacity={0.1} />
       {label && (
         <text
           x={x}
-          y={y + (small ? 26 : 30)}
+          y={y + (small ? 24 : 30)}
           textAnchor="middle"
-          fill="rgb(var(--mist))"
+          fill="rgb(var(--ink-muted))"
           fontSize={11}
-          fontFamily="var(--font-jetbrains), monospace"
+          fontFamily="var(--font-dm-mono), monospace"
           letterSpacing="0.06em"
         >
           {label}

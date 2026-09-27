@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Motif } from "@/components/primitives/Motif";
 
 export function MessageBubble({
   role,
@@ -11,15 +12,23 @@ export function MessageBubble({
 }) {
   const isUser = role === "user";
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
+      {!isUser && (
+        <span
+          aria-hidden="true"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-1.5 border-outline bg-lilac"
+        >
+          <Motif name="waveform" bare size={16} className="text-on-pastel" />
+        </span>
+      )}
       <div
-        className={`max-w-prose rounded-2xl px-4 py-3 ${
+        className={`max-w-prose rounded-[20px] border-1.5 border-outline px-4 py-3 ${
           isUser
-            ? "bg-accent text-night"
-            : "bg-panel border border-line text-ivory"
+            ? "rounded-br-[4px] bg-sky text-on-pastel"
+            : "rounded-bl-[4px] bg-card text-ink shadow-sticker"
         }`}
       >
-        <div className="text-[15px] leading-relaxed whitespace-pre-wrap">
+        <div className="text-[15px] font-medium leading-relaxed whitespace-pre-wrap">
           {children}
         </div>
       </div>

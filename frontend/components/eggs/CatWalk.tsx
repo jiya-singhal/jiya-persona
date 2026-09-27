@@ -36,8 +36,8 @@ export function CatWalk({ onDone }: { onDone?: () => void }) {
           width="56"
           height="32"
           viewBox="0 0 56 32"
-          fill="rgb(var(--ivory))"
-          opacity={0.85}
+          fill="rgb(var(--ink))"
+          opacity={0.9}
           style={{ animation: "jiya-cat-bob 0.5s ease-in-out infinite" }}
         >
           {/* body */}

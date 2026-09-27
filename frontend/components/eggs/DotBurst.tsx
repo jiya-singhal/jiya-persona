@@ -5,9 +5,11 @@ import { useMemo, useState } from "react";
 
 /**
  * Hover (or focus) the 21,750 stat and the benchmark grid scatters into
- * a couple hundred tiny accent dots — a representative sample, not all
+ * a couple hundred tiny pastel confetti dots — a representative sample, not all
  * 21,750 DOM nodes. Static under reduced motion.
  */
+const CONFETTI = ["bg-berry", "bg-cobalt", "bg-fern", "bg-grape", "bg-honey"];
+
 export function DotBurst({ children }: { children: React.ReactNode }) {
   const [burst, setBurst] = useState(false);
   const reduced = useReducedMotion();
@@ -20,7 +22,7 @@ export function DotBurst({ children }: { children: React.ReactNode }) {
         const b = Math.sin(i * 78.233) * 12543.2371;
         const rx = (a - Math.floor(a)) * 2 - 1;
         const ry = (b - Math.floor(b)) * 2 - 1;
-        return { x: rx * 130, y: ry * 70, d: (i % 10) * 0.012 };
+        return { x: rx * 130, y: ry * 70, d: (i % 10) * 0.012, c: CONFETTI[i % CONFETTI.length] };
       }),
     [],
   );
@@ -41,7 +43,7 @@ export function DotBurst({ children }: { children: React.ReactNode }) {
           {dots.map((d, i) => (
             <motion.span
               key={i}
-              className="absolute left-1/2 top-1/2 h-[2.5px] w-[2.5px] rounded-full bg-accent"
+              className={`absolute left-1/2 top-1/2 h-[5px] w-[5px] rounded-full ${d.c}`}
               initial={false}
               animate={
                 burst

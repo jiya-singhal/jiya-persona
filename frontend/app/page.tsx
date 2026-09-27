@@ -7,7 +7,7 @@ import { Toolbox } from "@/components/sections/Toolbox";
 import { BeyondCode } from "@/components/sections/BeyondCode";
 import { ChatSection } from "@/components/sections/ChatSection";
 import { Footer } from "@/components/sections/Footer";
-import { MistDivider } from "@/components/primitives/MistDivider";
+import { WavyDivider } from "@/components/primitives/WavyDivider";
 import { EasterEggs } from "@/components/eggs/EasterEggs";
 
 export default function Home() {
@@ -17,17 +17,17 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
         <SelectedWork />
-        <MistDivider />
+        <WavyDivider color="honey" />
         <HowIThink />
-        <MistDivider flip />
+        <WavyDivider color="fern" />
         <Measuring />
-        <MistDivider />
+        <WavyDivider color="grape" />
         <Toolbox />
-        <MistDivider flip />
+        <WavyDivider color="grape" />
         <BeyondCode />
-        <MistDivider />
+        <WavyDivider color="cobalt" />
         <ChatSection />
-        <MistDivider flip />
+        <WavyDivider color="berry" />
         <Footer />
       </main>
       <EasterEggs />

@@ -12,33 +12,35 @@ function tagOf(s: Source): string {
   return String(t ?? "source");
 }
 
+const CHIP = ["bg-blush", "bg-butter", "bg-mint", "bg-sky", "bg-lilac", "bg-peach"];
+
 export function SourceCitation({ sources }: { sources: Source[] }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   if (!sources.length) return null;
 
   return (
     <div className="mt-3 flex flex-col gap-2">
-      <div className="font-mono text-[11px] uppercase tracking-wider text-mist">
+      <div className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">
         Sources
       </div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-2">
         {sources.map((s, i) => (
           <button
             key={i}
             onClick={() => setOpenIdx(openIdx === i ? null : i)}
-            className={`px-2 py-1 rounded-md text-xs border transition-colors ${
-              openIdx === i
-                ? "bg-accent text-night border-accent"
-                : "bg-panel text-ivory/80 border-line hover:border-accent/50"
-            }`}
+            className={`rounded-full border-1.5 border-outline py-1 pl-1 pr-3 text-xs font-bold text-on-pastel transition-transform duration-200 ease-bounce hover:-translate-y-0.5 ${
+              CHIP[i % CHIP.length]
+            } ${openIdx === i ? "shadow-sticker" : ""}`}
           >
-            <span className="font-mono mr-1.5 opacity-60">{i + 1}</span>
+            <span className="mr-1.5 inline-grid h-5 w-5 place-items-center rounded-full border-1.5 border-on-pastel bg-white font-mono text-[10px]">
+              {i + 1}
+            </span>
             {tagOf(s)}
           </button>
         ))}
       </div>
       {openIdx !== null && (
-        <div className="mt-1 rounded-md border border-line bg-panel p-3 text-sm leading-relaxed text-ivory/80 whitespace-pre-wrap">
+        <div className="mt-1 rounded-[14px] border-1.5 border-dashed border-outline bg-card p-3 text-sm leading-relaxed text-ink-muted whitespace-pre-wrap">
           {sources[openIdx].text}
         </div>
       )}

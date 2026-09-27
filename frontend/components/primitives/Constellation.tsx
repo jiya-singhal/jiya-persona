@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { EASE, viewportOnce } from "@/lib/motion";
 
 /*
- * The signature motif: from far away, a constellation; up close, a system
- * diagram. Tiny labeled nodes joined by hairlines, illuminating in sequence.
+ * From far away, a constellation; up close, a system diagram. Little
+ * pastel nodes with ink outlines, joined by hairlines, popping in
+ * one after another.
  */
 
 type Node = { x: number; y: number; label: string; r?: number };
@@ -18,6 +19,8 @@ const NODES: Node[] = [
   { x: 520, y: 150, label: "model", r: 4 },
   { x: 400, y: 220, label: "db", r: 3 },
 ];
+
+const PASTELS = ["blush", "butter", "mint", "sky", "lilac", "peach"];
 
 const EDGES: [number, number][] = [
   [0, 1],
@@ -53,9 +56,10 @@ export function Constellation({
           y1={NODES[a].y}
           x2={NODES[b].x}
           y2={NODES[b].y}
-          stroke="rgb(var(--accent))"
-          strokeOpacity={0.25}
-          strokeWidth={0.75}
+          stroke="rgb(var(--ink-faint))"
+          strokeOpacity={0.6}
+          strokeWidth={1.2}
+          strokeLinecap="round"
           variants={{
             hidden: { pathLength: 0, opacity: 0 },
             visible: {
@@ -74,15 +78,20 @@ export function Constellation({
             visible: { opacity: 1, transition: { duration: 0.8, ease: EASE } },
           }}
         >
-          <circle cx={n.x} cy={n.y} r={n.r ?? 3} fill="rgb(var(--accent))" fillOpacity={0.9} />
-          <circle cx={n.x} cy={n.y} r={(n.r ?? 3) + 5} fill="rgb(var(--accent))" fillOpacity={0.12} />
+          <circle
+            cx={n.x}
+            cy={n.y}
+            r={(n.r ?? 3) + 3}
+            fill={`rgb(var(--${PASTELS[i % PASTELS.length]}))`}
+            stroke="rgb(var(--outline))"
+            strokeWidth={1.4}
+          />
           <text
             x={n.x + 10}
             y={n.y + 3}
-            fill="rgb(var(--mist))"
-            fillOpacity={0.7}
-            fontSize={9}
-            fontFamily="var(--font-jetbrains), monospace"
+            fill="rgb(var(--ink-muted))"
+            fontSize={10}
+            fontFamily="var(--font-dm-mono), monospace"
             letterSpacing="0.08em"
           >
             {n.label}

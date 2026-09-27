@@ -38,9 +38,9 @@ export function Waveform({ className }: { className?: string }) {
 
     const accent = () => {
       const v = getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent")
+        .getPropertyValue("--berry")
         .trim();
-      return v ? `rgb(${v.split(" ").join(",")})` : "rgb(157,176,255)";
+      return v ? `rgb(${v.split(" ").join(",")})` : "rgb(194,37,92)";
     };
 
     const draw = () => {
@@ -61,8 +61,9 @@ export function Waveform({ className }: { className?: string }) {
         else ctx.lineTo(x, y);
       }
       ctx.strokeStyle = color;
-      ctx.globalAlpha = 0.7;
-      ctx.lineWidth = 1.4;
+      ctx.globalAlpha = 0.85;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
       ctx.stroke();
       ctx.globalAlpha = 1;
     };
