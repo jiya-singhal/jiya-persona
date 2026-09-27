@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ChatWindow } from "@/components/ChatWindow";
-import { Doodle } from "@/components/primitives/Doodle";
+import { Motif } from "@/components/primitives/Motif";
 
 export const metadata: Metadata = {
   title: "Jiya Singhal · AI persona",
@@ -16,10 +16,10 @@ export default function ChatPage() {
       <header className="border-b-1.5 border-outline bg-sky px-6 py-5 text-on-pastel">
         <div className="mx-auto flex max-w-prose items-end justify-between gap-4">
           <div>
-            <div className="font-hand text-xl leading-none">AI persona ✦</div>
+            <div className="font-mono text-xs uppercase tracking-[0.16em]">AI persona</div>
             <h1 className="mt-1 inline-flex items-center gap-2 font-display text-3xl font-semibold">
               Jiya Singhal
-              <Doodle shape="sparkle" color="butter" size={24} outline="var(--on-pastel)" rotate={-8} />
+              <Motif name="waveform" bare size={24} />
             </h1>
           </div>
           <Link

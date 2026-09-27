@@ -110,9 +110,9 @@ export function VoicequalDemo() {
             onChange={(e) => void onFile(e.target.files?.[0] ?? undefined)}
           />
           {state.phase === "analyzing" ? (
-            <span className="font-hand text-2xl text-cobalt">analyzing…</span>
+            <span className="font-mono text-sm text-cobalt">analyzing…</span>
           ) : state.phase === "recording" ? (
-            <span className="font-hand text-2xl text-berry">● recording 5s…</span>
+            <span className="font-mono text-sm text-berry">● recording 5s…</span>
           ) : (
             <>
               <span className="font-mono text-3xl text-berry" aria-hidden="true">
@@ -178,7 +178,7 @@ export function VoicequalDemo() {
           <p className="mt-5 text-base">
             <span className="text-ink-muted">QUALITY </span>
             <span
-              className={`ml-1 inline-block -rotate-2 rounded-full border-1.5 border-outline px-3 py-1 text-sm font-medium text-on-pastel ${VERDICT_STYLE[state.result.verdict]}`}
+              className={`ml-1 inline-block rounded-full border-1.5 border-outline px-3 py-1 text-sm font-medium text-on-pastel ${VERDICT_STYLE[state.result.verdict]}`}
             >
               {state.result.verdict}
             </span>

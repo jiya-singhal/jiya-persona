@@ -25,52 +25,47 @@ export default function OGImage() {
           position: "relative",
         }}
       >
-        {/* pastel sticker shapes */}
+        {/* a waveform drawn in pastel bars, top right */}
         <div
           style={{
             position: "absolute",
-            right: "90px",
-            top: "70px",
-            width: "150px",
-            height: "150px",
-            borderRadius: "9999px",
-            background: "#FFE38F",
-            border: "4px solid #2D2640",
-            boxShadow: "8px 8px 0 0 #2D2640",
+            right: "80px",
+            top: "80px",
             display: "flex",
+            alignItems: "center",
+            gap: "12px",
           }}
-        />
+        >
+          {[40, 90, 150, 70, 180, 110, 60, 130, 50].map((h, i) => (
+            <div
+              key={i}
+              style={{
+                width: "22px",
+                height: `${h}px`,
+                borderRadius: "9999px",
+                background: ["#FFC6D5", "#FFE38F", "#BFE9D2", "#BCDCFF", "#DCCFFF"][i % 5],
+                border: "3px solid #2D2640",
+                display: "flex",
+              }}
+            />
+          ))}
+        </div>
         <div
           style={{
-            position: "absolute",
-            right: "270px",
-            top: "40px",
-            width: "90px",
-            height: "200px",
-            borderRadius: "9999px",
-            background: "#FFC6D5",
-            border: "4px solid #2D2640",
-            boxShadow: "8px 8px 0 0 #2D2640",
-            transform: "rotate(-12deg)",
-            display: "flex",
-          }}
-        />
-        <div
-          style={{
-            fontSize: 28,
-            fontFamily: "sans-serif",
-            fontWeight: 800,
+            fontSize: 24,
+            fontFamily: "monospace",
+            letterSpacing: "0.16em",
+            fontWeight: 700,
             color: "#2D2640",
             background: "#FFCFAE",
             border: "3px solid #2D2640",
             borderRadius: "9999px",
             padding: "8px 24px",
             alignSelf: "flex-start",
-            transform: "rotate(-3deg)",
             display: "flex",
           }}
         >
-          hi, I&apos;m jiya ✦
+          JIYA SINGHAL
         </div>
         <div
           style={{

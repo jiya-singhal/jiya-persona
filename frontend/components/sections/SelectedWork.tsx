@@ -10,11 +10,15 @@ import { ConversationVisual } from "@/components/visuals/ConversationVisual";
 import { VoicequalDemo } from "@/components/visuals/VoicequalDemo";
 import { Highlight } from "@/components/primitives/Highlight";
 import { Sticker } from "@/components/primitives/Sticker";
-import { WashiTape } from "@/components/primitives/WashiTape";
-import { Doodle, type Pastel } from "@/components/primitives/Doodle";
+import { Motif, type MotifName, type Pastel } from "@/components/primitives/Motif";
 
-/* Each case study gets its own pastel for the tape and the visual card. */
-const CARD_COLORS: Pastel[] = ["blush", "mint", "sky", "lilac"];
+/* Each case study gets a pastel and the motif of its own work. */
+const MOTIFS: Record<CaseStudyT["id"], { color: Pastel; name: MotifName }> = {
+  "voice-pipeline": { color: "blush", name: "waveform" },
+  voicequal: { color: "mint", name: "spectrum" },
+  "ai-persona": { color: "sky", name: "braces" },
+  "kv-cache": { color: "lilac", name: "nodes" },
+};
 /* Built-with tags cycle through all six pastels, like a sheet of stickers. */
 const TAG_COLORS = ["bg-blush", "bg-butter", "bg-mint", "bg-sky", "bg-lilac", "bg-peach"];
 
@@ -59,7 +63,7 @@ export function SelectedWork() {
 function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
   const Visual = VISUALS[cs.id];
   const flip = index % 2 === 1;
-  const color = CARD_COLORS[index % CARD_COLORS.length];
+  const motif = MOTIFS[cs.id];
 
   return (
     <Reveal>
@@ -84,7 +88,7 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
               <span className="font-display text-4xl font-bold leading-none text-ink sm:text-5xl">
                 <Highlight color="butter">{cs.metric.to}</Highlight>
               </span>
-              <Sticker color="mint" rotate={4}>
+              <Sticker color="mint">
                 {cs.metric.delta}
               </Sticker>
             </div>
@@ -92,15 +96,15 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
 
           <dl className="mt-8 space-y-5 text-base leading-relaxed">
             <div>
-              <dt className="font-hand text-2xl leading-none text-berry">problem</dt>
+              <dt className="font-mono text-xs uppercase tracking-[0.16em] text-berry">problem</dt>
               <dd className="mt-1.5 text-ink-muted">{cs.problem}</dd>
             </div>
             <div>
-              <dt className="font-hand text-2xl leading-none text-berry">investigation</dt>
+              <dt className="font-mono text-xs uppercase tracking-[0.16em] text-berry">investigation</dt>
               <dd className="mt-1.5 text-ink-muted">{cs.investigation}</dd>
             </div>
             <div>
-              <dt className="font-hand text-2xl leading-none text-berry">built</dt>
+              <dt className="font-mono text-xs uppercase tracking-[0.16em] text-berry">built</dt>
               <dd className="mt-2 flex flex-wrap gap-2">
                 {cs.built.map((b, i) => (
                   <span
@@ -113,7 +117,7 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
               </dd>
             </div>
             <div>
-              <dt className="font-hand text-2xl leading-none text-berry">result</dt>
+              <dt className="font-mono text-xs uppercase tracking-[0.16em] text-berry">result</dt>
               <dd className="mt-1.5 font-semibold text-ink">{cs.result}</dd>
             </div>
           </dl>
@@ -124,7 +128,7 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
             className="mt-6 max-h-0 overflow-hidden rounded-[14px] border-1.5 border-dashed border-transparent bg-card text-base leading-relaxed text-ink-muted opacity-0 transition-all duration-500 ease-out group-hover:max-h-48 group-hover:border-outline group-hover:opacity-100 focus:max-h-48 focus:border-outline focus:opacity-100"
           >
             <p className="p-4">
-              <span className="font-hand text-xl text-grape">deeper ↘ </span>
+              <span className="font-mono text-xs uppercase tracking-[0.14em] text-grape">deeper · </span>
               {cs.hoverDetail}
             </p>
           </div>
@@ -148,18 +152,9 @@ function CaseStudyCard({ cs, index }: { cs: CaseStudyT; index: number }) {
 
         {/* visual */}
         <div
-          className={`sticker relative rounded-[20px] bg-card p-6 sm:p-8 ${
-            flip ? "lg:order-1 lg:rotate-1" : "lg:-rotate-1"
-          }`}
+          className={`sticker relative rounded-[20px] bg-card p-6 pt-12 sm:p-8 sm:pt-14 ${flip ? "lg:order-1" : ""}`}
         >
-          <WashiTape color={color} rotate={flip ? 5 : -4} className="absolute -top-3 left-1/2 -ml-12" />
-          <Doodle
-            shape={flip ? "star" : "sparkle"}
-            color="butter"
-            size={30}
-            rotate={flip ? 10 : -10}
-            className="absolute -right-3 -top-4"
-          />
+          <Motif name={motif.name} color={motif.color} size={36} className="absolute left-5 top-4" />
           <Visual />
         </div>
       </article>

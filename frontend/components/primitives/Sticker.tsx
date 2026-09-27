@@ -1,4 +1,4 @@
-import type { Pastel } from "./Doodle";
+import type { Pastel } from "./Motif";
 
 const BG: Record<Pastel, string> = {
   butter: "bg-butter",
@@ -9,22 +9,19 @@ const BG: Record<Pastel, string> = {
   peach: "bg-peach",
 };
 
-/** A tilted pill label that looks slapped onto the page. */
+/** A pill label with an ink outline, for one to three words of status. */
 export function Sticker({
   color = "butter",
-  rotate = -3,
   className = "",
   children,
 }: {
   color?: Pastel;
-  rotate?: number;
   className?: string;
   children: React.ReactNode;
 }) {
   return (
     <span
       className={`sticker inline-block whitespace-nowrap rounded-full px-3 py-1.5 text-[0.8125rem] font-extrabold leading-none text-on-pastel ${BG[color]} ${className}`}
-      style={{ transform: `rotate(${rotate}deg)` }}
     >
       {children}
     </span>

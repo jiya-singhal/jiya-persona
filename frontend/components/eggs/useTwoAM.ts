@@ -11,7 +11,7 @@ function applied(): boolean {
 }
 
 /**
- * 2 AM mode: the "stargazing" night palette, toggled by clicking the moon.
+ * 2 AM mode: the night palette, toggled by the switch in the header.
  * State lives on <html class="two-am"> (set pre-hydration by an inline
  * script in layout.tsx) + localStorage. A custom event keeps every
  * hook instance in sync.
@@ -41,7 +41,7 @@ export function useTwoAM() {
     prev?.remove();
     const toast = document.createElement("div");
     toast.id = "jiya-2am-toast";
-    toast.textContent = next ? "☾ stargazing" : "☀ back to daydream";
+    toast.textContent = next ? "2 AM mode on" : "2 AM mode off";
     toast.setAttribute("role", "status");
     toast.style.cssText =
       "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;" +

@@ -26,7 +26,7 @@ export function ConversationVisual() {
         }}
         className="max-w-[85%] rounded-[20px] rounded-bl-[4px] border-1.5 border-outline bg-sky px-4 py-3 text-on-pastel"
       >
-        <p className="font-hand text-lg leading-none">you</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em]">you</p>
         <p className="mt-1 text-sm font-medium leading-relaxed">
           What was the hardest engineering problem Jiya solved?
         </p>
@@ -39,7 +39,7 @@ export function ConversationVisual() {
         }}
         className="ml-auto max-w-[85%] rounded-[20px] rounded-br-[4px] border-1.5 border-outline bg-card px-4 py-3 shadow-sticker"
       >
-        <p className="font-hand text-lg leading-none text-grape">jiya ai ✦</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-grape">jiya ai</p>
         <p className="mt-1 text-sm font-medium leading-relaxed text-ink">
           Probably the cross-platform mic failure: four plausible causes, each ruled
           out with source-level proof…{" "}

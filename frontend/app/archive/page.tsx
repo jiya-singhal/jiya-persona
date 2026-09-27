@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Header } from "@/components/Header";
 import { ActivityFeed } from "@/components/ActivityFeed";
-import { Doodle } from "@/components/primitives/Doodle";
+import { Motif } from "@/components/primitives/Motif";
 import { Highlight } from "@/components/primitives/Highlight";
 import projectsData from "@/content/projects.json";
 
@@ -26,10 +26,10 @@ export default function ArchivePage() {
     <>
       <Header />
       <main className="mx-auto w-full max-w-shell px-6 pb-24 pt-16">
-        <p className="font-hand text-2xl text-berry">the full index ↘</p>
+        <p className="font-mono text-sm font-medium uppercase tracking-[0.16em] text-berry">the full index</p>
         <h1 className="mt-3 inline-flex items-center gap-3 font-display text-4xl font-semibold text-ink sm:text-5xl">
           <Highlight color="blush">Experiments.</Highlight>
-          <Doodle shape="sparkle" color="butter" size={32} rotate={-10} />
+          <Motif name="braces" color="butter" size={44} />
         </h1>
         <p className="mt-4 max-w-prose text-base font-medium leading-relaxed text-ink-muted">
           The complete works, including the early questionable ones. Each entry
@@ -44,7 +44,7 @@ export default function ArchivePage() {
                 href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className="sticker group grid grid-cols-[3rem_1fr_auto] items-baseline gap-4 rounded-[20px] bg-card px-5 py-4 transition-transform duration-200 ease-bounce hover:-translate-y-0.5 hover:-rotate-[0.5deg] md:grid-cols-[3rem_16rem_1fr_auto]"
+                className="sticker group grid grid-cols-[3rem_1fr_auto] items-baseline gap-4 rounded-[20px] bg-card px-5 py-4 transition-transform duration-200 ease-bounce hover:-translate-y-0.5 md:grid-cols-[3rem_16rem_1fr_auto]"
               >
                 <span
                   className={`inline-grid h-8 w-8 place-items-center self-center rounded-full border-1.5 border-outline font-mono text-xs text-on-pastel ${

@@ -6,8 +6,6 @@ import { COPY } from "@/content/profile";
 import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { Reveal } from "@/components/primitives/Reveal";
 import { ChatWindow } from "../ChatWindow";
-import { Doodle } from "@/components/primitives/Doodle";
-import { WashiTape } from "@/components/primitives/WashiTape";
 
 export function ChatSection() {
   return (
@@ -26,13 +24,8 @@ export function ChatSection() {
         </Reveal>
 
         <Reveal delay={0.15}>
-          <div className="relative">
-            <WashiTape color="sky" rotate={-3} className="absolute -top-3 left-10 z-10" />
-            <WashiTape color="butter" rotate={4} width={80} className="absolute -top-3 right-10 z-10" />
-            <Doodle shape="heart" color="blush" size={30} rotate={-12} className="absolute -bottom-4 -left-3 z-10" />
-            <div className="sticker h-[36rem] overflow-hidden rounded-[20px] bg-card">
-              <ChatWindow />
-            </div>
+          <div className="sticker h-[36rem] overflow-hidden rounded-[20px] bg-card">
+            <ChatWindow />
           </div>
         </Reveal>
 

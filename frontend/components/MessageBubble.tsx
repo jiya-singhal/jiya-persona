@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Doodle } from "@/components/primitives/Doodle";
+import { Motif } from "@/components/primitives/Motif";
 
 export function MessageBubble({
   role,
@@ -18,7 +18,7 @@ export function MessageBubble({
           aria-hidden="true"
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-1.5 border-outline bg-lilac"
         >
-          <Doodle shape="sparkle" color="butter" size={16} outline="var(--on-pastel)" />
+          <Motif name="waveform" bare size={16} className="text-on-pastel" />
         </span>
       )}
       <div

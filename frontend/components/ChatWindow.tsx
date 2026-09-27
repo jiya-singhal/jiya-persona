@@ -116,7 +116,7 @@ export function ChatWindow({
                 on her calendar.
               </p>
               <div className="flex flex-col gap-2">
-                <div className="font-hand text-2xl leading-none text-cobalt">try asking ↘</div>
+                <div className="font-mono text-xs uppercase tracking-[0.14em] text-cobalt">try asking</div>
                 {CHAT_SUGGESTIONS.map((s) => (
                   <button
                     key={s.label}
@@ -173,7 +173,7 @@ export function ChatWindow({
             disabled={streaming || !input.trim()}
             className="btn btn-primary"
           >
-            Send ✦
+            Send
           </button>
         </form>
       </div>

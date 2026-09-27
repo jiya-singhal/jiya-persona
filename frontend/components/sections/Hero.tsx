@@ -6,19 +6,17 @@ import { COPY, HERO_STATS } from "@/content/profile";
 import { EASE } from "@/lib/motion";
 import { Waveform } from "@/components/primitives/Waveform";
 import { Constellation } from "@/components/primitives/Constellation";
-import { MoonGlow } from "@/components/primitives/MoonGlow";
-import { Doodle } from "@/components/primitives/Doodle";
+import { Motif, type MotifName } from "@/components/primitives/Motif";
 import { Highlight } from "@/components/primitives/Highlight";
-import { Sticker } from "@/components/primitives/Sticker";
 import { DotBurst } from "@/components/eggs/DotBurst";
 
-/* Stat cards cycle through the pastels and alternate their tilt. */
-const STAT_STYLE = [
-  { bg: "bg-blush", tilt: "-rotate-2" },
-  { bg: "bg-butter", tilt: "rotate-1" },
-  { bg: "bg-mint", tilt: "-rotate-1" },
-  { bg: "bg-sky", tilt: "rotate-2" },
-  { bg: "bg-lilac", tilt: "-rotate-1" },
+/* Each stat card gets a pastel and the motif of the work it measures. */
+const STAT_STYLE: { bg: string; motif: MotifName }[] = [
+  { bg: "bg-blush", motif: "latency" },
+  { bg: "bg-butter", motif: "check" },
+  { bg: "bg-mint", motif: "spectrum" },
+  { bg: "bg-sky", motif: "waveform" },
+  { bg: "bg-lilac", motif: "braces" },
 ];
 
 /** Puts a marker highlight behind the word "why" in the headline. */
@@ -37,25 +35,27 @@ function headline(text: string) {
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <MoonGlow className="absolute inset-0" />
-      <Constellation className="pointer-events-none absolute -right-24 top-40 hidden w-[34rem] opacity-70 lg:block" />
-
-      {/* doodles scattered in the margins */}
-      <Doodle shape="sparkle" color="butter" size={34} rotate={-10} className="absolute left-[4%] top-[18%] hidden md:block" />
-      <Doodle shape="heart" color="blush" size={26} rotate={12} className="absolute left-[46%] top-[12%] hidden md:block" />
-      <Doodle shape="star" color="mint" size={24} rotate={-8} className="absolute bottom-[14%] right-[10%] hidden md:block" />
-      <Doodle shape="flower" color="lilac" size={30} className="absolute bottom-[30%] left-[2%] hidden lg:block" />
+      {/* soft pastel glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(520px 380px at 85% 20%, rgb(var(--lilac) / 0.4), transparent 70%), radial-gradient(420px 320px at 8% 90%, rgb(var(--blush) / 0.3), transparent 70%)",
+        }}
+      />
+      <Constellation className="pointer-events-none absolute -right-24 top-32 hidden w-[34rem] opacity-70 lg:block" />
 
       <div className="relative mx-auto flex min-h-[88vh] w-full max-w-shell flex-col justify-center px-6 py-24">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: EASE }}
-          className="flex items-center gap-3"
+          className="flex items-center gap-4"
         >
-          <Sticker color="peach" rotate={-4}>
-            hi, I&apos;m {COPY.hero.name.split(" ")[0].toLowerCase()} ✦
-          </Sticker>
+          <p className="font-mono text-sm font-medium uppercase tracking-[0.2em] text-ink-muted">
+            {COPY.hero.name}
+          </p>
           <Waveform className="h-10 w-40" />
         </motion.div>
 
@@ -63,7 +63,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
-          className="mt-8 max-w-3xl font-display text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl"
+          className="mt-6 max-w-3xl font-display text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl"
         >
           {headline(COPY.hero.headline)}
         </motion.h1>
@@ -81,7 +81,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: EASE, delay: 0.5 }}
-          className="mt-4 font-hand text-2xl text-grape"
+          className="mt-4 font-mono text-sm text-grape"
         >
           {COPY.hero.current}
         </motion.p>
@@ -112,9 +112,10 @@ export function Hero() {
               <span className="font-mono text-xl font-medium text-on-pastel sm:text-2xl">{s.display}</span>
             );
             return (
-              <div key={s.label} className={`sticker rounded-[20px] px-4 py-4 text-on-pastel ${st.bg} ${st.tilt}`}>
+              <div key={s.label} className={`sticker rounded-[20px] px-4 py-4 text-on-pastel ${st.bg}`}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd>
+                  <Motif name={st.motif} bare size={18} className="mb-2 opacity-70" />
                   {s.egg === "dotburst" ? <DotBurst>{number}</DotBurst> : number}
                   <p className="mt-1.5 text-sm font-semibold leading-snug">{s.label}</p>
                 </dd>
@@ -127,9 +128,8 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: EASE, delay: 1.1 }}
-          className="mt-8 inline-flex items-center gap-2 font-hand text-xl text-ink-muted"
+          className="mt-8 font-hand text-xl text-ink-muted"
         >
-          <Doodle shape="squiggle" color="berry" size={22} />
           {COPY.hero.statsNote}
         </motion.p>
       </div>

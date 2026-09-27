@@ -32,7 +32,7 @@ export function ActivityFeed() {
 
   return (
     <div>
-      <h2 className="inline-flex items-center gap-2 font-hand text-2xl text-fern">
+      <h2 className="inline-flex items-center gap-2 font-mono text-sm font-medium uppercase tracking-[0.14em] text-fern">
         <span className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-80" />
           <span className="relative inline-flex h-2 w-2 rounded-full border border-outline bg-mint" />

@@ -4,8 +4,8 @@
 
 /*
  * The Daydream palette: a pastel notebook. RGB triplets so Tailwind alpha
- * modifiers work (bg-card/80 etc.). The moon swaps the whole set to the
- * "stargazing" night theme via html.two-am.
+ * modifiers work (bg-card/80 etc.). The header's 2 AM switch swaps the
+ * whole set to the night theme via html.two-am.
  */
 :root {
   --paper: 255 250 243; /* #FFFAF3 cream notebook paper */
@@ -35,7 +35,7 @@
   --honey: 138 90 0;
 }
 
-/* Stargazing: dusk-purple paper, cream ink, the same pastels glowing on it */
+/* 2 AM mode: dusk-purple paper, cream ink, the same pastels on it */
 html.two-am {
   --paper: 31 26 51;
   --paper-alt: 39 32 66;
@@ -77,20 +77,6 @@ body {
   transition: background-color 0.6s ease, color 0.6s ease;
 }
 
-/*
- * Stargazing layer — only at night. A tiny point-grid of irregular stars,
- * tiled from an inline SVG. Fixed and pointer-transparent.
- */
-html.two-am body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='%23E8E4D8'%3E%3Ccircle cx='23' cy='31' r='0.7' opacity='0.35'/%3E%3Ccircle cx='71' cy='13' r='0.5' opacity='0.28'/%3E%3Ccircle cx='118' cy='47' r='0.8' opacity='0.4'/%3E%3Ccircle cx='166' cy='22' r='0.5' opacity='0.25'/%3E%3Ccircle cx='209' cy='58' r='0.7' opacity='0.32'/%3E%3Ccircle cx='38' cy='84' r='0.5' opacity='0.24'/%3E%3Ccircle cx='97' cy='95' r='0.6' opacity='0.3'/%3E%3Ccircle cx='151' cy='79' r='0.5' opacity='0.22'/%3E%3Ccircle cx='197' cy='104' r='0.9' opacity='0.42'/%3E%3Ccircle cx='16' cy='128' r='0.6' opacity='0.3'/%3E%3Ccircle cx='63' cy='141' r='0.8' opacity='0.36'/%3E%3Ccircle cx='122' cy='131' r='0.5' opacity='0.24'/%3E%3Ccircle cx='176' cy='150' r='0.6' opacity='0.28'/%3E%3Ccircle cx='227' cy='137' r='0.5' opacity='0.22'/%3E%3Ccircle cx='42' cy='183' r='0.7' opacity='0.34'/%3E%3Ccircle cx='90' cy='201' r='0.5' opacity='0.26'/%3E%3Ccircle cx='139' cy='188' r='0.9' opacity='0.4'/%3E%3Ccircle cx='187' cy='214' r='0.6' opacity='0.3'/%3E%3Ccircle cx='230' cy='192' r='0.5' opacity='0.24'/%3E%3Ccircle cx='12' cy='222' r='0.6' opacity='0.28'/%3E%3C/g%3E%3Cg fill='%239DB0FF'%3E%3Ccircle cx='143' cy='16' r='1' opacity='0.35'/%3E%3Ccircle cx='31' cy='157' r='1.1' opacity='0.3'/%3E%3Ccircle cx='205' cy='170' r='1' opacity='0.32'/%3E%3C/g%3E%3C/svg%3E");
-}
-
 @layer components {
   /* The sticker: an ink outline and a hard offset shadow. */
   .sticker {
@@ -103,7 +89,7 @@ html.two-am body::after {
     @apply sticker inline-flex items-center gap-2 rounded-full px-6 py-3 text-[0.9375rem] font-bold leading-5 transition-[transform,box-shadow] duration-200 ease-bounce;
   }
   .btn:hover {
-    transform: translate(-2px, -2px) rotate(-1deg);
+    transform: translate(-2px, -2px);
     box-shadow: 5px 5px 0 0 rgb(var(--shadow-ink));
   }
   .btn:active {

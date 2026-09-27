@@ -3,24 +3,15 @@
 import { BRAIN, COPY, PHILOSOPHY } from "@/content/profile";
 import { SectionHeading } from "@/components/primitives/SectionHeading";
 import { Reveal } from "@/components/primitives/Reveal";
-import { Doodle } from "@/components/primitives/Doodle";
+import { Motif } from "@/components/primitives/Motif";
 
-/* Sticky notes cycle the pastels and alternate their tilt. */
-const NOTE_STYLE = [
-  "bg-butter -rotate-2",
-  "bg-blush rotate-1",
-  "bg-mint -rotate-1",
-  "bg-sky rotate-2",
-  "bg-lilac rotate-1",
-  "bg-peach -rotate-2",
-  "bg-mint rotate-2",
-  "bg-butter -rotate-1",
-];
+/* Field notes cycle through the pastels. */
+const NOTE_STYLE = ["bg-butter", "bg-blush", "bg-mint", "bg-sky", "bg-lilac", "bg-peach", "bg-mint", "bg-butter"];
 
 export function HowIThink() {
   return (
     <section id="think" className="relative">
-      <Doodle shape="cloud" color="sky" size={56} className="absolute right-[6%] top-16 hidden md:block" />
+      <Motif name="pitch" color="butter" size={48} className="absolute right-[6%] top-24 hidden md:grid" />
       <div className="mx-auto w-full max-w-shell px-6 py-24">
         <SectionHeading
           number={COPY.think.number}
@@ -54,9 +45,9 @@ export function HowIThink() {
           {BRAIN.map((b, i) => (
             <Reveal key={b.q} delay={i * 0.04}>
               <div
-                className={`sticker h-full rounded-[14px] px-5 py-5 text-on-pastel transition-transform duration-200 ease-bounce hover:rotate-0 hover:scale-[1.03] ${NOTE_STYLE[i % NOTE_STYLE.length]}`}
+                className={`h-full rounded-[14px] border-1.5 border-outline px-5 py-5 text-on-pastel ${NOTE_STYLE[i % NOTE_STYLE.length]}`}
               >
-                <p className="font-hand text-xl leading-tight">{b.q}</p>
+                <p className="font-mono text-xs uppercase tracking-[0.12em] opacity-80">{b.q}</p>
                 {b.egg === "benchmark" ? (
                   <p className="group/pf mt-1.5 cursor-help text-base font-bold">
                     <span className="group-hover/pf:hidden">{b.a}</span>

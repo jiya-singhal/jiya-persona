@@ -80,7 +80,7 @@ export function CommandPalette() {
 
   const commands = [
     { label: "→ Explore work", run: () => { setOpen(false); router.push("/#work"); } },
-    { label: isTwoAM ? "☀ Back to daydream" : "☾ Go stargazing", run: () => { setOpen(false); toggleTwoAM(); } },
+    { label: isTwoAM ? "Leave 2 AM mode" : "Enter 2 AM mode", run: () => { setOpen(false); toggleTwoAM(); } },
     { label: "📄 Open resume", run: () => { setOpen(false); window.open("/resume.pdf", "_blank"); } },
   ];
 
@@ -106,8 +106,8 @@ export function CommandPalette() {
           className="border-b-1.5 border-outline bg-lilac"
         >
           <label className="flex items-center gap-3 px-4">
-            <span className="text-lg text-on-pastel" aria-hidden="true">
-              ☾
+            <span className="font-mono text-lg text-on-pastel" aria-hidden="true">
+              &gt;
             </span>
             <input
               ref={inputRef}

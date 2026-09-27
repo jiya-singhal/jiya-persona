@@ -29,7 +29,7 @@ export function BookingInline({
     return (
       <div className="mt-3 rounded-[14px] border-1.5 border-outline bg-sky p-3 text-on-pastel">
         <div className="mb-2 font-mono text-[11px] uppercase tracking-wider">
-          ✦ Pulled from Jiya&apos;s calendar
+          Pulled from Jiya&apos;s calendar
         </div>
         {slots.length === 0 ? (
           <div className="text-sm">No slots available in that window.</div>

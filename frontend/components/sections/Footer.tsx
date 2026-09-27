@@ -2,33 +2,20 @@
 
 import Link from "next/link";
 import { COPY, LINKS } from "@/content/profile";
-import { useTwoAM } from "@/components/eggs/useTwoAM";
 import { Constellation } from "@/components/primitives/Constellation";
 import { Reveal } from "@/components/primitives/Reveal";
-import { Doodle } from "@/components/primitives/Doodle";
+import { Motif } from "@/components/primitives/Motif";
 import { Highlight } from "@/components/primitives/Highlight";
 
 const LINK_COLORS = ["bg-blush", "bg-butter", "bg-mint", "bg-sky", "bg-lilac", "bg-peach"];
 
 export function Footer() {
-  const { toggle } = useTwoAM();
-
   return (
     <footer id="contact" className="relative overflow-hidden">
       <Constellation className="pointer-events-none absolute -bottom-10 left-1/2 w-[30rem] -translate-x-1/2 opacity-40" />
-      <Doodle shape="sparkle" color="butter" size={30} rotate={-12} className="absolute left-[10%] top-24 hidden md:block" />
-      <Doodle shape="heart" color="blush" size={26} rotate={10} className="absolute right-[12%] top-40 hidden md:block" />
-      <Doodle shape="flower" color="mint" size={30} className="absolute bottom-24 left-[16%] hidden md:block" />
 
       <div className="relative mx-auto w-full max-w-shell px-6 py-24 text-center">
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label="The moon again. It still works."
-          className="mx-auto block rounded-full transition-transform duration-300 ease-bounce hover:-rotate-12 hover:scale-110"
-        >
-          <Doodle shape="moon" color="butter" size={48} rotate={-18} />
-        </button>
+        <Motif name="prompt" color="butter" size={48} className="mx-auto" />
 
         <Reveal>
           <p className="mt-8 font-display text-3xl font-semibold italic text-ink sm:text-5xl">
@@ -45,7 +32,7 @@ export function Footer() {
 
         <Reveal delay={0.2}>
           <Link href="/chat" className="btn btn-primary mt-8">
-            {COPY.footer.ask} ✦
+            {COPY.footer.ask}
           </Link>
           <p className="mt-4 font-hand text-xl text-grape">{COPY.footer.askAside}</p>
         </Reveal>
@@ -71,7 +58,7 @@ export function Footer() {
               href={l.href}
               target={l.href.startsWith("http") ? "_blank" : undefined}
               rel="noreferrer"
-              className={`rounded-full border-1.5 border-outline px-4 py-1.5 text-sm font-bold text-on-pastel transition-transform duration-200 ease-bounce hover:-translate-y-0.5 hover:-rotate-2 ${LINK_COLORS[i % LINK_COLORS.length]}`}
+              className={`rounded-full border-1.5 border-outline px-4 py-1.5 text-sm font-bold text-on-pastel transition-transform duration-200 ease-bounce hover:-translate-y-0.5 ${LINK_COLORS[i % LINK_COLORS.length]}`}
             >
               {l.label}
             </a>
@@ -79,7 +66,7 @@ export function Footer() {
         </nav>
 
         <p className="mt-10 font-mono text-[11px] tracking-[0.12em] text-ink-faint">
-          © {new Date().getFullYear()} jiya singhal · built at night, measured by day ✦
+          © {new Date().getFullYear()} jiya singhal · built at night, measured by day
         </p>
       </div>
     </footer>

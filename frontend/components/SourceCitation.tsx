@@ -30,7 +30,7 @@ export function SourceCitation({ sources }: { sources: Source[] }) {
             onClick={() => setOpenIdx(openIdx === i ? null : i)}
             className={`rounded-full border-1.5 border-outline py-1 pl-1 pr-3 text-xs font-bold text-on-pastel transition-transform duration-200 ease-bounce hover:-translate-y-0.5 ${
               CHIP[i % CHIP.length]
-            } ${openIdx === i ? "-rotate-2 shadow-sticker" : ""}`}
+            } ${openIdx === i ? "shadow-sticker" : ""}`}
           >
             <span className="mr-1.5 inline-grid h-5 w-5 place-items-center rounded-full border-1.5 border-on-pastel bg-white font-mono text-[10px]">
               {i + 1}

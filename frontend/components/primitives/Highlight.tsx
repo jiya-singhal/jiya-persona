@@ -1,4 +1,4 @@
-import type { Pastel } from "./Doodle";
+import type { Pastel } from "./Motif";
 
 /** A marker swipe behind the one word that carries the point. */
 export function Highlight({

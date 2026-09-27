@@ -46,7 +46,7 @@ export const viewport: Viewport = {
   themeColor: "#FFFAF3",
 };
 
-/* Applies the stargazing (2 AM) theme before first paint so there is no theme flash. */
+/* Applies 2 AM mode before first paint so there is no theme flash. */
 const twoAmScript = `try{if(localStorage.getItem("jiya-2am")==="1")document.documentElement.classList.add("two-am")}catch(e){}`;
 
 export default function RootLayout({
