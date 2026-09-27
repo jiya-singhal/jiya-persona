@@ -93,7 +93,7 @@
       "name": "KV-Cache",
       "url": "https://github.com/jiya-singhal/KV-Cache",
       "featured": true,
-      "tagline": "Distributed key-value cache - consistent hashing, synchronous primary-replica replication, bounded LRU.",
+      "tagline": "Distributed key-value cache - hash-modulo sharding, synchronous primary-replica replication, bounded LRU; 11,820 req/s on AWS.",
       "problem": "Provides a high-performance, in-memory key-value store that can handle concurrent requests, offering fast data retrieval and storage with optional time-to-live (TTL) and Least Recently Used (LRU) eviction policies.",
       "architecture": "The KV-Cache server is structured into three main layers: a Network Layer (`tcp_server.py`) utilizing `asyncio` for concurrent TCP connections; a Protocol Layer (`parser.py`, `commands.py`) responsible for parsing custom text-based commands and formatting responses; and a Cache Layer (`store.py`, `eviction.py`) that implements the core key-value storage, Time-To-Live (TTL) management, and a Least Recently Used (LRU) eviction policy. Client requests flow from a TCP socket through the protocol parser to the KV store, and responses are returned accordingly.",
       "features": [

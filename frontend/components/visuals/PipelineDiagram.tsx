@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { EASE, viewportOnce } from "@/lib/motion";
 
 /*
- * The 57s → 15s story, drawn: audio → VAD → concurrent tasks → processing
+ * The 57s → 37s story, drawn: audio → VAD → concurrent tasks → processing
  * → ready. Lines draw themselves; nodes illuminate in sequence; the three
  * concurrent branches light up together — that's the whole point.
  */
