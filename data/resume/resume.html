@@ -6,121 +6,151 @@
 <meta name="description" content="Resume of Jiya Singhal, software engineering intern at Sing One Song. Voice, real-time audio and game systems." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..600,50&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght,SOFT@9..144,400..700,100&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 <style>
   /*
-   * The Midnight Lab, printed. Same type system as the site (Inter, JetBrains
-   * Mono, Fraunces), same ink-blue and periwinkle, inverted onto ivory paper so
-   * it survives printing and text extraction. Single column on purpose: the
-   * persona's RAG ingester reads this PDF line by line.
+   * The Daydream notebook, printed. Same tokens as the site (frontend/app/
+   * globals.css): cream dot-grid paper, plum ink, six pastels as fills, five
+   * pops for coloured text, ink-outlined stickers with a hard offset shadow.
+   * Same type system too: Nunito, Fraunces (SOFT axis), DM Mono, Caveat once.
+   * Single column on purpose: the persona's RAG ingester reads this PDF in
+   * layout mode, line by line.
    */
   :root {
-    --paper: #F6F4EE;
-    --ink: #12192B;
-    --ink-soft: #3B4459;
-    --mist: #6B7488;
-    --line: #D3D7E2;
-    --accent: #3D51A6;
-    --accent-tint: #E4E9FA;
-    --gold: #9C7A45;
+    --paper: #FFFAF3;
+    --grid: #EFE2D4;
+    --card: #FFFFFF;
+    --ink: #2D2640;
+    --ink-muted: #625873;
+    --ink-faint: #6F6480;
+    --butter: #FFE38F;
+    --blush: #FFC6D5;
+    --sky: #BCDCFF;
+    --mint: #BFE9D2;
+    --lilac: #DCCFFF;
+    --peach: #FFCFAE;
+    --berry: #C2255C;
+    --cobalt: #3553C7;
+    --fern: #1B7A50;
+    --grape: #6A3FC0;
+    --honey: #8A5A00;
   }
-  @page { size: A4; margin: 12mm 13mm 12mm 13mm; }
+  @page { size: A4; margin: 11mm 12mm 11mm 12mm; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
-    background: var(--paper);
+    background-color: var(--paper);
+    background-image: radial-gradient(circle, var(--grid) 0.55pt, transparent 0.9pt);
+    background-size: 16pt 16pt;
     color: var(--ink);
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    font-size: 8.55pt;
-    line-height: 1.29;
+    font-family: "Nunito", ui-rounded, system-ui, sans-serif;
+    font-size: 8.4pt;
+    line-height: 1.3;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   a { color: inherit; text-decoration: none; }
-  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
-  .serif { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 50; }
+  .mono { font-family: "DM Mono", ui-monospace, monospace; }
+  .hand { font-family: "Caveat", cursive; }
+  b, strong { font-weight: 800; }
+
+  /* the sticker: ink outline + hard offset shadow, no tilt */
+  .sticker { border: 1pt solid var(--ink); box-shadow: 2pt 2pt 0 0 var(--ink); }
+  /* the marker swipe behind one word */
+  .hl { background: linear-gradient(transparent 38%, var(--butter) 38%, var(--butter) 92%, transparent 92%); padding: 0 2pt; border-radius: 2pt; }
 
   /* ---------- header ---------- */
-  header { border-bottom: 1px solid var(--line); padding-bottom: 9pt; }
+  header { padding-bottom: 7pt; border-bottom: 1pt solid var(--grid); }
+  .name-row { display: flex; align-items: center; gap: 8pt; }
   .name {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 9.5pt; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--mist); margin: 0;
+    font-family: "DM Mono", monospace; font-size: 8.4pt; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink);
+    background: var(--peach); border-radius: 999pt; padding: 3pt 9pt; margin: 0;
+    display: inline-block;
   }
-  .wave { color: var(--accent); font-size: 9pt; letter-spacing: 0.1em; margin-left: 8pt; }
+  .wave { color: var(--ink); opacity: 0.85; }
+  .wave svg { display: block; height: 11pt; width: 44pt; }
   h1 {
-    font-family: "Fraunces", Georgia, serif; font-weight: 500;
-    font-size: 20pt; line-height: 1.16; margin: 6pt 0 5pt; color: var(--ink);
-    letter-spacing: -0.005em;
+    font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100;
+    font-weight: 700; font-size: 20pt; line-height: 1.1; letter-spacing: -0.01em;
+    margin: 6pt 0 4pt; color: var(--ink);
   }
-  .role { font-size: 10pt; color: var(--ink-soft); margin: 0; }
-  .role b { font-weight: 600; color: var(--ink); }
-  .contact { margin: 6pt 0 0; font-family: "JetBrains Mono", monospace; font-size: 7.6pt; color: var(--mist); }
-  .contact span + span::before { content: "·"; color: var(--line); margin: 0 6pt; }
+  .role { font-size: 9.4pt; font-weight: 600; color: var(--ink-muted); margin: 0; }
+  .role b { color: var(--ink); }
+  .role .cur { color: var(--grape); font-family: "DM Mono", monospace; font-size: 7.8pt; font-weight: 500; }
+  .contact { margin: 5pt 0 0; font-family: "DM Mono", monospace; font-size: 7.3pt; color: var(--ink-faint); }
+  .contact span + span::before { content: "·"; color: var(--grid); margin: 0 5pt; }
 
-  /* stats strip, like the hero numbers */
-  .stats {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8pt;
-    margin: 8pt 0 0; padding: 0; list-style: none;
-  }
-  header { padding-bottom: 7pt; }
-  h1 { margin: 5pt 0 4pt; }
-  .stats li { border-left: 1px solid var(--line); padding-left: 7pt; }
-  .stats .n { font-family: "JetBrains Mono", monospace; font-size: 11.5pt; color: var(--ink); display: block; }
-  .stats .l { font-size: 7.4pt; color: var(--mist); display: block; margin-top: 1pt; }
+  /* stat stickers, one pastel each, like the hero cards */
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7pt; margin: 8pt 0 0; padding: 0; list-style: none; }
+  .stats li { border-radius: 9pt; padding: 5pt 7pt 5pt; color: var(--ink); }
+  .stats li:nth-child(1) { background: var(--blush); }
+  .stats li:nth-child(2) { background: var(--butter); }
+  .stats li:nth-child(3) { background: var(--mint); }
+  .stats li:nth-child(4) { background: var(--sky); }
+  .stats li:nth-child(5) { background: var(--lilac); }
+  .stats svg { display: block; width: 11pt; height: 11pt; margin-bottom: 2pt; opacity: 0.75; }
+  .stats .n { font-family: "DM Mono", monospace; font-size: 10.6pt; font-weight: 500; display: block; }
+  .stats .l { font-size: 7pt; font-weight: 700; display: block; margin-top: 1pt; line-height: 1.2; }
 
   /* ---------- sections ---------- */
-  section { margin-top: 7pt; break-inside: auto; }
-  .eyebrow {
-    font-family: "JetBrains Mono", monospace; font-size: 7.4pt; letter-spacing: 0;
-    text-transform: uppercase; color: var(--accent); margin: 0;
+  section { margin-top: 8pt; break-inside: auto; }
+  .eyebrow { display: flex; align-items: center; gap: 5pt; margin: 0; font-family: "DM Mono", monospace; font-size: 7.2pt; font-weight: 500; letter-spacing: 0; text-transform: uppercase; }
+  .eyebrow .num {
+    display: inline-grid; place-items: center; width: 13pt; height: 13pt; border-radius: 999pt;
+    border: 1pt solid var(--ink); color: var(--ink); font-size: 6.8pt; font-weight: 500;
   }
-  .eyebrow .num { color: var(--mist); margin-right: 6pt; }
+  section[data-family="blush"] .eyebrow { color: var(--berry); }  section[data-family="blush"] .num { background: var(--blush); }
+  section[data-family="sky"] .eyebrow { color: var(--cobalt); }   section[data-family="sky"] .num { background: var(--sky); }
+  section[data-family="mint"] .eyebrow { color: var(--fern); }    section[data-family="mint"] .num { background: var(--mint); }
+  section[data-family="butter"] .eyebrow { color: var(--honey); } section[data-family="butter"] .num { background: var(--butter); }
+  section[data-family="lilac"] .eyebrow { color: var(--grape); }  section[data-family="lilac"] .num { background: var(--lilac); }
   h2 {
-    font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 13.5pt;
-    margin: 1pt 0 4pt; color: var(--ink); line-height: 1.2;
+    font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100;
+    font-weight: 700; font-size: 13pt; letter-spacing: -0.01em; margin: 2pt 0 4pt; color: var(--ink); line-height: 1.15;
   }
-  h2::after { content: ""; display: block; height: 1px; background: var(--line); margin-top: 3pt; }
+  h2::after { content: ""; display: block; height: 1pt; background: var(--grid); margin-top: 3pt; }
 
-  .block { margin-top: 7pt; }
-  .block + .block { margin-top: 9pt; }
+  .block { margin-top: 6pt; }
+  .block + .block { margin-top: 8pt; }
   .block-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; break-inside: avoid; break-after: avoid; }
   .block-head .org { flex: 1 1 auto; }
-  .org { font-size: 10.5pt; font-weight: 600; margin: 0; color: var(--ink); }
-  .meta { font-family: "JetBrains Mono", monospace; font-size: 7.6pt; color: var(--mist); margin: 1pt 0 0; }
-  .meta b { color: var(--ink-soft); font-weight: 500; }
+  .org { font-size: 10pt; font-weight: 800; margin: 0; color: var(--ink); }
+  .meta { font-family: "DM Mono", monospace; font-size: 7.4pt; color: var(--ink-faint); margin: 1pt 0 0; }
+  .meta b { color: var(--ink-muted); font-weight: 500; }
   /* one line, always: the RAG ingester reads org + stack as a single header line */
-  .stack { font-family: "JetBrains Mono", monospace; font-size: 7.4pt; color: var(--mist); text-align: right; flex: 0 0 auto; white-space: nowrap; }
-  .lede { margin: 3pt 0 2pt; color: var(--ink-soft); font-size: 9.2pt; }
+  .stack { font-family: "DM Mono", monospace; font-size: 7.2pt; color: var(--ink-faint); text-align: right; flex: 0 0 auto; white-space: nowrap; }
+  .lede { margin: 3pt 0 2pt; color: var(--ink-muted); font-size: 8.6pt; font-weight: 600; }
 
   ul.bullets { list-style: none; margin: 3pt 0 0; padding: 0; }
-  ul.bullets li { display: flex; gap: 6pt; margin: 0 0 2.6pt; break-inside: avoid; }
-  ul.bullets li .dot { color: var(--accent); flex: 0 0 auto; }
-  ul.bullets li b { font-weight: 600; color: var(--ink); }
-  ul.bullets li .m { font-family: "JetBrains Mono", monospace; font-size: 8.6pt; color: var(--accent); }
+  ul.bullets li { display: flex; gap: 5pt; margin: 0 0 2.4pt; break-inside: avoid; }
+  ul.bullets li .dot { color: var(--berry); flex: 0 0 auto; font-weight: 800; }
+  ul.bullets li b { font-weight: 800; color: var(--ink); }
+  ul.bullets li .m { font-family: "DM Mono", monospace; font-size: 8pt; font-weight: 500; color: var(--cobalt); }
 
-  /* skills as a two column key/value table, like ~/toolbox */
-  table.skills { width: 100%; border-collapse: collapse; margin-top: 4pt; }
-  table.skills td { vertical-align: top; padding: 1.6pt 0; border-bottom: 1px solid var(--accent-tint); }
-  table.skills td.k { width: 17%; font-family: "JetBrains Mono", monospace; font-size: 7.4pt; color: var(--mist); text-transform: lowercase; letter-spacing: 0.04em; padding-right: 8pt; }
-  table.skills td.v { color: var(--ink-soft); }
+  table.skills { width: 100%; border-collapse: collapse; margin-top: 3pt; }
+  table.skills td { vertical-align: top; padding: 1.5pt 0; border-bottom: 1pt solid var(--grid); }
+  table.skills td.k { width: 17%; font-family: "DM Mono", monospace; font-size: 7.2pt; font-weight: 500; color: var(--fern); text-transform: lowercase; padding-right: 8pt; }
+  table.skills td.v { color: var(--ink-muted); font-weight: 600; }
 
   .edu .block { margin-top: 4pt; }
   .edu .block + .block { margin-top: 4pt; }
-  .edu .org { font-size: 9.6pt; }
+  .edu .org { font-size: 9.4pt; }
 
-  footer { margin-top: 6pt; padding-top: 4pt; border-top: 1px solid var(--line);
-    font-family: "JetBrains Mono", monospace; font-size: 7.2pt; color: var(--mist);
-    display: flex; justify-content: space-between; }
-  footer .moon { color: var(--gold); }
+  footer { margin-top: 6pt; padding-top: 4pt; border-top: 1pt solid var(--grid); display: flex; justify-content: space-between; align-items: baseline; }
+  footer .note { font-family: "Caveat", cursive; font-size: 10.5pt; color: var(--ink-muted); }
+  footer .url { font-family: "DM Mono", monospace; font-size: 7.2pt; color: var(--grape); font-weight: 500; }
 </style>
 </head>
 <body>
 
 <header>
-  <p class="name">Jiya Singhal <span class="wave">≋≋≋≋</span></p>
-  <h1>I like figuring out why things behave the way they do.</h1>
-  <p class="role"><b>Software Engineering Intern</b> · voice, real-time audio and game systems · currently building at Sing One Song, Bangalore</p>
+  <div class="name-row">
+    <p class="name">Jiya Singhal</p>
+    <span class="wave" aria-hidden="true"><svg viewBox="0 0 96 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h6l4-5 6 12 6-18 6 20 6-14 4 7 4-3h8l4-5 6 12 6-18 6 20 6-14 4 7 4-3h6"/></svg></span>
+  </div>
+  <h1>I like figuring out <span class="hl">why</span> things behave the way they do.</h1>
+  <p class="role"><b>Software Engineering Intern</b> · voice, real-time audio and game systems · <span class="cur">currently building at Sing One Song</span></p>
   <p class="contact">
     <span>+91-8630588622</span>
     <span><a href="mailto:jiya.23bcs10043@sst.scaler.com">jiya.23bcs10043@sst.scaler.com</a></span>
@@ -130,16 +160,16 @@
     <span><a href="https://leetcode.com/u/jiyasinghal_/">leetcode.com/u/jiyasinghal_</a></span>
   </p>
   <ul class="stats">
-    <li><span class="n">196</span><span class="l">merged PRs across 13 repos</span></li>
-    <li><span class="n">14 games</span><span class="l">one interruption-safe pause system</span></li>
-    <li><span class="n">23 / 23</span><span class="l">engine-port parity tests</span></li>
-    <li><span class="n">21,750</span><span class="l">benchmark cases behind a model swap</span></li>
-    <li><span class="n">5.5% → 0.6%</span><span class="l">false alarms on 355 real recordings</span></li>
+    <li class="sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4c-2 0-3 1-3 3v2.5c0 1.2-.8 2.5-2 2.5 1.2 0 2 1.3 2 2.5V17c0 2 1 3 3 3M15 4c2 0 3 1 3 3v2.5c0 1.2.8 2.5 2 2.5-1.2 0-2 1.3-2 2.5V17c0 2-1 3-3 3"/></svg><span class="n">196</span><span class="l">merged PRs across 13 repos</span></li>
+    <li class="sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span class="n">21,750</span><span class="l">benchmark cases behind one model swap</span></li>
+    <li class="sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17c2.5 0 3-9 6-9s2.5 6 5 6 3.5-8 7-8"/><circle cx="9" cy="8" r="1.3" fill="currentColor"/><circle cx="14" cy="14" r="1.3" fill="currentColor"/><circle cx="21" cy="6" r="1.3" fill="currentColor"/></svg><span class="n">23 / 23</span><span class="l">engine-port parity tests</span></li>
+    <li class="sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-5M8 20V9M12 20V4M16 20v-8M20 20v-4"/></svg><span class="n">5.5% → 0.6%</span><span class="l">false alarms on 355 real recordings</span></li>
+    <li class="sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7.5" stroke-dasharray="2 2.6"/><circle cx="12" cy="4.5" r="2.2" fill="currentColor"/><circle cx="18.5" cy="15.8" r="2.2" fill="currentColor"/><circle cx="5.5" cy="15.8" r="2.2" fill="currentColor"/></svg><span class="n">14 games</span><span class="l">one interruption-safe pause system</span></li>
   </ul>
 </header>
 
 <!-- ================= 01 EXPERIENCE ================= -->
-<section id="experience">
+<section id="experience" data-family="blush">
   <p class="eyebrow"><span class="num">01</span>Experience</p>
   <h2>Experience</h2>
 
@@ -182,7 +212,7 @@
 </section>
 
 <!-- ================= 02 PROJECTS ================= -->
-<section id="projects">
+<section id="projects" data-family="sky">
   <p class="eyebrow"><span class="num">02</span>Projects</p>
   <h2>Projects</h2>
 
@@ -221,7 +251,7 @@
 </section>
 
 <!-- ================= 03 SKILLS ================= -->
-<section id="skills">
+<section id="skills" data-family="mint">
   <p class="eyebrow"><span class="num">03</span>Technical Skills</p>
   <h2>Technical Skills</h2>
   <table class="skills">
@@ -237,7 +267,7 @@
 </section>
 
 <!-- ================= 04 EDUCATION ================= -->
-<section id="education" class="edu">
+<section id="education" class="edu" data-family="butter">
   <p class="eyebrow"><span class="num">04</span>Education</p>
   <h2>Education</h2>
   <div class="block">
@@ -255,7 +285,7 @@
 </section>
 
 <!-- ================= 05 ACHIEVEMENTS ================= -->
-<section id="achievements">
+<section id="achievements" data-family="lilac">
   <p class="eyebrow"><span class="num">05</span>Achievements</p>
   <h2>Achievements &amp; beyond code</h2>
   <ul class="bullets">
@@ -266,8 +296,8 @@
 </section>
 
 <footer>
-  <span>Every number here traces to a pull request, a commit, or a measurement I can show you.</span>
-  <span class="moon">☾ jiya-persona.vercel.app</span>
+  <span class="note">numbers are nicer when they mean something. every one here traces to a PR, a commit, or a measurement.</span>
+  <span class="url">jiya-persona.vercel.app</span>
 </footer>
 
 </body>
