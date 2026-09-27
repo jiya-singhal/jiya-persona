@@ -30,7 +30,7 @@ export const COPY = {
     name: "JIYA SINGHAL",
     headline: "I like figuring out why things behave the way they do.",
     sub: "I build voice, AI and backend systems, usually somewhere between making something work and understanding why it didn't.",
-    current: "Software Engineer · Voice / AI / Systems · currently building @ Sing One Song",
+    current: "Software Engineering Intern · voice / real-time audio / game systems · currently building @ Sing One Song",
     ctaPrimary: "See what I've been building",
     ctaSecondary: "Ask my AI persona ↗",
     statsNote: "numbers are nicer when they mean something.",
@@ -83,11 +83,11 @@ export const HERO_STATS: {
   label: string;
   egg?: "dotburst";
 }[] = [
-  { display: "57s → 15s", label: "voice onboarding latency" },
-  { display: "21,750", label: "benchmark runs", egg: "dotburst" },
+  { display: "196", label: "merged PRs across 13 repos" },
+  { display: "21,750", label: "benchmark cases behind one model swap", egg: "dotburst" },
+  { display: "23 / 23", label: "engine-port parity tests" },
+  { display: "5.5% → 0.6%", label: "false alarms on 355 real recordings" },
   { display: "89% → 96%", label: "retrieval relevance" },
-  { display: "75 tests", label: "open-source voicequal" },
-  { display: "top ~5%", label: "LeetCode Knight" },
 ];
 
 /** Quick-fire personality cards — brief §10, lightly playful, never meme-y. */
@@ -119,17 +119,17 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     id: "voice-pipeline",
     eyebrow: "SING ONE SONG · VOICE INFRASTRUCTURE",
-    headline: "Making a voice onboarding flow feel instant.",
-    metric: { from: "57 sec", to: "15 sec", delta: "74% lower p50 latency" },
+    headline: "Why did voice onboarding take a minute? Nothing was slow.",
+    metric: { from: "57 sec", to: "37 sec", delta: "cold-run latency, measured end to end" },
     problem:
       "New users waited almost a minute inside voice onboarding, on the very first thing they experience.",
     investigation:
       "Nothing was slow. Independent I/O steps were just queuing politely behind each other.",
     built: ["FastAPI", "Firebase", "Cloud Run", "asyncio", "Silero VAD", "Cloud Tasks"],
     result:
-      "Concurrent orchestration, VAD-trimmed silence, retry-safe handlers: p50 latency 57s → 15s.",
+      "Concurrent orchestration, VAD-trimmed silence, retry-safe handlers: measured cold runs 57s → 37s, warm runs faster still.",
     hoverDetail:
-      "Every handler survives Cloud Tasks redelivery: same input, same end state, no double side-effects. p50/p95 probes shipped with the fix, so the win stays measured.",
+      "Hand-measured cold runs, not a production p50; the warm path was tuned toward 15s. Every handler survives Cloud Tasks redelivery: same input, same end state, no double side-effects.",
   },
   {
     id: "voicequal",
@@ -139,11 +139,11 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Reject good recordings and you punish users. Accept bad ones and you waste every downstream step.",
     investigation:
       "Turned “sounds bad” into numbers (SNR, spectral flatness, background level), then benchmarked against 200 labeled clips instead of my own ears.",
-    built: ["Python", "numpy / scipy", "rolling stats", "hysteresis", "CLI", "PyPI"],
+    built: ["Python", "numpy / scipy", "HNR", "rolling stats", "hysteresis", "CLI", "PyPI"],
     result:
-      "voicequal, on PyPI with its full benchmark: 46% exact-tier, 82% within one tier. The honest number shipped.",
+      "voicequal, on PyPI with its full benchmark. v0.2.0's HNR-gated tiers: 46% → 55.5% exact, 82% → 89.5% within one tier. Still modest, still published.",
     hoverDetail:
-      "The weak spot is documented too: spectral SNR overrates loud vocals buried in noise. v0.2.0 plans VAD-gated SNR to fix exactly that.",
+      "v0.1.1's weak spot was spectral SNR overrating loud vocals buried in noise (28 dB off the true mixing SNR). v0.2.0 gates the decision on HNR instead (4.4 dB off) and has 106 tests; the PyPI release is next.",
     links: [
       { label: "PyPI", url: "https://pypi.org/project/voicequal/" },
       { label: "GitHub", url: "https://github.com/jiya-singhal/voicequal" },
@@ -159,7 +159,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Grounded it in my resume and auto-summarized repo cards, with MMR retrieval so near-identical chunks don't crowd out the useful one.",
     built: ["FastAPI", "ChromaDB", "Voyage embeddings", "MMR retrieval", "LLM-as-judge", "Vapi voice"],
     result:
-      "A voice + chat persona tested with 20+ adversarial prompts written to break it. You're on its portfolio right now.",
+      "A voice + chat persona tested with 20+ adversarial prompts written to break it: groundedness 0.92, hallucination 9.1%. You're on its portfolio right now.",
     hoverDetail:
       "An LLM judge scores every answer for groundedness against retrieved sources, and the eval runs as a gate. Ask it something: sources are cited under every answer.",
   },
@@ -170,12 +170,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     problem:
       "A cache is easy until it's distributed: keys must survive nodes leaving, reads must agree, memory can't grow forever.",
     investigation:
-      "Consistent hashing so keys barely move when topology changes; synchronous replication, paying write latency for reads that always agree.",
-    built: ["consistent hashing", "primary-replica replication", "TTL", "LRU eviction"],
+      "Hash-modulo placement across three nodes with transparent forwarding; synchronous replication, paying write latency for reads that always agree.",
+    built: ["hash-modulo sharding", "primary-replica replication", "TTL", "LRU eviction", "raw TCP protocol"],
     result:
-      "Three nodes, strong consistency, TTL expiry, bounded LRU memory. The systems instinct isn't limited to AI.",
+      "Three nodes, strong consistency, TTL expiry, bounded LRU memory. 11,820 req/s at p99 18.8ms on AWS, zero errors over 100k requests.",
     hoverDetail:
-      "Every write waits for the replica, a deliberate cost. For a read-heavy cache that trade is the right one, and I can argue it.",
+      "Every write waits for the replica, a deliberate cost. No automatic failover yet, and modulo sharding reshuffles keys if the node count changes: I can argue both trades and what I'd add next (a ring with virtual nodes, heartbeats plus quorum promotion).",
     links: [{ label: "GitHub", url: "https://github.com/jiya-singhal/KV-Cache" }],
   },
 ];
@@ -211,18 +211,19 @@ export const PHILOSOPHY: { title: string; body: string }[] = [
 export const MEASURING: { thing: string; detail: string }[] = [
   { thing: "Latency", detail: "p50 / p95" },
   { thing: "Retrieval quality", detail: "89 → 96%" },
-  { thing: "Model accuracy", detail: "21,750 benchmark tests" },
-  { thing: "Audio quality", detail: "SNR · entropy · VAD" },
+  { thing: "Model accuracy", detail: "21,750 benchmark cases" },
+  { thing: "Audio quality", detail: "SNR · flatness · noise floor" },
   { thing: "Regression", detail: "automated gates" },
   { thing: "Reliability", detail: "cross-platform edge cases" },
 ];
 
 export const TOOLBOX: { group: string; items: string }[] = [
-  { group: "Languages", items: "Python · TypeScript · JavaScript · Java · Dart · SQL" },
+  { group: "Languages", items: "TypeScript · Python · Dart · JavaScript · Java · SQL" },
+  { group: "Audio + real-time", items: "Web Audio · AudioWorklet · pitch detection · VAD · DSP" },
   { group: "AI + evaluation", items: "RAG · LLM-as-judge · agent orchestration · Voyage · Claude" },
   { group: "Backend", items: "FastAPI · asyncio · Firebase · Node" },
-  { group: "Infra", items: "GCP · Docker · GitHub Actions · Playwright" },
-  { group: "Interfaces", items: "React · Next.js · Flutter · Phaser" },
+  { group: "Infra + testing", items: "GCP · Docker · GitHub Actions · Pulumi · Playwright · vitest" },
+  { group: "Interfaces", items: "Phaser · Flutter · React · Next.js · Canvas2D" },
 ];
 
 export const TERMINAL_COMMANDS: Record<string, string[]> = {

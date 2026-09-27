@@ -33,12 +33,12 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "Jiya Singhal · I like figuring out why things behave the way they do",
   description:
-    "Software engineer working across voice, AI, backend systems and product engineering. Measured work, honest numbers, and an AI persona you can actually talk to.",
+    "Software engineering intern working across voice, real-time audio, game and backend systems. Measured work, honest numbers, and an AI persona you can actually talk to.",
   metadataBase: new URL("https://jiya-persona.vercel.app"),
   openGraph: {
     title: "Jiya Singhal · I like figuring out why things behave the way they do",
     description:
-      "Voice, AI and backend systems. 74% lower onboarding latency, a 21,750-test benchmark, an open-source audio library, and an AI persona grounded in all of it.",
+      "Voice, real-time audio and game systems. 196 merged PRs, a 21,750-case benchmark, an open-source audio library, and an AI persona grounded in all of it.",
   },
 };
 

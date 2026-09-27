@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { EASE, viewportOnce } from "@/lib/motion";
 
 /*
- * Three nodes, keys travelling through consistent hashing. The key dot
+ * Three nodes, keys routed by hash-modulo sharding. The key dot
  * loops slowly node to node; paused off-screen; static under reduced motion.
  */
 
@@ -28,7 +28,7 @@ export function KVCacheVisual() {
       fill="none"
       className="w-full"
       role="img"
-      aria-label="Three cache nodes with keys routed between them by consistent hashing"
+      aria-label="Three cache nodes with keys routed between them by hash-modulo sharding"
       initial="hidden"
       whileInView="visible"
       viewport={viewportOnce}

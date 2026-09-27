@@ -81,8 +81,8 @@ export default function OGImage() {
         </div>
         <div style={{ marginTop: 40, display: "flex", gap: "20px", fontFamily: "sans-serif", fontWeight: 700 }}>
           {[
-            ["74% ↓ latency", "#BFE9D2"],
-            ["21,750 benchmark runs", "#BCDCFF"],
+            ["196 merged PRs", "#BFE9D2"],
+            ["21,750 benchmark cases", "#BCDCFF"],
             ["open-source PyPI author", "#DCCFFF"],
           ].map(([t, c]) => (
             <span

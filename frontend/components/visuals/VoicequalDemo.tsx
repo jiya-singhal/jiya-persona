@@ -206,7 +206,7 @@ export function VoicequalDemo() {
           voicequal
         </a>
         &apos;s metrics: an estimate, not the published library. The real
-        benchmark: 46% exact / 82% within one tier, on 200 labeled clips.
+        benchmark (v0.2.0): 55.5% exact / 89.5% within one tier, on 200 labeled clips.
         First {MAX_SECONDS}s analyzed.
       </p>
     </div>

@@ -14,7 +14,7 @@ A single dark, "stage"-themed scrolling page (design leans into Jiya's audio/voi
 
 | section | what it shows |
 | --- | --- |
-| **Hero** | animated pitch trace + headline metrics (57s→15s latency, 21,750-test benchmark, 5.5%→0.6% false positives, LeetCode Knight) |
+| **Hero** | animated pitch trace + headline metrics (196 merged PRs, 21,750-case benchmark, 23/23 engine-parity tests, 5.5%→0.6% false positives, 89%→96% retrieval relevance) |
 | **About** | narrative, education, open-source PRs |
 | **Experience** | Sing One Song + Tradeindia, metric by metric |
 | **Projects** | cards auto-generated from the same Repo Cards that feed the AI — purpose, stack, architecture, and *honest tradeoffs* pulled from the actual code |
