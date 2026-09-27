@@ -8,7 +8,7 @@ The core insight from the BRIEF: the seven public GitHub repos have **thin or mi
 
 ### Resume
 
-`backend/app/rag/resume_ingest.py` parses `data/resume.pdf` with `pypdf`, splits on common section headers (Experience / Projects / Education / Skills), and emits two granularities of chunk per Experience block: a full block-level chunk for context, and bullet-level chunks for individual facts. Bullet-level granularity is what lets the agent retrieve a single number ("98.8% pass rate") in isolation rather than burying it inside a 600-word paragraph.
+`backend/app/rag/resume_ingest.py` parses `data/resume.pdf` with `pypdf` in layout mode (indentation marks a wrapped bullet line; a flush-left short line marks a new block), splits on common section headers (Experience / Projects / Education / Skills), and emits two granularities of chunk per Experience block: a full block-level chunk for context, and bullet-level chunks for individual facts. Bullet-level granularity is what lets the agent retrieve a single number ("98.8% pass rate") in isolation rather than burying it inside a 600-word paragraph.
 
 Each chunk gets `{source_type: "resume", section: "...", company: "..."}` metadata so the retriever can filter at query time.
 

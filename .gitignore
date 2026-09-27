@@ -53,3 +53,6 @@ screenshots/
 # OMC tooling state
 .omc/
 **/.omc/
+
+# build artifact of data/resume/build.sh; the canonical copies live in data/, frontend/public/, backend/data/
+data/resume/resume.pdf

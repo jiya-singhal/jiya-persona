@@ -21,14 +21,29 @@ SECTION_PATTERNS = [
 ]
 
 
+BULLET_MARKERS = ("•", "-", "–", "▪", "*", "◦")
+
+
 def extract_text(pdf_path: Path) -> str:
+    """Extract page text in layout mode so indentation survives.
+
+    Layout mode keeps horizontal positions as leading spaces, which is what
+    lets the block chunker tell a wrapped bullet line (indented) from a new
+    block header (flush left). Plain mode loses that and mis-splits any resume
+    whose bullets wrap into short lines.
+    """
     reader = PdfReader(str(pdf_path))
     pages = []
     for page in reader.pages:
-        text = page.extract_text()
+        text = page.extract_text(extraction_mode="layout")
         if text:
             pages.append(text)
     return "\n".join(pages)
+
+
+def _norm(line: str) -> str:
+    """Collapse layout-mode spacing runs inside a line; strip the edges."""
+    return re.sub(r"\s{2,}", " ", line.strip())
 
 
 def detect_section(line: str) -> str | None:
@@ -42,10 +57,23 @@ def detect_section(line: str) -> str | None:
 
 
 def _detect_company(text: str) -> str:
-    companies = ["SingOneSong", "TradeIndia", "Scaler", "BITS Pilani"]
-    for c in companies:
-        if c.lower() in text.lower():
-            return c
+    """Map the block's text to a canonical company label.
+
+    The resume PDF spells the employer "Sing One Song" (the brand) while the
+    rest of the corpus uses "SingOneSong", so both spellings map to one label.
+    """
+    aliases = [
+        ("singonesong", "SingOneSong"),
+        ("sing one song", "SingOneSong"),
+        ("tradeindia", "TradeIndia"),
+        ("scaler", "Scaler"),
+        ("bits pilani", "BITS Pilani"),
+        ("birla institute", "BITS Pilani"),
+    ]
+    lower = text.lower()
+    for needle, label in aliases:
+        if needle in lower:
+            return label
     return ""
 
 
@@ -90,6 +118,8 @@ def chunk_section(section: dict) -> list[dict]:
         return _chunk_by_blocks(text, section_name)
 
     # For others, keep as one chunk if short enough, else split by paragraphs
+    text = "\n".join(_norm(l) for l in text.split("\n"))
+
     if len(text) < 800:
         return [_make_chunk(text, section_name)]
 
@@ -117,14 +147,16 @@ def _chunk_by_blocks(text: str, section_name: str) -> list[dict]:
 
     for line in lines:
         stripped = line.strip()
-        # Heuristic: a new block starts with a non-bullet, non-empty short line
-        is_bullet = stripped.startswith(("•", "-", "–", "▪", "*", "◦"))
+        # Layout mode keeps wrapped bullet lines indented; a header is flush left.
+        indented = bool(stripped) and line[:1].isspace()
+        is_bullet = stripped.startswith(BULLET_MARKERS)
         is_short_header = (
             stripped
             and not is_bullet
-            and len(stripped) < 120
+            and not indented
+            and len(_norm(line)) < 120
             and current_block
-            and any(l.strip().startswith(("•", "-", "–")) for l in current_block)
+            and any(l.strip().startswith(BULLET_MARKERS) for l in current_block)
         )
         if is_short_header:
             blocks.append(current_block)
@@ -137,7 +169,7 @@ def _chunk_by_blocks(text: str, section_name: str) -> list[dict]:
 
     chunks = []
     for block in blocks:
-        block_text = "\n".join(block).strip()
+        block_text = "\n".join(_norm(l) for l in block if l.strip()).strip()
         if not block_text:
             continue
         company = _detect_company(block_text)
@@ -147,8 +179,10 @@ def _chunk_by_blocks(text: str, section_name: str) -> list[dict]:
         current_bullet = ""
         header_lines = []
         for line in block:
-            stripped = line.strip()
-            if stripped.startswith(("•", "-", "–", "▪", "*", "◦")):
+            stripped = _norm(line)
+            if not stripped:
+                continue
+            if stripped.startswith(BULLET_MARKERS):
                 if current_bullet:
                     bullet_lines.append(current_bullet)
                 current_bullet = stripped

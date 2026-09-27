@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Jiya Singhal · Resume</title>
+<meta name="description" content="Resume of Jiya Singhal, software engineering intern at Sing One Song. Voice, real-time audio and game systems." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..600,50&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /*
+   * The Midnight Lab, printed. Same type system as the site (Inter, JetBrains
+   * Mono, Fraunces), same ink-blue and periwinkle, inverted onto ivory paper so
+   * it survives printing and text extraction. Single column on purpose: the
+   * persona's RAG ingester reads this PDF line by line.
+   */
+  :root {
+    --paper: #F6F4EE;
+    --ink: #12192B;
+    --ink-soft: #3B4459;
+    --mist: #6B7488;
+    --line: #D3D7E2;
+    --accent: #3D51A6;
+    --accent-tint: #E4E9FA;
+    --gold: #9C7A45;
+  }
+  @page { size: A4; margin: 12mm 13mm 12mm 13mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 8.55pt;
+    line-height: 1.29;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .serif { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 50; }
+
+  /* ---------- header ---------- */
+  header { border-bottom: 1px solid var(--line); padding-bottom: 9pt; }
+  .name {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5pt; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mist); margin: 0;
+  }
+  .wave { color: var(--accent); font-size: 9pt; letter-spacing: 0.1em; margin-left: 8pt; }
+  h1 {
+    font-family: "Fraunces", Georgia, serif; font-weight: 500;
+    font-size: 20pt; line-height: 1.16; margin: 6pt 0 5pt; color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .role { font-size: 10pt; color: var(--ink-soft); margin: 0; }
+  .role b { font-weight: 600; color: var(--ink); }
+  .contact { margin: 6pt 0 0; font-family: "JetBrains Mono", monospace; font-size: 7.6pt; color: var(--mist); }
+  .contact span + span::before { content: "·"; color: var(--line); margin: 0 6pt; }
+
+  /* stats strip, like the hero numbers */
+  .stats {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8pt;
+    margin: 8pt 0 0; padding: 0; list-style: none;
+  }
+  header { padding-bottom: 7pt; }
+  h1 { margin: 5pt 0 4pt; }
+  .stats li { border-left: 1px solid var(--line); padding-left: 7pt; }
+  .stats .n { font-family: "JetBrains Mono", monospace; font-size: 11.5pt; color: var(--ink); display: block; }
+  .stats .l { font-size: 7.4pt; color: var(--mist); display: block; margin-top: 1pt; }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 7pt; break-inside: auto; }
+  .eyebrow {
+    font-family: "JetBrains Mono", monospace; font-size: 7.4pt; letter-spacing: 0;
+    text-transform: uppercase; color: var(--accent); margin: 0;
+  }
+  .eyebrow .num { color: var(--mist); margin-right: 6pt; }
+  h2 {
+    font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 13.5pt;
+    margin: 1pt 0 4pt; color: var(--ink); line-height: 1.2;
+  }
+  h2::after { content: ""; display: block; height: 1px; background: var(--line); margin-top: 3pt; }
+
+  .block { margin-top: 7pt; }
+  .block + .block { margin-top: 9pt; }
+  .block-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; break-inside: avoid; break-after: avoid; }
+  .block-head .org { flex: 1 1 auto; }
+  .org { font-size: 10.5pt; font-weight: 600; margin: 0; color: var(--ink); }
+  .meta { font-family: "JetBrains Mono", monospace; font-size: 7.6pt; color: var(--mist); margin: 1pt 0 0; }
+  .meta b { color: var(--ink-soft); font-weight: 500; }
+  /* one line, always: the RAG ingester reads org + stack as a single header line */
+  .stack { font-family: "JetBrains Mono", monospace; font-size: 7.4pt; color: var(--mist); text-align: right; flex: 0 0 auto; white-space: nowrap; }
+  .lede { margin: 3pt 0 2pt; color: var(--ink-soft); font-size: 9.2pt; }
+
+  ul.bullets { list-style: none; margin: 3pt 0 0; padding: 0; }
+  ul.bullets li { display: flex; gap: 6pt; margin: 0 0 2.6pt; break-inside: avoid; }
+  ul.bullets li .dot { color: var(--accent); flex: 0 0 auto; }
+  ul.bullets li b { font-weight: 600; color: var(--ink); }
+  ul.bullets li .m { font-family: "JetBrains Mono", monospace; font-size: 8.6pt; color: var(--accent); }
+
+  /* skills as a two column key/value table, like ~/toolbox */
+  table.skills { width: 100%; border-collapse: collapse; margin-top: 4pt; }
+  table.skills td { vertical-align: top; padding: 1.6pt 0; border-bottom: 1px solid var(--accent-tint); }
+  table.skills td.k { width: 17%; font-family: "JetBrains Mono", monospace; font-size: 7.4pt; color: var(--mist); text-transform: lowercase; letter-spacing: 0.04em; padding-right: 8pt; }
+  table.skills td.v { color: var(--ink-soft); }
+
+  .edu .block { margin-top: 4pt; }
+  .edu .block + .block { margin-top: 4pt; }
+  .edu .org { font-size: 9.6pt; }
+
+  footer { margin-top: 6pt; padding-top: 4pt; border-top: 1px solid var(--line);
+    font-family: "JetBrains Mono", monospace; font-size: 7.2pt; color: var(--mist);
+    display: flex; justify-content: space-between; }
+  footer .moon { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="name">Jiya Singhal <span class="wave">≋≋≋≋</span></p>
+  <h1>I like figuring out why things behave the way they do.</h1>
+  <p class="role"><b>Software Engineering Intern</b> · voice, real-time audio and game systems · currently building at Sing One Song, Bangalore</p>
+  <p class="contact">
+    <span>+91-8630588622</span>
+    <span><a href="mailto:jiya.23bcs10043@sst.scaler.com">jiya.23bcs10043@sst.scaler.com</a></span>
+    <span><a href="https://github.com/jiya-singhal">github.com/jiya-singhal</a></span>
+    <span><a href="https://www.linkedin.com/in/jiyasinghal/">linkedin.com/in/jiyasinghal</a></span>
+    <span><a href="https://jiya-persona.vercel.app">jiya-persona.vercel.app</a></span>
+    <span><a href="https://leetcode.com/u/jiyasinghal_/">leetcode.com/u/jiyasinghal_</a></span>
+  </p>
+  <ul class="stats">
+    <li><span class="n">196</span><span class="l">merged PRs across 13 repos</span></li>
+    <li><span class="n">14 games</span><span class="l">one interruption-safe pause system</span></li>
+    <li><span class="n">23 / 23</span><span class="l">engine-port parity tests</span></li>
+    <li><span class="n">21,750</span><span class="l">benchmark cases behind a model swap</span></li>
+    <li><span class="n">5.5% → 0.6%</span><span class="l">false alarms on 355 real recordings</span></li>
+  </ul>
+</header>
+
+<!-- ================= 01 EXPERIENCE ================= -->
+<section id="experience">
+  <p class="eyebrow"><span class="num">01</span>Experience</p>
+  <h2>Experience</h2>
+
+  <div class="block">
+    <div class="block-head">
+      <p class="org">Sing One Song</p>
+      <span class="stack">TypeScript · Phaser · Web Audio · Flutter · Swift · Python</span>
+    </div>
+    <p class="meta"><b>Software Engineering Intern</b> · Bangalore · Aug 2025 – Present</p>
+    <p class="lede">A singing app whose games grade your voice in real time. 244 authored PRs, 196 merged, across a Flutter app and a TypeScript game monorepo (13 repos); 60 went through peer review.</p>
+    <ul class="bullets">
+      <li><span class="dot">•</span><span><b>Real-time pitch engine, Dart → TypeScript.</b> Ported a voice-controlled game's grading engine from Flutter to the shared web runtime, landing a pluggable-engine seam first so the other games stayed untouched; proved correctness with a <span class="m">23/23</span> pitch-frame replay harness against the live Dart engine rather than from-scratch unit tests, and kept the mobile cutover one URL parameter, so rollback is one line.</span></li>
+      <li><span class="dot">•</span><span><b>Interruption-safe pause across all 14 games.</b> Any call, lock screen, notification shade or app switch freezes every game exactly where it stands and opens a shared pause menu, in gameplay and in tutorials; a <span class="m">+9k-line</span> cross-cutting change, merged, plus a deliberate do-not-merge test build with a per-game script so the team could feel-test it before merge.</span></li>
+      <li><span class="dot">•</span><span><b>Why Android singers were never credited.</b> Native pitch frames arrive in 160 ms bursts that a per-tick sampler thinned to ~6/s against a 12/s lock floor, so credit was mathematically unreachable. Fixed the collector, an honest mic-ready contract, and a stop-during-start deadlock in the Flutter bridge, each with a test that fails on the old code.</span></li>
+      <li><span class="dot">•</span><span><b>Audio reliability across the Flutter / WebView boundary.</b> Bounded mic auto-restart with backoff, iOS interruption recovery in Swift, and three distinct mic-loss mechanisms found by differential diagnosis: a JS channel-name collision, a stale AVAudioSession, and a leaked Android audio focus.</span></li>
+      <li><span class="dot">•</span><span><b>Real song transposition on Flutter web.</b> Shipped a granular-SOLA pitch-shift AudioWorklet so key changes alter the audio, not just the labels, with a coherence gate keeping scoring aligned to what the listener hears; closed the accompanying CORS gap after reproducing it with a real-SDK probe and writing the threat model down.</span></li>
+      <li><span class="dot">•</span><span><b>Tutorial rebuild under a byte-identical constraint.</b> Rebuilt a game's onboarding (<span class="m">+11.5k / −2.9k</span> lines) on a teammate's in-flight branch: ended an infinite retry loop that trapped struggling singers, added practice / gameplay grading parity, and proved the scoring engine unchanged with MD5 gates; the suite grew 270 → 423 tests.</span></li>
+      <li><span class="dot">•</span><span><b>Renderer-vs-engine drift, measured.</b> Hop-offs got later the longer you played: the visual cursor free-ran and latched its lead over the engine. Faster cursor broadcasts plus a proportional convergence cut the gap <span class="m">53 px → 16 px</span>, flat across rails, pinned by regression tests and a debug readout.</span></li>
+      <li><span class="dot">•</span><span><b>Voice-onboarding pipeline.</b> Built it from scratch (FastAPI, Firebase, retry-safe Cloud Tasks), then re-architected it as concurrent orchestration on Cloud Run with asyncio and Silero VAD silence-trim; measured end-to-end cold latency fell <span class="m">57 s → 37 s</span> on the first flow every new user hits, with warm runs faster still.</span></li>
+      <li><span class="dot">•</span><span><b>Audio-quality gate.</b> A rule-based classifier on background dB, SNR, spectral flatness and temporal variance that decides whether a recording is usable, tuned for precision on warnings because a false alarm punishes a good singer: <span class="m">5.5% → 0.6%</span> false-positive warnings across 355 production recordings.</span></li>
+      <li><span class="dot">•</span><span><b>Benchmark before the model swap.</b> Built a Playwright harness that tests pitch models in the real browser path on <span class="m">21,750</span> synthetic cases (29 singers × 150 MUSAN noises × 5 noise-mix levels); validated swift-f0, 40× smaller than PESTO (389 KB vs 16 MB), at 98.8% vs 96.8% pass, and kept it as a standing regression gate.</span></li>
+      <li><span class="dot">•</span><span><b>Test, release and analytics infrastructure.</b> A headless screenshot runner that drives 13 voice games to live gameplay without a microphone (26/26 captures) and posts shots on every PR; a cross-repo tutorial-drift CI gate; HTTP Basic Auth across 20 live game sites; PostHog across ~20 games with a gameplay heartbeat, since voice-controlled runs produce no taps.</span></li>
+      <li><span class="dot">•</span><span><b>Shared systems and house rules.</b> A diagnostic-tip system where each game diagnoses its own run into one verdict feeding both its result screen and the app's setlist card (six games); a shared music-toggle package adopted by four games; the mic-safe sound rule: no audio in mic-live windows, because the speaker bleeds into pitch detection.</span></li>
+      <li><span class="dot">•</span><span><b>AI-assisted engineering, with rails.</b> Authored the team's first agent self-verification skill (render, capture, diff, iterate, then report) and a company playbook; run parallel agent worktree lanes, one issue → one branch → one PR: 28 PRs in 15 days, six of them merged playtest fixes across five games in a single day, every AI-written change behind diagnose-first and byte-identical gates.</span></li>
+      <li><span class="dot">•</span><span><b>Backend and audio ML (first months).</b> Voice Activity Detection task, a Resemblyzer-based gender-detection service, CREPE syllable-level pitch data, and a noise-robustness test framework across 30 singers.</span></li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <p class="org">Tradeindia</p>
+      <span class="stack">Python · FAISS · Streamlit</span>
+    </div>
+    <p class="meta"><b>Product &amp; Tech Intern</b> · Noida · Jan 2025 – Apr 2025</p>
+    <ul class="bullets">
+      <li><span class="dot">•</span><span><b>Trust and fraud tooling.</b> Integrated third-party identity-verification APIs (Truecaller, IDfy, Shield) into the buyer–seller flow; ran the proof-of-concept evaluation of an automated voice bot through call-transcript analysis and ASR / script tuning.</span></li>
+      <li><span class="dot">•</span><span><b>Hybrid search over messy listings.</b> FAISS vector search plus fuzzy normalisation under a weighted scoring layer, so semantic and lexical signals cover each other's blind spots: relevance <span class="m">89% → 96%</span> across thousands of unstructured listings.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 02 PROJECTS ================= -->
+<section id="projects">
+  <p class="eyebrow"><span class="num">02</span>Projects</p>
+  <h2>Projects</h2>
+
+  <div class="block">
+    <div class="block-head">
+      <p class="org">AI Persona · a grounded voice + chat agent</p>
+      <span class="stack">FastAPI · ChromaDB · Gemini · Vapi · Next.js · Cal.com</span>
+    </div>
+    <ul class="bullets">
+      <li><span class="dot">•</span><span>RAG over this resume and 13 live-fetched GitHub repos (941 chunks, MMR retrieval) serving a streaming chat UI and phone calls, with real Cal.com slot proposal and booking as tool calls; voice first-token latency ~1.0 s in production. Live at jiya-persona.vercel.app, and it is the portfolio you are reading this from.</span></li>
+      <li><span class="dot">•</span><span>An LLM-as-judge eval harness over 20+ adversarial prompts written to break grounding: groundedness <span class="m">0.92</span>, hallucination <span class="m">9.1%</span>, adversarial groundedness 1.0; a nightly GitHub Action refreshes the corpus. House rule recorded in the repo: never inflate a number.</span></li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <p class="org">voicequal · open-source audio-quality library</p>
+      <span class="stack">Python · numpy / scipy · pytest · PyPI</span>
+    </div>
+    <ul class="bullets">
+      <li><span class="dot">•</span><span>Real-time audio-quality assessment (SNR, spectral flatness, noise floor, HNR, a four-tier verdict with hysteresis for streaming), on PyPI as <span class="mono">pip install voicequal</span> and published with its full 200-clip VocalSet + MUSAN benchmark, not a favourable subset. v0.2.0's HNR-gated decision lifts exact-tier accuracy <span class="m">46% → 55.5%</span> and off-by-one <span class="m">82% → 89.5%</span>; 106 tests, CI on three Python versions.</span></li>
+      <li><span class="dot">•</span><span>Ported the decision layer to Dart inside a production app with 26 parity tests matching the Python reference to ~9 significant figures, which surfaced three real port bugs.</span></li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <p class="org">Distributed KV-Cache cluster</p>
+      <span class="stack">Python · asyncio · raw TCP · Docker Compose · AWS</span>
+    </div>
+    <ul class="bullets">
+      <li><span class="dot">•</span><span>Three-node sharded cache with hash-modulo key placement and transparent request forwarding, synchronous primary–replica replication for strong consistency, per-node TTL and bounded LRU eviction, over a custom Redis-style text protocol; load-tested on AWS at <span class="m">11,820 req/s</span>, p99 18.8 ms, zero errors across 100k requests. I can argue the write-latency trade and where it breaks.</span></li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ================= 03 SKILLS ================= -->
+<section id="skills">
+  <p class="eyebrow"><span class="num">03</span>Technical Skills</p>
+  <h2>Technical Skills</h2>
+  <table class="skills">
+    <tr><td class="k">languages</td><td class="v">TypeScript / JavaScript, Python, Dart, Java, SQL; Swift and Kotlin touchpoints for iOS / Android audio</td></tr>
+    <tr><td class="k">audio &amp; real-time</td><td class="v">Web Audio, AudioWorklet, pitch detection (CREPE, PESTO, swift-f0), VAD, DSP (SOLA, SNR / spectral metrics), mic-safe sound design</td></tr>
+    <tr><td class="k">games &amp; ui</td><td class="v">Phaser 3, Canvas2D, Flutter, React, Next.js, Tailwind</td></tr>
+    <tr><td class="k">backend &amp; infra</td><td class="v">FastAPI, asyncio, Firebase (Functions, Hosting, Firestore), GCP Cloud Run, Node.js, Docker, GitHub Actions, Pulumi, Vercel, Render</td></tr>
+    <tr><td class="k">testing &amp; quality</td><td class="v">Playwright, vitest, node:test, flutter test; parity harnesses, byte-identical diff gates, CI perf pins sized from measured variance</td></tr>
+    <tr><td class="k">data &amp; retrieval</td><td class="v">FAISS, ChromaDB, Redis, SQLite, ONNX Runtime</td></tr>
+    <tr><td class="k">ai engineering</td><td class="v">RAG, LLM-as-judge evals, agent orchestration, Claude / Claude Code, Cursor, multi-agent review and audit workflows</td></tr>
+    <tr><td class="k">core cs</td><td class="v">Data structures and algorithms, OOP, DBMS, operating systems, networks</td></tr>
+  </table>
+</section>
+
+<!-- ================= 04 EDUCATION ================= -->
+<section id="education" class="edu">
+  <p class="eyebrow"><span class="num">04</span>Education</p>
+  <h2>Education</h2>
+  <div class="block">
+    <div class="block-head">
+      <p class="org">Scaler School of Technology</p>
+      <span class="stack">Undergraduate program in Computer Science · Bangalore · 2023 – Present · CGR 7.22</span>
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-head">
+      <p class="org">Birla Institute of Technology and Science (BITS)</p>
+      <span class="stack">B.Sc. (Hons.) in Computer Science · 2023 – Present · CGPA 7.89</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 ACHIEVEMENTS ================= -->
+<section id="achievements">
+  <p class="eyebrow"><span class="num">05</span>Achievements</p>
+  <h2>Achievements &amp; beyond code</h2>
+  <ul class="bullets">
+    <li><span class="dot">•</span><span><b>LeetCode Knight</b>, top ~5% by contest rating.</span></li>
+    <li><span class="dot">•</span><span><b>Open source:</b> voicequal on PyPI; merged PRs to NixOS/nixos-summer (#51), OneBusAway docs (#140), Iview (#8).</span></li>
+    <li><span class="dot">•</span><span><b>Senior Diploma in Bharatanatyam</b>, Prayag Sangeet Samiti, Allahabad. Years before I debugged distributed systems, I learned precision through rhythm.</span></li>
+  </ul>
+</section>
+
+<footer>
+  <span>Every number here traces to a pull request, a commit, or a measurement I can show you.</span>
+  <span class="moon">☾ jiya-persona.vercel.app</span>
+</footer>
+
+</body>
+</html>
