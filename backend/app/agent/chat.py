@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 
 MODEL = "gemini-2.5-flash"
 MAX_TOOL_TURNS = 4  # safety cap on tool-call loop
+THINKING_BUDGET = 400  # tokens of thought per turn; see GenerateContentConfig below
 
 
 @dataclass
@@ -47,7 +48,13 @@ class ChatRequest:
     history: list[HistoryTurn] = field(default_factory=list)
 
 
-EMPLOYER_SIGNALS = ("singonesong", "sing one song", "tradeindia", "trade india")
+EMPLOYER_SIGNALS = (
+    "singonesong", "sing one song", "tradeindia", "trade india", "intern",
+    # Names of the private-repo work the resume and work notes describe.
+    "steady shred", "ride the pitch", "singing snakes", "paint the pitch",
+    "voice pipeline", "onboarding pipeline", "pitch engine", "engine port",
+    "pause system", "interruption", "swift-f0", "pesto", "quality gate",
+)
 EXPLICIT_REPO_SIGNALS = ("repo", "repository", "github", "open source", "open-source")
 
 
@@ -68,16 +75,17 @@ def _detect_filter(message: str) -> str:
     mentions_repo = any(s in lower for s in EXPLICIT_REPO_SIGNALS) or any(
         n in lower for n in _repo_name_signals()
     )
-    # Employer questions answer from the resume only: Repo Card facts bleeding
-    # into employer narratives was the top eval failure mode.
+    # Employer questions answer from the resume + work notes: Repo Card facts
+    # bleeding into employer narratives was the top eval failure mode.
     if mentions_employer and not mentions_repo:
         return "resume"
-    repo_signals = ("project", "repo", "github", "built", "code", "tech stack", "tradeoff")
-    resume_signals = ("intern", "experience", "singonesong", "tradeindia", "education", "scaler")
-    if any(s in lower for s in repo_signals) and not any(s in lower for s in resume_signals):
+    # A named public repo (or an explicit "repo"/"GitHub") answers from the
+    # repo cards, code, and the notes on personal projects.
+    if mentions_repo and not mentions_employer:
         return "github"
-    if any(s in lower for s in resume_signals) and not any(s in lower for s in repo_signals):
-        return "resume"
+    # Everything else searches the whole corpus. The old secondary heuristic
+    # sent any question containing "built" or "project" to GitHub only, which
+    # hid the work notes on the very questions they answer best.
     return "any"
 
 
@@ -92,10 +100,15 @@ def _retrieve(message: str, source_filter: str) -> list[dict]:
     )
 
 
+SOURCE_TEXT_CHARS = 1600  # work-note sections run up to ~1.5k chars; the
+# eval judge grades against this payload, so a shorter cut made it mark
+# claims from the tail of a chunk as ungrounded.
+
+
 def _serialize_sources(chunks: list[dict]) -> list[dict]:
     return [
         {
-            "text": c["text"][:600],
+            "text": c["text"][:SOURCE_TEXT_CHARS],
             "metadata": c["metadata"],
             "score": round(c.get("score", 0.0), 3),
         }
@@ -164,7 +177,12 @@ async def stream_chat(req: ChatRequest) -> AsyncIterator[dict]:
     config = types.GenerateContentConfig(
         system_instruction=SYSTEM_PROMPT,
         temperature=0.3,
-        max_output_tokens=600,
+        # Gemini 2.5 counts its own thinking against max_output_tokens. With
+        # the old cap of 600 and no thinking budget, ~570 tokens of thought
+        # left ~25 for the answer and replies were cut mid-sentence
+        # (finish_reason MAX_TOKENS). Bound the thinking and leave room.
+        max_output_tokens=1400,
+        thinking_config=types.ThinkingConfig(thinking_budget=THINKING_BUDGET),
         tools=[booking_tools],
     )
 
