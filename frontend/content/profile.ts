@@ -65,7 +65,7 @@ export const COPY = {
     number: "05",
     eyebrow: "AI Jiya",
     title: "An AI that can actually answer questions about me.",
-    sub: "The persona is itself a portfolio project: RAG over my resume and repos, tested with adversarial prompts.",
+    sub: "The persona is itself a portfolio project: RAG over my resume, my work notes and my repos, tested with adversarial prompts.",
   },
   footer: {
     still: "Got a problem worth thinking about?",
@@ -156,10 +156,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     problem:
       "Portfolio chatbots love inventing their owner's accomplishments. Mine speaks to recruiters, so it only says things I can defend.",
     investigation:
-      "Grounded it in my resume and auto-summarized repo cards, with MMR retrieval so near-identical chunks don't crowd out the useful one.",
+      "Grounded it in my resume, curated notes on my private-repo work, and auto-summarized repo cards, with a diversity pass so near-identical chunks don't crowd out the useful one.",
     built: ["FastAPI", "ChromaDB", "Voyage embeddings", "MMR retrieval", "LLM-as-judge", "Vapi voice"],
     result:
-      "A voice + chat persona tested with 20+ adversarial prompts written to break it: groundedness 0.92, hallucination 9.1%. You're on its portfolio right now.",
+      "A voice + chat persona graded by an LLM judge on 30 questions, adversarial ones included: groundedness 0.99, zero hallucinated claims in the September 2026 run. You're on its portfolio right now.",
     hoverDetail:
       "An LLM judge scores every answer for groundedness against retrieved sources, and the eval runs as a gate. Ask it something: sources are cited under every answer.",
   },

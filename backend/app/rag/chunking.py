@@ -77,10 +77,23 @@ def chunk_repo_card(card: dict, repo_name: str) -> list[dict]:
     return chunks
 
 
+MAX_CHUNKS_PER_FILE = 8
+
+
 def chunk_source_code(
-    files: dict[str, str], repo_name: str, chunk_size: int = 800, overlap: int = 100
+    files: dict[str, str],
+    repo_name: str,
+    chunk_size: int = 800,
+    overlap: int = 100,
+    max_chunks_per_file: int = MAX_CHUNKS_PER_FILE,
 ) -> list[dict]:
-    """Chunk raw source files at ~800 tokens (chars as proxy) with overlap."""
+    """Chunk raw source files at ~800 tokens (chars as proxy) with overlap.
+
+    Each file contributes at most `max_chunks_per_file` chunks: the head of a
+    file (imports, module docstring, top-level structure) is what a question
+    about the repo needs, and an uncapped file (a 50-chunk data file, a long
+    README) otherwise dominates the whole repo's share of the corpus.
+    """
     chunks = []
     for file_path, content in files.items():
         if not content.strip():
@@ -89,7 +102,9 @@ def chunk_source_code(
         # Simple char-based chunking (rough token proxy)
         text = content
         start = 0
-        while start < len(text):
+        emitted = 0
+        while start < len(text) and emitted < max_chunks_per_file:
+            emitted += 1
             end = min(start + chunk_size, len(text))
             chunk_text = text[start:end]
             if chunk_text.strip():

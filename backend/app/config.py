@@ -18,13 +18,18 @@ class Settings(BaseSettings):
     data_dir: Path = base_dir / "data"
     resume_path: Path = data_dir / "resume.pdf"
     repo_cards_dir: Path = data_dir / "repo_cards"
+    work_history_dir: Path = data_dir / "work_history"
     chroma_dir: Path = data_dir / "chroma_db"
 
     # GitHub repos to ingest — curated set of strongest work; the frontend
     # activity feed shows all public repos regardless of this list.
+    # "owner/repo@branch" pins a non-default branch.
     github_repos: list[str] = [
         "jiya-singhal/voicequal",
-        "jiya-singhal/KV-Cache",
+        # The three-node distributed version lives on this branch; main is
+        # the single-node server and used to make the persona contradict
+        # the resume ("single-node, no sharding").
+        "jiya-singhal/KV-Cache@final-project-submission",
         "jiya-singhal/Distributed-Live-Polling-System",
         "jiya-singhal/agentic-workflow",
         "jiya-singhal/devops-ci-cd",

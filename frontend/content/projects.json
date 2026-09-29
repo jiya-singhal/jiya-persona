@@ -6,42 +6,41 @@
       "url": "https://github.com/jiya-singhal/voicequal",
       "featured": true,
       "tagline": "Audio-quality library on PyPI - published with its full 200-clip benchmark, not a favourable subset.",
-      "problem": "Determining if an audio recording is clean enough to process by analyzing acoustic metrics.",
-      "architecture": "The system processes audio by loading files or streaming chunks from a microphone. Audio is divided into overlapping frames. For each frame, it computes acoustic metrics: RMS, spectral flatness, spectral concentration, SNR, and noise floor. These per-frame metrics feed into a `RollingStats` object that maintains historical buffers for noise floor and RMS values, enabling the calculation of temporal variance and aggregated background dBA. Finally, an `assess_quality` function uses these aggregated metrics in an SNR-gated tiered assessment logic to determine a quality tier (excellent, good, fair, or poor) and a descriptive reason. For real-time streaming, a `LiveDetector` adds a hysteresis buffer to stabilize tier changes.",
+      "problem": "Answers the question every voice app eventually has to answer: \"is this recording clean enough to process?\"",
+      "architecture": "The system processes audio by first loading/resampling it (io.py), then extracting frame-level acoustic metrics (metrics.py). A RollingStats component (state.py) maintains historical data for calculating temporal variance and background noise levels. The assessment.py module applies a decision logic, primarily HNR-gated, to assign an audio quality tier (excellent, good, fair, poor) based on these metrics. There are two main processing paths: pipeline.py for batch file analysis and live.py for real-time streaming with added tier-stability hysteresis. Calibration (calibration.py) adjusts for microphone differences, and a command-line interface (cli.py) provides user interaction.",
       "features": [
-        "Real-time audio quality assessment for voice applications",
-        "Analyzes audio using four acoustic metrics: SNR, Spectral Flatness, Temporal Variance, Background dBA",
-        "Returns a quality tier: 'excellent', 'good', 'fair', or 'poor'",
-        "Provides numerical values for all assessed metrics and a reason for the tier decision",
-        "Supports one-shot file analysis (`assess`)",
-        "Supports real-time streaming analysis from a microphone (`LiveDetector`) with tier change callbacks",
-        "Command-line interface (CLI) for file assessment and live listening",
-        "Auto-calibration for microphone input to account for hardware and OS processing differences",
-        "Benchmarks against a reproducible test set mixed from VocalSet and MUSAN datasets",
-        "Stabilizes streaming assessment with a hysteresis buffer (new tier must persist for N frames)",
-        "Estimates noise floor using 10th percentile of recent RMS values",
-        "Reports room loudness as the median of recent RMS values",
-        "Includes a `spectral_concentration` metric to gauge how tonal vs. broadband an audio frame is"
+        "Real-time audio quality assessment",
+        "Analyzes audio using acoustic metrics, led by harmonic-to-noise ratio (HNR)",
+        "Returns a quality tier (excellent, good, fair, poor) and underlying metrics",
+        "Pure numpy/scipy, CPU-only, no models to download",
+        "Supports analysis of audio files via command-line interface or Python API",
+        "Supports real-time streaming from microphones via command-line interface or Python API",
+        "Includes microphone auto-calibration to adjust for different hardware",
+        "Streaming features a hysteresis buffer for stable tier reporting",
+        "Benchmarked against a reproducible test set for accuracy metrics"
       ],
       "tradeoffs": [
-        "Calibrated for voice/recording quality (clean enough to process), not subjective pleasingness.",
-        "Background dBA is a calibrated proxy, not a certified acoustic dB meter (does not use IEC 61672 A-weighted filter).",
-        "Requires calibration (`voicequal listen --calibrate`) once per new machine or microphone setup due to varying signal levels.",
-        "Assumes reasonable audio input; no built-in echo cancellation or noise suppression.",
-        "Accuracy can vary if the OS pre-processes mic audio (e.g., macOS Voice Isolation, browser noise suppression), even with calibration.",
-        "Known weakness in `v0.1.1`: low exact accuracy (5.0%) for `very_loud_snr` category (voice mixed with noise at ~5 dB SNR) because spectral SNR can read high for loud vocals buried in noise. `v0.2.0` plans to address this with Voice Activity Detection (VAD) gating for RMS-domain SNR estimation."
+        "Calibrated for voice/recording quality: Focuses on whether a recording is 'clean enough to process', not subjective human audio preference.",
+        "Not a certified acoustic dB meter: Background dBA is an estimate using rough dB conversion, not conforming to IEC 61672 A-weighted filter standards.",
+        "Thresholds tuned on specific test set: The decision thresholds for quality tiers were specifically tuned on the provided 200-clip benchmark set, and performance may vary on other real-world speech.",
+        "Difficulty separating 10 dB vs 5 dB mixes: The HNR metric compresses at low SNRs, making it challenging to perfectly distinguish between moderate and very loud noise conditions.",
+        "Assumes reasonable audio input: The system does not include built-in echo cancellation or noise suppression; detection accuracy can be affected by OS-level audio preprocessing.",
+        "Different mics deliver different signal levels: Requires per-mic calibration using 'voicequal listen --calibrate' for accurate background dBA readings with new hardware."
       ],
-      "demonstrates": "The project demonstrates a practical application of digital signal processing (DSP) for real-time audio analysis, including: feature extraction (RMS, SNR, spectral flatness, spectral concentration), rolling statistics for temporal context, custom rule-based classification logic, and stream processing with hysteresis. It showcases how to build a usable Python library with a CLI, benchmarks, and clear API for both file-based and live streaming audio data.",
+      "demonstrates": "The project demonstrates real-time audio processing techniques, including frame-based analysis and streaming. It showcases Digital Signal Processing (DSP) concepts through the calculation of various acoustic metrics (HNR, SNR, spectral flatness, concentration) using NumPy and SciPy. It illustrates the implementation of a rule-based classification system for categorizing audio quality into discrete tiers. The project also provides examples of stateful processing with rolling statistics for temporal metrics, best practices for benchmarking and evaluating DSP algorithms against reproducible test sets, and development of a user-friendly command-line interface (CLI).",
       "complexity": "intermediate",
       "languages": [
         "Python"
       ],
       "frameworks": [
-        "numpy",
-        "scipy",
-        "soundfile",
-        "rich",
-        "sounddevice"
+        "u",
+        "n",
+        "c",
+        "l",
+        "e",
+        "a",
+        "r",
+        " "
       ]
     },
     {
@@ -49,44 +48,46 @@
       "url": "https://github.com/jiya-singhal/jiya-persona",
       "featured": true,
       "tagline": "This site. A RAG-grounded AI rep with voice, chat, real calendar booking, and an LLM-judge eval harness.",
-      "problem": "Provides a grounded and factual AI persona for Jiya Singhal that can answer questions about her professional background (resume, GitHub repositories) without hallucination, and also facilitate real-time meeting scheduling by interacting with her Cal.com calendar. It also offers both chat and voice interfaces for interaction.",
-      "architecture": "The system features a Next.js frontend deployed on Vercel, interacting with a FastAPI backend deployed on Render. The backend handles RAG (Retrieval Augmented Generation) by querying a ChromaDB vector store, which contains chunks from Jiya's resume (PDF) and auto-summarized GitHub repo cards. Embeddings are generated using VoyageAI. The backend uses Google's Gemini API for LLM interactions. For scheduling, the backend integrates with the Cal.com API. Voice interactions are facilitated by Vapi, which orchestrates Deepgram STT and ElevenLabs TTS, and communicates with the backend via an OpenAI-compatible endpoint. Different Gemini models (`gemini-2.5-flash` for chat, `gemini-2.5-flash-lite` for voice) are used for optimization. The RAG corpus is baked into the backend's Docker image.",
+      "problem": "The project addresses the challenge of creating an interactive, verifiable, and comprehensive professional portfolio. It provides an AI agent that can answer specific, grounded questions about a candidate's background and projects without hallucination, and facilitates practical actions such as scheduling interviews.",
+      "architecture": "The application follows a full-stack architecture with a Next.js 14 frontend deployed on Vercel and a FastAPI backend deployed on Render. The backend is responsible for RAG processing, LLM interactions using Google Gemini API, and integration with external services like Cal.com. For voice interactions, Vapi acts as an orchestrator for STT/TTS and communicates with an OpenAI-compatible endpoint on the backend. The RAG corpus, including ChromaDB, GitHub repo cards, and resume PDF, is baked into the backend's Docker image for deployment. Retrieval for RAG occurs before LLM calls, injecting relevant context directly into the user turn.",
       "features": [
-        "AI representative of Jiya Singhal for evaluators.",
-        "Interactive chat interface accessible via a public URL.",
-        "Voice interface accessible via a phone number using Vapi.",
-        "Factual claims grounded in Jiya's resume and public GitHub repositories (RAG).",
-        "Proposes and books real meeting slots from Jiya's Cal.com calendar.",
-        "Streaming voice replies with optimized first-token latency (target 1.0s in production).",
-        "Uses `gemini-2.5-flash` for chat and `gemini-2.5-flash-lite` for voice, optimizing for groundedness and latency respectively.",
-        "Automated summarization of GitHub repositories into 'Repo Cards' using Gemini.",
-        "Includes an evaluation suite with 20 questions, LLM-judging, and PDF report generation for metrics like groundedness, relevance, and honesty."
+        "Animated portfolio displaying hero metrics, experience, and projects.",
+        "Live GitHub commit stream fetched at request time.",
+        "AI representative (chatbot and voice assistant) providing answers grounded in resume and GitHub repo specifics.",
+        "End-to-end meeting booking via Cal.com integration.",
+        "Source citation for factual claims, with refusal to fabricate information.",
+        "Voice assistant integration through Vapi, optimized for low first-token latency.",
+        "Automated generation of project cards from GitHub repository data.",
+        "Nightly GitHub Action to refresh the RAG corpus, keeping AI knowledge current.",
+        "Evaluation report demonstrating AI performance metrics (groundedness, relevance, honesty, latency)."
       ],
       "tradeoffs": [
-        "A 20% hallucination rate (groundedness < 0.8) was observed in evaluations, primarily due to a cross-repo leak where details from one repo card (search-listings) bled into narratives about another (TradeIndia).",
-        "The `gemini-2.5-flash-lite` model used for voice has a shorter context length, which is compensated for by a voice-mode prompt addendum.",
-        "The RAG corpus being 'baked into Docker image' implies that updates to the resume or GitHub repos require rebuilding and redeploying the Docker image.",
-        "Unclear from provided files regarding detailed error handling strategies beyond HTTP exceptions for external API failures.",
-        "The frontend uses a proxy (`/api/chat`) to the backend, which adds an additional network hop for chat requests."
+        "Documented 20% hallucination rate (groundedness < 0.8) primarily caused by cross-repo factual leakage, where details from one repository inadvertently appear in the context of another.",
+        "Voice mode's use of `gemini-2.5-flash-lite` optimizes for speed, which might involve a trade-off in context depth or groundedness compared to the `gemini-2.5-flash` model used for chat.",
+        "A `MAX_TOOL_TURNS` cap (4 turns) is implemented in the chat agent to prevent infinite tool-calling loops.",
+        "The heuristic-based `_detect_filter` for RAG source selection may not always perfectly infer user intent, potentially affecting retrieval relevance.",
+        "Specific common terms like 'SingoneSong' are explicitly filtered from repo name signals to prevent collisions with employer mentions, requiring more explicit cues for GitHub-related queries when these terms are present."
       ],
-      "demonstrates": "This repository demonstrates the development of an advanced AI persona system leveraging RAG, large language models (Gemini), and external API integrations. It showcases how to build interactive chat and voice interfaces, implement server-side function calling, optimize for real-time performance (e.g., voice latency), and construct a robust evaluation framework for LLM-based applications, including prompt engineering for groundedness and mitigation of hallucination.",
+      "demonstrates": "This repository demonstrates the development of an advanced AI-powered portfolio application, integrating sophisticated RAG techniques across multiple data sources (PDF, GitHub repos), LLM function calling for real-world interactions (Cal.com booking), and robust voice AI integration. It showcases full-stack development using FastAPI and Next.js, cloud deployment strategies with Render and Vercel, CI/CD automation, performance optimization (e.g., latency reduction through model splitting and pre-retrieval RAG), and structured evaluation of AI agent performance.",
       "complexity": "advanced",
       "languages": [
-        "Python",
         "TypeScript",
-        "Dockerfile",
+        "Python",
+        "HTML",
+        "JavaScript",
         "CSS",
-        "JavaScript"
+        "Shell",
+        "Dockerfile"
       ],
       "frameworks": [
         "FastAPI",
         "Next.js",
-        "Vanilla JavaScript",
-        "uvicorn",
-        "pydantic-settings",
-        "google-genai",
-        "voyageai",
-        "chromadb"
+        "framer-motion",
+        "lucide-react",
+        "next",
+        "react",
+        "react-dom",
+        "autoprefixer"
       ]
     },
     {
@@ -94,29 +95,28 @@
       "url": "https://github.com/jiya-singhal/KV-Cache",
       "featured": true,
       "tagline": "Distributed key-value cache - hash-modulo sharding, synchronous primary-replica replication, bounded LRU; 11,820 req/s on AWS.",
-      "problem": "Provides a high-performance, in-memory key-value store that can handle concurrent requests, offering fast data retrieval and storage with optional time-to-live (TTL) and Least Recently Used (LRU) eviction policies.",
-      "architecture": "The KV-Cache server is structured into three main layers: a Network Layer (`tcp_server.py`) utilizing `asyncio` for concurrent TCP connections; a Protocol Layer (`parser.py`, `commands.py`) responsible for parsing custom text-based commands and formatting responses; and a Cache Layer (`store.py`, `eviction.py`) that implements the core key-value storage, Time-To-Live (TTL) management, and a Least Recently Used (LRU) eviction policy. Client requests flow from a TCP socket through the protocol parser to the KV store, and responses are returned accordingly.",
+      "problem": "Provides fast, temporary storage for key-value data, addressing the need for quick data retrieval and reducing load on primary data stores. It incorporates cache management features like time-based expiration and least-recently-used eviction to efficiently manage memory and data freshness.",
+      "architecture": "The system is a KV-Cache Server with a modular architecture:\n    *   Network Layer (`src/network/tcp_server.py`): Uses `asyncio.start_server()` for non-blocking I/O, handling multiple concurrent client TCP connections on port 7171.\n    *   Protocol Layer (`src/protocol/`): Consists of `commands.py` (defining PUT, GET, DELETE, EXISTS) and `parser.py` (parsing raw text commands and formatting responses).\n    *   Cache Layer (`src/cache/`): Implements `store.py` for core key-value storage (`KVStore`). `KVStore` itself provides in-memory storage using Python's `OrderedDict`, and integrates both Time-To-Live (TTL) for key expiration and Least Recently Used (LRU) eviction policies. The module `eviction.py` offers a standalone LRU implementation.\n    *   Cluster Components (`src/cluster/`): Includes `config.py`, `replication.py`, and `router.py` for supporting cluster mode, enabling key sharding to primary nodes and replicating write operations to replica nodes. `docker-compose.yml` configures 3 nodes for a clustered deployment.\n    *   Data flow: Client Request -> TCP Socket -> Protocol Parser -> KV Store (with TTL/LRU) -> Protocol Formatter -> TCP Socket -> Server Response. In cluster mode, requests may be forwarded to primary nodes or replicated to replicas.",
       "features": [
-        "High-performance, in-memory key-value store",
-        "Async TCP server using Python's asyncio for non-blocking I/O",
-        "Handles multiple concurrent client connections",
-        "Custom text-based protocol supporting PUT, GET, DELETE, EXISTS, and QUIT commands",
-        "Key-value storage with O(1) average-case time complexity for operations",
-        "Time-To-Live (TTL) management for automatic key expiration",
-        "Least Recently Used (LRU) eviction policy for cache management",
-        "Docker image for easy containerization and deployment",
-        "Includes benchmarking script for performance analysis of internal components",
-        "Includes load testing script for simulating concurrent clients and measuring network performance"
+        "High-performance in-memory key-value storage.",
+        "Asynchronous TCP server for handling concurrent clients.",
+        "Custom, simple text-based protocol with commands like PUT, GET, DELETE, EXISTS.",
+        "Time-To-Live (TTL) for automatic key expiration directly within the KVStore.",
+        "Least Recently Used (LRU) eviction policy directly within the KVStore, using `OrderedDict`.",
+        "Cluster mode support with sharding (key distribution) and replication (write mirroring) across multiple nodes.",
+        "Dockerized deployment for easy setup and scaling.",
+        "Provides development tools: an interactive client script, a load testing tool, and a benchmark script for internal performance measurement.",
+        "Configurable via command-line arguments and environment variables."
       ],
       "tradeoffs": [
-        "In-memory storage results in data loss upon server restart or failure, as there is no persistence mechanism.",
-        "The custom TCP protocol requires specific client-side implementation (e.g., `scripts/client.py` or `netcat`), lacking compatibility with standard, widely-used client libraries.",
-        "The architecture is single-node, which limits scalability beyond the resources of a single machine and presents a single point of failure.",
-        "No explicit authentication or authorization mechanisms are provided, making the server insecure for untrusted network environments without external security layers.",
-        "The protocol's error handling is basic, relying on simple 'OK'/'ERROR' responses without detailed error codes."
+        "No Data Persistence: Being an \"in-memory\" store, all data is lost upon server restart as there is no evident disk-based persistence mechanism.",
+        "Custom Protocol Lock-in: Requires custom clients to interact with the server; it is not compatible with standard key-value store protocols (e.g., Redis protocol).",
+        "Limited Data Types: Values are stored as strings (`value: str`), not natively supporting richer data structures beyond basic key-value pairs.",
+        "Scalability Complexity: While sharding and replication are implemented, managing a large-scale cluster (e.g., handling node failures, rebalancing shards) might require more advanced features not fully detailed or robust in the provided files.",
+        "Single-threaded Python Execution (GIL): Despite `asyncio` for I/O concurrency, CPU-bound operations within command execution are still limited by Python's Global Interpreter Lock (GIL), potentially limiting peak throughput on multi-core machines for purely computational tasks (though caching is often I/O bound)."
       ],
-      "demonstrates": "This project demonstrates the development of a high-performance, asynchronous TCP server using Python's `asyncio`, including the design and implementation of a custom network protocol. It showcases fundamental cache functionalities such as key-value storage, Time-To-Live (TTL), and Least Recently Used (LRU) eviction policies. Furthermore, it exemplifies modular software design, comprehensive testing (unit, integration, load, benchmark), application containerization with Docker, and basic cloud deployment patterns.",
-      "complexity": "intermediate",
+      "demonstrates": "Asynchronous programming in Python using `asyncio` for high-concurrency network services; implementation of a custom network protocol over raw TCP sockets; design and implementation of core caching mechanisms, including TTL and LRU eviction policies; modular software design principles for building a server application; basic distributed system concepts like sharding and replication; developing robust testing strategies (unit, integration, load tests); containerization with Docker and multi-container orchestration with `docker-compose`; scripting for development tasks (client, benchmark, load test, validation); and deployment considerations for cloud environments (AWS EC2).",
+      "complexity": "advanced",
       "languages": [
         "Python",
         "Shell",
@@ -130,7 +130,7 @@
         "socket",
         "statistics",
         "dataclasses",
-        "pytest"
+        "time"
       ]
     },
     {

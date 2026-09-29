@@ -12,6 +12,10 @@ The core insight from the BRIEF: the seven public GitHub repos have **thin or mi
 
 Each chunk gets `{source_type: "resume", section: "...", company: "..."}` metadata so the retriever can filter at query time.
 
+### Work notes — the private-repo work the resume summarises
+
+Most of Jiya's strongest work is in private company repos the persona cannot read. `backend/data/work_history/*.md` is a curated set of notes written from her engineering record (pull requests, commits, measurements, and her own honesty corrections): one note per story, a small front-matter block (title, company, period, tags), then `## ` sections. `backend/app/rag/work_history_ingest.py` turns every section into one chunk prefixed with the note's title and period, tagged `{source_type: "work_story", topic, title, section, company, period}`. Employer questions retrieve from resume + work notes; public-project questions retrieve from repo cards + code + the notes tagged `company: personal project`. Notes are the most recent and most detailed source, so the system prompt tells the model to prefer them when a repo summary lags (a repo card generated from `main` can describe an older version than the resume).
+
 ### GitHub — auto-summarized Repo Cards
 
 Per repo, `backend/app/rag/github_ingest.py` fetches metadata + a curated subset of source files (priority list: README, manifest, config, entry points; skip lockfiles, binaries, audio, generated bundles). Then `backend/app/rag/repo_summarizer.py` calls Gemini 2.5 Flash with `response_mime_type="application/json"` to produce a structured **Repo Card** with fields like `one_line_purpose`, `architecture_summary`, `tradeoffs_and_limitations`, `complexity_level`. Each card is cached to `data/repo_cards/<repo>.json` keyed by `last_commit_date` so re-ingestion only re-queries Gemini for repos that actually changed.

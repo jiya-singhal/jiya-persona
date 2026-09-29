@@ -1,7 +1,7 @@
 {
   "repo_name": "jiya-singhal/KV-Cache",
   "one_line_purpose": "A high-performance, in-memory key-value cache server built with Python and asyncio, communicating over raw TCP sockets.",
-  "problem_solved": "Provides a high-performance, in-memory key-value store that can handle concurrent requests, offering fast data retrieval and storage with optional time-to-live (TTL) and Least Recently Used (LRU) eviction policies.",
+  "problem_solved": "Provides fast, temporary storage for key-value data, addressing the need for quick data retrieval and reducing load on primary data stores. It incorporates cache management features like time-based expiration and least-recently-used eviction to efficiently manage memory and data freshness.",
   "tech_stack": {
     "languages": [
       "Python",
@@ -12,54 +12,54 @@
       "asyncio"
     ],
     "key_libraries": [
+      "asyncio",
       "collections.OrderedDict",
       "logging",
       "argparse",
       "socket",
       "statistics",
       "dataclasses",
+      "time",
+      "random",
+      "string",
+      "sys",
+      "os",
+      "pathlib",
       "pytest",
-      "pytest-asyncio",
-      "pytest-cov",
-      "pytest-timeout",
-      "black",
-      "isort",
-      "mypy",
-      "flake8",
-      "uvloop"
+      "setuptools",
+      "netcat-openbsd"
     ],
-    "storage": "In-memory (using Python's OrderedDict)",
+    "storage": "In-memory using Python's collections.OrderedDict",
     "deployment": "Docker, AWS EC2"
   },
-  "architecture_summary": "The KV-Cache server is structured into three main layers: a Network Layer (`tcp_server.py`) utilizing `asyncio` for concurrent TCP connections; a Protocol Layer (`parser.py`, `commands.py`) responsible for parsing custom text-based commands and formatting responses; and a Cache Layer (`store.py`, `eviction.py`) that implements the core key-value storage, Time-To-Live (TTL) management, and a Least Recently Used (LRU) eviction policy. Client requests flow from a TCP socket through the protocol parser to the KV store, and responses are returned accordingly.",
+  "architecture_summary": "The system is a KV-Cache Server with a modular architecture:\n    *   Network Layer (`src/network/tcp_server.py`): Uses `asyncio.start_server()` for non-blocking I/O, handling multiple concurrent client TCP connections on port 7171.\n    *   Protocol Layer (`src/protocol/`): Consists of `commands.py` (defining PUT, GET, DELETE, EXISTS) and `parser.py` (parsing raw text commands and formatting responses).\n    *   Cache Layer (`src/cache/`): Implements `store.py` for core key-value storage (`KVStore`). `KVStore` itself provides in-memory storage using Python's `OrderedDict`, and integrates both Time-To-Live (TTL) for key expiration and Least Recently Used (LRU) eviction policies. The module `eviction.py` offers a standalone LRU implementation.\n    *   Cluster Components (`src/cluster/`): Includes `config.py`, `replication.py`, and `router.py` for supporting cluster mode, enabling key sharding to primary nodes and replicating write operations to replica nodes. `docker-compose.yml` configures 3 nodes for a clustered deployment.\n    *   Data flow: Client Request -> TCP Socket -> Protocol Parser -> KV Store (with TTL/LRU) -> Protocol Formatter -> TCP Socket -> Server Response. In cluster mode, requests may be forwarded to primary nodes or replicated to replicas.",
   "key_features": [
-    "High-performance, in-memory key-value store",
-    "Async TCP server using Python's asyncio for non-blocking I/O",
-    "Handles multiple concurrent client connections",
-    "Custom text-based protocol supporting PUT, GET, DELETE, EXISTS, and QUIT commands",
-    "Key-value storage with O(1) average-case time complexity for operations",
-    "Time-To-Live (TTL) management for automatic key expiration",
-    "Least Recently Used (LRU) eviction policy for cache management",
-    "Docker image for easy containerization and deployment",
-    "Includes benchmarking script for performance analysis of internal components",
-    "Includes load testing script for simulating concurrent clients and measuring network performance"
+    "High-performance in-memory key-value storage.",
+    "Asynchronous TCP server for handling concurrent clients.",
+    "Custom, simple text-based protocol with commands like PUT, GET, DELETE, EXISTS.",
+    "Time-To-Live (TTL) for automatic key expiration directly within the KVStore.",
+    "Least Recently Used (LRU) eviction policy directly within the KVStore, using `OrderedDict`.",
+    "Cluster mode support with sharding (key distribution) and replication (write mirroring) across multiple nodes.",
+    "Dockerized deployment for easy setup and scaling.",
+    "Provides development tools: an interactive client script, a load testing tool, and a benchmark script for internal performance measurement.",
+    "Configurable via command-line arguments and environment variables."
   ],
   "notable_code_decisions": [
-    "Implementation of a custom, simple text-based protocol over raw TCP sockets, providing direct control over communication specifics.",
-    "Leveraging Python's `asyncio` for concurrent, non-blocking I/O to efficiently manage multiple client connections.",
-    "Utilizing `collections.OrderedDict` for the core KV store and LRU eviction, enabling O(1) average-case time complexity for key operations and LRU order maintenance.",
-    "Modular software design with distinct layers for network handling, protocol parsing, and cache logic (store, TTL, eviction) to enhance maintainability and testability.",
-    "Provision of command-line arguments and environment variables for flexible server configuration (host, port, max-keys, debug).",
-    "Inclusion of comprehensive load testing and benchmarking scripts to validate and measure performance characteristics objectively."
+    "`asyncio` for Concurrency: Leverages Python's `asyncio` for efficient, non-blocking I/O to handle many concurrent client connections without traditional threads.",
+    "`collections.OrderedDict` for KVStore & LRU: Utilizes `OrderedDict` to provide O(1) average-case time complexity for cache operations while intrinsically supporting LRU eviction by maintaining insertion/access order.",
+    "Custom Text Protocol: Implements a simple, human-readable, custom text-based protocol over raw TCP, simplifying communication but requiring custom clients.",
+    "Modular Design: Separates concerns into distinct `network`, `protocol`, `cache`, and `cluster` modules for maintainability and clarity.",
+    "Clustering Logic: Integrates sharding (`is_primary_for_key`, `get_shard_for_key`, `get_primary_node`) and replication (`replicate_to_replica`, `forward_request`) directly into the `KVServer` to enable distributed caching.",
+    "Environment-based Configuration: Uses `src/config/settings.py` and environment variables for flexible configuration (`KV_CACHE_HOST`, `KV_CACHE_PORT`, `KV_CACHE_MAX_KEYS`, `NODE_ID`, `CLUSTER_MODE`)."
   ],
   "tradeoffs_and_limitations": [
-    "In-memory storage results in data loss upon server restart or failure, as there is no persistence mechanism.",
-    "The custom TCP protocol requires specific client-side implementation (e.g., `scripts/client.py` or `netcat`), lacking compatibility with standard, widely-used client libraries.",
-    "The architecture is single-node, which limits scalability beyond the resources of a single machine and presents a single point of failure.",
-    "No explicit authentication or authorization mechanisms are provided, making the server insecure for untrusted network environments without external security layers.",
-    "The protocol's error handling is basic, relying on simple 'OK'/'ERROR' responses without detailed error codes."
+    "No Data Persistence: Being an \"in-memory\" store, all data is lost upon server restart as there is no evident disk-based persistence mechanism.",
+    "Custom Protocol Lock-in: Requires custom clients to interact with the server; it is not compatible with standard key-value store protocols (e.g., Redis protocol).",
+    "Limited Data Types: Values are stored as strings (`value: str`), not natively supporting richer data structures beyond basic key-value pairs.",
+    "Scalability Complexity: While sharding and replication are implemented, managing a large-scale cluster (e.g., handling node failures, rebalancing shards) might require more advanced features not fully detailed or robust in the provided files.",
+    "Single-threaded Python Execution (GIL): Despite `asyncio` for I/O concurrency, CPU-bound operations within command execution are still limited by Python's Global Interpreter Lock (GIL), potentially limiting peak throughput on multi-core machines for purely computational tasks (though caching is often I/O bound)."
   ],
-  "complexity_level": "intermediate",
-  "what_it_demonstrates": "This project demonstrates the development of a high-performance, asynchronous TCP server using Python's `asyncio`, including the design and implementation of a custom network protocol. It showcases fundamental cache functionalities such as key-value storage, Time-To-Live (TTL), and Least Recently Used (LRU) eviction policies. Furthermore, it exemplifies modular software design, comprehensive testing (unit, integration, load, benchmark), application containerization with Docker, and basic cloud deployment patterns.",
-  "_last_commit": "2026-01-25T17:01:35+00:00"
+  "complexity_level": "advanced",
+  "what_it_demonstrates": "Asynchronous programming in Python using `asyncio` for high-concurrency network services; implementation of a custom network protocol over raw TCP sockets; design and implementation of core caching mechanisms, including TTL and LRU eviction policies; modular software design principles for building a server application; basic distributed system concepts like sharding and replication; developing robust testing strategies (unit, integration, load tests); containerization with Docker and multi-container orchestration with `docker-compose`; scripting for development tasks (client, benchmark, load test, validation); and deployment considerations for cloud environments (AWS EC2).",
+  "_last_commit": "2026-01-31T12:32:26+00:00"
 }

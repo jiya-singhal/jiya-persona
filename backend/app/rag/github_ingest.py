@@ -25,6 +25,9 @@ SKIP_EXTENSIONS = {
     ".min.js", ".min.css", ".map", ".bundle.js", ".chunk.js",
     ".pdf", ".docx", ".xlsx", ".pptx",
     ".sqlite", ".db", ".bin", ".dat",
+    # Data and log files: they say nothing about how the repo is built and
+    # a single CSV used to contribute more chunks than the rest of its repo.
+    ".csv", ".tsv", ".jsonl", ".ndjson", ".parquet", ".ipynb", ".log", ".txt",
 }
 
 SKIP_FILENAMES = {
@@ -96,13 +99,21 @@ def _priority_score(path: str) -> int:
     return 4
 
 
-def _get_file_tree(repo: Repository) -> list[str]:
+def _get_file_tree(repo: Repository, ref: str) -> list[str]:
     try:
-        tree = repo.get_git_tree(sha=repo.default_branch, recursive=True)
+        tree = repo.get_git_tree(sha=ref, recursive=True)
         return [item.path for item in tree.tree if item.type == "blob"]
     except GithubException:
-        logger.warning(f"Could not get tree for {repo.full_name}")
+        logger.warning(f"Could not get tree for {repo.full_name}@{ref}")
         return []
+
+
+def parse_repo_spec(spec: str) -> tuple[str, str | None]:
+    """Split "owner/repo@branch" into ("owner/repo", "branch"); branch optional."""
+    if "@" in spec:
+        full_name, branch = spec.split("@", 1)
+        return full_name, branch or None
+    return spec, None
 
 
 def _select_files(file_tree: list[str]) -> list[str]:
@@ -111,9 +122,9 @@ def _select_files(file_tree: list[str]) -> list[str]:
     return candidates[:MAX_FILES_PER_REPO]
 
 
-def _fetch_file_content(repo: Repository, path: str) -> str | None:
+def _fetch_file_content(repo: Repository, path: str, ref: str) -> str | None:
     try:
-        content_file: ContentFile = repo.get_contents(path)
+        content_file: ContentFile = repo.get_contents(path, ref=ref)
         if content_file.size and content_file.size > MAX_FILE_BYTES:
             return None
         if content_file.encoding == "base64" and content_file.content:
@@ -124,21 +135,29 @@ def _fetch_file_content(repo: Repository, path: str) -> str | None:
         return None
 
 
-def fetch_repo(github_token: str, repo_full_name: str) -> RepoData:
+def fetch_repo(github_token: str, repo_spec: str) -> RepoData:
+    """Fetch a repo's metadata and representative files.
+
+    `repo_spec` is "owner/repo" or "owner/repo@branch". The branch matters
+    when the interesting code is not on the default branch (KV-Cache keeps
+    its three-node version on a submission branch).
+    """
+    repo_full_name, branch = parse_repo_spec(repo_spec)
     g = Github(github_token)
     repo = g.get_repo(repo_full_name)
+    ref = branch or repo.default_branch
 
     languages = repo.get_languages()
 
     try:
-        commits = repo.get_commits()
+        commits = repo.get_commits(sha=ref)
         total_commits = commits.totalCount
         last_commit_date = commits[0].commit.committer.date.isoformat() if total_commits > 0 else ""
     except GithubException:
         total_commits = 0
         last_commit_date = ""
 
-    file_tree = _get_file_tree(repo)
+    file_tree = _get_file_tree(repo, ref)
     selected_paths = _select_files(file_tree)
 
     selected_files = {}
@@ -146,7 +165,7 @@ def fetch_repo(github_token: str, repo_full_name: str) -> RepoData:
     for path in selected_paths:
         if total_bytes >= MAX_BYTES_PER_REPO:
             break
-        content = _fetch_file_content(repo, path)
+        content = _fetch_file_content(repo, path, ref)
         if content:
             total_bytes += len(content.encode("utf-8"))
             selected_files[path] = content
@@ -160,7 +179,7 @@ def fetch_repo(github_token: str, repo_full_name: str) -> RepoData:
         last_commit_date=last_commit_date,
         total_commits=total_commits,
         created_at=repo.created_at.isoformat() if repo.created_at else "",
-        default_branch=repo.default_branch,
+        default_branch=ref,
         file_tree=file_tree,
         selected_files=selected_files,
     )
