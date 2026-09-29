@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from app.config import settings
 from app.rag.resume_ingest import ingest_resume
+from app.rag.work_history_ingest import ingest_work_history
 from app.rag.github_ingest import fetch_repo
 from app.rag.repo_summarizer import generate_repo_card
 from app.rag.chunking import chunk_repo_card, chunk_source_code
@@ -43,6 +44,15 @@ def run_resume_ingestion() -> list[dict]:
     logger.info(f"Resume produced {len(chunks)} chunks")
     for c in chunks[:3]:
         logger.info(f"  Sample: [{c['metadata']['section']}] {c['text'][:80]}...")
+    return chunks
+
+
+def run_work_history_ingestion() -> list[dict]:
+    logger.info(f"Parsing work-history notes from {settings.work_history_dir}")
+    chunks = ingest_work_history(settings.work_history_dir)
+    logger.info(f"Work history produced {len(chunks)} chunks")
+    for c in chunks[:3]:
+        logger.info(f"  Sample: [{c['metadata']['topic']}] {c['text'][:80]}...")
     return chunks
 
 
@@ -111,8 +121,9 @@ def main():
     if not args.repos_only:
         resume_chunks = run_resume_ingestion()
         all_chunks.extend(resume_chunks)
+        all_chunks.extend(run_work_history_ingestion())
     else:
-        logger.info("Skipping resume (--repos-only)")
+        logger.info("Skipping resume and work history (--repos-only)")
 
     # Repos
     repo_chunks = run_repo_ingestion(force_cards=args.force_cards)

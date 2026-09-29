@@ -10,6 +10,9 @@ export type SourceMeta = {
   field?: string;
   file_path?: string;
   company?: string;
+  topic?: string;
+  title?: string;
+  period?: string;
   [k: string]: unknown;
 };
 

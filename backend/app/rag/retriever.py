@@ -76,9 +76,19 @@ def query(
 
     where_filter = None
     if source_filter == "resume":
-        where_filter = {"source_type": "resume"}
+        # The curated work notes are the private-repo work the resume
+        # summarises, so employer questions draw on both.
+        where_filter = {"source_type": {"$in": ["resume", "work_story"]}}
     elif source_filter == "github":
-        where_filter = {"source_type": {"$in": ["github_card", "github_code"]}}
+        # Public-project questions: repo cards and code, plus the curated
+        # notes on personal projects (they carry the corrected numbers and
+        # the branch caveats a repo summary generated from `main` misses).
+        where_filter = {
+            "$or": [
+                {"source_type": {"$in": ["github_card", "github_code"]}},
+                {"company": "personal project"},
+            ]
+        }
 
     kwargs = {
         "query_embeddings": [query_embedding],
@@ -110,18 +120,42 @@ def query(
     return _mmr_diversify(items, top_k_after_mmr)
 
 
+MAX_PER_REPO = 2
+MAX_PER_STORY = 2
+MAX_RESUME = 4
+
+
+def _diversity_key(meta: dict) -> tuple[str, int]:
+    """Group key and cap for the diversity pass.
+
+    Code and card chunks from one repo are near-duplicates of each other, so
+    they are capped per repo. Work notes are capped per note (topic). Resume
+    chunks are the densest facts in the corpus and get a higher cap; the old
+    behaviour keyed them all under one "resume" bucket capped at 2, which let
+    raw code crowd out the resume on most unfiltered questions.
+    """
+    source = meta.get("source_type", "")
+    if source == "resume":
+        return ("resume", MAX_RESUME)
+    if source == "work_story":
+        topic = meta.get("topic", "")
+        # The overview note mentions everything, so it matches everything;
+        # one of its sections is enough context on any question.
+        cap = 1 if topic == "overview" else MAX_PER_STORY
+        return (f"story:{topic}", cap)
+    repo = meta.get("repo", "")
+    return (repo or source, MAX_PER_REPO)
+
+
 def _mmr_diversify(items: list[dict], top_k: int) -> list[dict]:
-    """Simple diversity pass: limit per-repo representation."""
+    """Simple diversity pass: limit per-repo / per-note representation."""
     repo_counts: dict[str, int] = {}
     selected = []
-    max_per_repo = 2
 
     for item in items:
-        repo = item["metadata"].get("repo", "")
-        source = item["metadata"].get("source_type", "")
-        key = repo if repo else source
+        key, cap = _diversity_key(item["metadata"])
 
-        if repo_counts.get(key, 0) >= max_per_repo and len(selected) < top_k:
+        if repo_counts.get(key, 0) >= cap and len(selected) < top_k:
             continue
 
         selected.append(item)

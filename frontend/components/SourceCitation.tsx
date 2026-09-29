@@ -7,6 +7,7 @@ function tagOf(s: Source): string {
   const m = s.metadata || {};
   const t = m.source_type;
   if (t === "resume") return `resume · ${m.section ?? "?"}`;
+  if (t === "work_story") return `work notes · ${m.topic ?? m.section ?? "?"}`;
   if (t === "github_card") return `${m.repo ?? "?"} · ${m.field ?? "card"}`;
   if (t === "github_code") return `${m.repo ?? "?"} · ${m.file_path ?? "?"}`;
   return String(t ?? "source");
