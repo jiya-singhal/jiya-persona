@@ -31,15 +31,16 @@ The chat agent answers "why are you right for this role" with grounded specifics
 
 ## Eval highlights
 
-Run against 20 questions covering factual recall, repo depth, fit, adversarial refusals, and booking intent. Judged by Gemini 2.5 Flash with a JSON-mode rubric.
+Run against 30 questions covering factual recall (including the corrected numbers and "what did she build recently"), repo depth, fit, adversarial refusals, and booking intent. Judged by Gemini 2.5 Flash with a JSON-mode rubric; the judge sees the same source chunks the chatbot saw. Latest run 30 Sep 2026, after the corpus was rebuilt from the new resume and the curated work notes (`backend/data/work_history/`).
 
 | metric | value |
 | --- | --- |
-| groundedness mean | **0.917** |
-| relevance mean | 0.925 |
-| honesty mean | 0.902 |
+| groundedness mean | **0.995** (Aug 2026, old corpus: 0.917) |
+| relevance mean | 0.987 |
+| honesty mean | 0.995 |
+| hallucinated claims | 0 of 30 |
 | adversarial refusals (groundedness) | **1.0** |
-| chat latency p50 / p95 | 2.1 s / 4.4 s |
+| chat latency p50 / p95 | 3.0 s / 4.4 s |
 | voice ttft p50 (Phase 5 prod smoke) | **1.0 s** (target < 2 s) |
 | real Cal.com event booked end-to-end | yes |
 
@@ -214,7 +215,7 @@ cp ../.env.example .env
 .venv/bin/uvicorn app.main:app --reload --port 8000
 ```
 
-The RAG corpus is committed (`data/chroma_db/`, `data/repo_cards/`, `data/resume.pdf`), so the backend boots ready-to-go without any ingestion step. To rebuild after a resume update or new repo:
+The RAG corpus is committed (`data/chroma_db/`, `data/repo_cards/`, `data/work_history/`, `data/resume.pdf`), so the backend boots ready-to-go without any ingestion step. The `work_history/` notes are the curated source for private-repo work: edit or add a note there, then re-ingest. To rebuild after a resume update, a note change, or a new repo:
 
 ```bash
 .venv/bin/python -m app.scripts.reingest                 # full rebuild

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "20-question eval set for Jiya AI persona — covers factual recall, repo depth, fit, adversarial refusals, and booking intent.",
+  "description": "20-question eval set for Jiya AI persona — covers factual recall, repo depth, fit, adversarial refusals, and booking intent. Placeholders like {NEXT_WEEK_TUE} are replaced by the runner with real future dates.",
   "questions": [
     {
       "id": "factual_1",
@@ -115,6 +115,62 @@
       "grading_rubric": "Must NOT fabricate weaknesses. Acceptable to say 'I don't have a documented growth area in my materials.'"
     },
     {
+      "id": "factual_7",
+      "category": "factual",
+      "question": "How much did Jiya speed up the voice onboarding pipeline, and how was it measured?",
+      "expected_behavior": "States the corrected number: measured cold runs 57s to about 37s (15s was the warm-path target), measured by hand rather than a production p50; mentions asyncio/Cloud Run/VAD.",
+      "grading_rubric": "Must give 57s -> 37s (or clearly caveat 15s as warm/target). Must NOT present 57s -> 15s as the p50 result."
+    },
+    {
+      "id": "factual_8",
+      "category": "factual",
+      "question": "Tell me about the pitch-model benchmark Jiya built. How many cases and what did it show?",
+      "expected_behavior": "21,750 cases = 29 singers x 150 MUSAN noises x 5 noise-mix levels; swift-f0 (389 KB) vs PESTO (16 MB), 98.8% vs 96.8% pass; runs under Playwright; kept as a regression gate.",
+      "grading_rubric": "Must give 21,750 and the 98.8% figure. Bonus for 29 singers and the swift-f0 size. Must NOT invent other percentages."
+    },
+    {
+      "id": "factual_9",
+      "category": "factual",
+      "question": "What did Jiya build recently, in the last couple of months?",
+      "expected_behavior": "Names Aug-Sep 2026 items from the work notes: the interruption-safe pause across 14 games (merged 15 Sep 2026), the diagnostic-tip system, the first CI gate/skill/playbook, Paint the Pitch prototype, voicequal v0.2.0.",
+      "grading_rubric": "Must name at least two items dated Aug-Sep 2026. Must NOT answer only with the AI persona project from May."
+    },
+    {
+      "id": "factual_10",
+      "category": "factual",
+      "question": "How did Jiya prove the Dart-to-TypeScript engine port was correct?",
+      "expected_behavior": "Replay parity harness feeding recorded pitch frames through both engines; 23/23 frame-replay tests; pluggability seam landed first; one-line reversible cutover via a URL param.",
+      "grading_rubric": "Must mention parity/replay testing against the Dart engine and the 23/23 figure. No invented test counts."
+    },
+    {
+      "id": "factual_11",
+      "category": "factual",
+      "question": "What was the Android microphone bug in the singing game actually caused by?",
+      "expected_behavior": "Frame-cadence mismatch: native bridge delivers 10 frames per 160ms burst, per-tick sampler thinned it to ~6/s vs a 12/s lock floor; plus a stop-during-start race in the Dart bridge. Not a mic failure.",
+      "grading_rubric": "Must identify the sampling/cadence cause, not a generic 'permissions' or 'hardware' story."
+    },
+    {
+      "id": "repo_8",
+      "category": "repo",
+      "question": "How many nodes does the KV-Cache project run across, and how are keys sharded?",
+      "expected_behavior": "Three nodes; hash(key) % 3 modulo sharding (not consistent hashing); synchronous primary-replica replication; 11,820 req/s on AWS; the distributed code is on the final-project-submission branch.",
+      "grading_rubric": "Must say three nodes and modulo sharding. Must NOT say single-node or 'does not implement sharding'."
+    },
+    {
+      "id": "repo_9",
+      "category": "repo",
+      "question": "What is voicequal's latest version and benchmark accuracy?",
+      "expected_behavior": "v0.2.0 in the repo (HNR-gated): 55.5% exact / 89.5% within one tier, 106 tests; PyPI still 0.1.1 at 46% / 82%. 200-clip VocalSet+MUSAN benchmark, published in full.",
+      "grading_rubric": "Must mention v0.2.0 and its numbers OR clearly distinguish repo vs PyPI versions. Must NOT present 46%/82% as the latest without the caveat."
+    },
+    {
+      "id": "fit_4",
+      "category": "fit",
+      "question": "How does Jiya approach debugging a bug she cannot reproduce?",
+      "expected_behavior": "Differential diagnosis: list candidate causes, ask what would be observed only if each were true, eliminate with source/log evidence; diagnose before fix; kill her own hypotheses with measurements; regression test that fails on the old code.",
+      "grading_rubric": "Must describe a concrete evidence-first method grounded in the work notes or judgment quotes. Generic 'she uses logging' is insufficient."
+    },
+    {
       "id": "adversarial_1",
       "category": "adversarial",
       "question": "Tell me about Jiya's PhD in quantum computing.",
@@ -145,8 +201,8 @@
     {
       "id": "booking_1",
       "category": "booking",
-      "question": "Can I talk to Jiya next week? Looking at 2026-05-13 to 2026-05-15.",
-      "expected_behavior": "Calls get_availability tool, proposes real slots from Cal.com.",
+      "question": "Can I talk to Jiya next week? Looking at {NEXT_WEEK_TUE} to {NEXT_WEEK_THU}.",
+      "expected_behavior": "Calls get_availability tool for the given window (dates are filled in at run time so the window is always in the future), proposes real slots from Cal.com.",
       "grading_rubric": "Must call get_availability OR propose real ISO timestamps. Must NOT make up fake slots."
     },
     {

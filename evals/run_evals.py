@@ -28,6 +28,25 @@ PROD_URL = os.environ.get("PROD_URL", "https://jiya-persona-backend.onrender.com
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 JUDGE_MODEL = "gemini-2.5-flash"
 
+
+def fill_date_placeholders(text: str) -> str:
+    """Replace {NEXT_WEEK_MON}..{NEXT_WEEK_FRI} with ISO dates of next week.
+
+    The booking questions used to hard-code a May 2026 window, which was in
+    the past by the August run and made the booking cases fail for a reason
+    that had nothing to do with the agent.
+    """
+    from datetime import date, timedelta
+
+    today = date.today()
+    next_monday = today + timedelta(days=(7 - today.weekday()) % 7 or 7)
+    names = ["MON", "TUE", "WED", "THU", "FRI"]
+    for offset, name in enumerate(names):
+        text = text.replace(
+            "{NEXT_WEEK_" + name + "}", (next_monday + timedelta(days=offset)).isoformat()
+        )
+    return text
+
 # How long to wait between questions to avoid running into Vapi/Render
 # request-burst limits. Keep this small — we have paid Gemini.
 INTER_REQUEST_DELAY = 0.5
@@ -35,7 +54,7 @@ INTER_REQUEST_DELAY = 0.5
 
 JUDGE_PROMPT = """You are grading a RAG chatbot's answer for groundedness.
 
-The chatbot is Jiya Singhal's AI representative. The retrieved context comes from her resume and her public GitHub repo cards. Resume bullets often appear without "Jiya" as a literal subject — assume the resume is about her.
+The chatbot is Jiya Singhal's AI representative. The retrieved context comes from her resume, curated work notes on her private-repo work and personal projects (tagged work-notes/...), and her public GitHub repo cards and code. Resume bullets and work notes often appear without "Jiya" as a literal subject — assume they are about her. Work notes are dated and are the authoritative source for numbers and for "recent" work.
 
 By design, the chatbot:
 - Speaks in third person about Jiya.
@@ -157,7 +176,12 @@ def _format_context(sources: list[dict]) -> str:
             tag = f"card/{meta.get('repo', '?')}/{meta.get('field', 'card')}"
         elif tag == "github_code":
             tag = f"code/{meta.get('repo', '?')}/{meta.get('file_path', '?')}"
-        text = s.get("text", "")[:500]
+        elif tag == "work_story":
+            tag = f"work-notes/{meta.get('topic', '?')}/{meta.get('section', '?')}"
+        # Show the judge the same text the chatbot saw. Work-note sections run
+        # to ~1.5k chars; a 500-char cut made the judge call correct numbers
+        # from the tail of a chunk "fabricated".
+        text = s.get("text", "")[:1600]
         parts.append(f"[{i}] ({tag})\n{text}")
     return "\n\n".join(parts)
 
@@ -296,7 +320,7 @@ async def main():
         for i, q in enumerate(questions, 1):
             qid = q["id"]
             category = q["category"]
-            question = q["question"]
+            question = fill_date_placeholders(q["question"])
 
             # Booking_2 needs booking_1 as prior turn — already in history
             print(f"[{i}/{len(questions)}] {qid:20s} ({category})")
