@@ -43,6 +43,22 @@ class Settings(BaseSettings):
         "jiya-singhal/Contact-Manager-App",
     ]
 
+    # Red-team harness only (evals/redteam): plants a fake canary token in the
+    # system prompt and disables real bookings. Never on in production.
+    redteam_mode: bool = False
+    # Prompt-injection guardrails: "on" (all layers), "off", or a comma list
+    # of spotlight,input,output for per-layer ablation runs.
+    guardrails: str = "on"
+
+    @property
+    def guardrail_layers(self) -> set[str]:
+        value = self.guardrails.strip().lower()
+        if value in ("on", "1", "true", "yes"):
+            return {"spotlight", "input", "output"}
+        if value in ("off", "0", "false", "no", ""):
+            return set()
+        return {part.strip() for part in value.split(",")}
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
 

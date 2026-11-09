@@ -28,8 +28,13 @@ def ingest_chunks(
     voyage_api_key: str,
     chroma_dir: str,
     chunks: list[dict],
+    id_prefix: str = "",
 ) -> int:
-    """Ingest chunks into ChromaDB. Returns number of chunks added."""
+    """Ingest chunks into ChromaDB. Returns number of chunks added.
+
+    Ids are "<source_type>_<i>", so a second call would overwrite the first
+    call's chunks; pass id_prefix to add chunks alongside an existing corpus.
+    """
     if not chunks:
         return 0
 
@@ -38,7 +43,7 @@ def ingest_chunks(
 
     texts = [c["text"] for c in chunks]
     metadatas = [c["metadata"] for c in chunks]
-    ids = [f"{c['metadata'].get('source_type', 'unk')}_{i}" for i, c in enumerate(chunks)]
+    ids = [f"{id_prefix}{c['metadata'].get('source_type', 'unk')}_{i}" for i, c in enumerate(chunks)]
 
     # Embed
     embeddings = embed_texts(voyage_api_key, texts, input_type="document")

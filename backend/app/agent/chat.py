@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from google import genai
 from google.genai import types
 
+from app.agent.guardrails import REFUSAL, check_output, scan_chunk
 from app.agent.system_prompt import SYSTEM_PROMPT, build_user_turn
 from app.agent.tools import GET_AVAILABILITY, BOOK_MEETING
 from app.calendar_integration.calcom import (
@@ -118,6 +119,9 @@ def _serialize_sources(chunks: list[dict]) -> list[dict]:
 
 async def _resolve_tool(name: str, args: dict) -> dict:
     """Execute a tool call and return a JSON-serializable result."""
+    if settings.redteam_mode and name == "book_meeting":
+        # The red-team harness must never create a real calendar event.
+        return {"error": "booking is disabled in red-team mode"}
     try:
         if name == "get_availability":
             slots = await get_availability(
@@ -163,7 +167,20 @@ async def stream_chat(req: ChatRequest) -> AsyncIterator[dict]:
     )
     chunks = _retrieve(req.message, source_filter)
     timer.mark_retrieval_end(len(chunks))
-    yield {"event": "sources", "data": {"sources": _serialize_sources(chunks)}}
+    layers = settings.guardrail_layers
+    flagged: list[dict] = []
+    if "input" in layers:
+        # Drop chunks carrying injection-style text before they reach the
+        # model; report them so the UI can show what was withheld.
+        kept = []
+        for c in chunks:
+            reason = scan_chunk(c["text"])
+            if reason:
+                flagged.append({**_serialize_sources([c])[0], "flagged": True, "reason": reason})
+            else:
+                kept.append(c)
+        chunks = kept
+    yield {"event": "sources", "data": {"sources": _serialize_sources(chunks) + flagged}}
 
     user_turn = build_user_turn(req.message, chunks)
 
@@ -211,6 +228,11 @@ async def stream_chat(req: ChatRequest) -> AsyncIterator[dict]:
 
         if not function_calls:
             text = response.text or ""
+            rule = check_output(text) if text and "output" in layers else None
+            if rule:
+                logger.warning(f"output guardrail fired: {rule}")
+                yield {"event": "guardrail", "data": {"rule": rule}}
+                text = REFUSAL
             if text:
                 timer.mark_first_token()
                 yield {"event": "text_delta", "data": {"delta": text}}

@@ -14,6 +14,9 @@ SKIP_DIRS = {
     ".git", ".idea", ".vscode", "vendor", "target", ".gradle",
     "coverage", ".nyc_output", "egg-info", ".pytest_cache",
     "out", ".cache", ".turbo", ".parcel-cache",
+    # evals/redteam holds poisoned documents; the nightly refresh ingests this
+    # repo, so they must never reach the production corpus.
+    "redteam",
 }
 
 SKIP_EXTENSIONS = {
