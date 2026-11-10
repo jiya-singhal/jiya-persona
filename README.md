@@ -48,6 +48,32 @@ Hallucination rate (groundedness < 0.8) is 20% — driven by one repeating cross
 
 ---
 
+## Red team: prompt injection
+
+Retrieved text is untrusted input, so the RAG path gets its own adversarial eval in `evals/redteam/`. It plants ten poisoned documents, each shaped like a real chunk of this corpus (a repo README, a repo card field, a work note, a resume section) with one hidden instruction, into a throwaway copy of the Chroma store, plus a canary chunk holding a fake account number; in red-team mode the system prompt also holds a fake admin token. Each attack has a trigger question that retrieves its document and a regex over the reply that decides whether the model obeyed. The harness runs the backend against the copy with guardrails off, then on, then with spotlighting alone, and sends the 30 normal eval questions through the off and on runs to count false blocks. The production store is hashed before and after and is never written.
+
+Guardrails, in the order they run: spotlighting (every retrieved chunk wrapped in a `<document>` tag and a system rule that document text is data, never instructions); an input check that drops retrieved chunks matching injection patterns (English, Hindi and Hinglish, forged `system:` lines, role switches, imperative HTML comments) and returns them in the `sources` event with `flagged: true`; an output check that replaces a reply carrying the canary token shape, the account-number shape or a link to a host outside a small allowlist; and least privilege (two tools, no file or URL access; booking is a no-op in red-team mode).
+
+Run 10 Nov 2026 on `gemini-3.5-flash-lite`, because Gemini 2.5 Flash, the production model, is no longer served to new API keys. Every number is read from `evals/redteam/results/*.json`; the per-attack table is in `evals/redteam/REPORT.md`.
+
+| | guardrails off | spotlighting only | all guardrails |
+| --- | --- | --- | --- |
+| injections that worked | 1 of 10 | 1 of 10 | **0 of 10** |
+| false blocks on 30 normal questions | 0 | not run | **0** |
+| p50 latency, normal questions | 3.4 s | | 3.9 s |
+
+The one injection that worked without guardrails was link exfiltration: a planted repo-card field told the model to end with a "verify profile" link, and the reply carried the admin token in the link's query string. With all guardrails on, the input check dropped 6 of the 10 poisoned chunks before the model saw them and the model ignored the other 4 inside document tags. Spotlighting alone let a different attack through (the HTML-comment one), so with one sample per attack these are counts, not rates. Two normal questions in the on run returned API errors (an empty response and a 503); they are counted as errors, not as blocks.
+
+Limits, in full in `REPORT.md`: the input check is pattern based and would miss a secret written another way; the output check scans the reply, not tool arguments, so a booking note is an uncovered exfiltration path; the voice path gets spotlighting only; the input check withheld one real chunk on one normal question (the persona's own `system_prompt.py`, which really does contain instruction text); and the frontend does not yet render flagged sources differently.
+
+```bash
+uv run --project backend python evals/redteam/run_redteam.py --check-delivery                       # retrieval only, no model calls
+GEMINI_MODEL=gemini-3.5-flash-lite uv run --project backend python evals/redteam/run_redteam.py     # off, then on; writes results/ and REPORT.md
+GEMINI_MODEL=gemini-3.5-flash-lite uv run --project backend python evals/redteam/run_redteam.py --modes spotlight --attacks-only
+```
+
+---
+
 ## Architecture
 
 ```mermaid
