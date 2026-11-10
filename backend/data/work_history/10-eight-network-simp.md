@@ -5,7 +5,7 @@ period: Oct 2026 - present
 tags: llm, agents, evals, llm-as-judge, safety, guardrails, model routing, fastify, postgres, flutter, azure, astrology
 ---
 ## Role
-Jiya joined Eight Network in Bangalore on 1 October 2026 as an AI Software Engineer Intern and is the primary engineer on Simp, an AI companion chat app for India with 40 Hinglish personas with storylines and per-persona memory. The product runs on a Fastify and Postgres backend, a Flutter app and a React CMS, deployed on Azure Container Apps with GitHub Actions CI. The code is in private company repositories.
+Jiya joined Eight Network in Bangalore on 1 October 2026 as an AI Software Engineer Intern building Simp, a multilingual AI companion chat app for India with persona memory and storylines. The product runs on a Fastify and Postgres backend, a Flutter app and a React CMS, deployed on Azure Container Apps with GitHub Actions CI. The code is in private company repositories.
 
 ## Chat correctness
 Postgres alone prevents duplicate or missed messages: idempotent sends, per-conversation locks and SSE replay on reconnect. Rollouts drain in-flight replies before live event streams close.
@@ -23,4 +23,4 @@ Replaced invented readings with an in-house Vedic chart engine on NASA JPL DE440
 No-meetup, no-contact and crisis-care rules plus an LLM check. Evals showed most meetup blocks were false alarms, so the guard was rebuilt to count agreement only after a real ask to meet; the current guard shows zero false positives and zero misses on the labelled set. Birth details are captured only with consent and never logged.
 
 ## Persona convergence
-Traced personas sounding alike to engine rules outweighing each character prompt; cut the rule planner from 45 to 18 lines, kept safety in code, and decided on blind reads of 78-chat comparisons and 29k replayed replies.
+Traced personas sounding alike to engine rules outweighing each character prompt; removed the rule-based planner and kept safety in code, deciding on blind reads of paired conversations and replays of saved replies rather than judge scores.

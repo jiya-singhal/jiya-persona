@@ -5,7 +5,7 @@ period: 2025 - present
 tags: overview, role, timeline, evidence
 ---
 ## Current role
-Jiya Singhal is an AI Software Engineer Intern at Eight Network in Bangalore since 1 October 2026, the primary engineer on Simp, an AI companion chat app for India with 40 Hinglish personas. See the Eight Network note for the work: the Fastify and Postgres backend, the Flutter app and CMS, the Claude model gateway with routing and cost controls, the evaluation lab with LLM-as-judge and simulated users, the safety guardrails, and the grounded astrology and tarot module. The code is in private company repositories.
+Jiya Singhal is an AI Software Engineer Intern at Eight Network in Bangalore since 1 October 2026, building Simp, a multilingual AI companion chat app for India. See the Eight Network note for the work: the Fastify and Postgres backend, the Flutter app and CMS, the Claude model gateway with routing and cost controls, the evaluation lab with LLM-as-judge and simulated users, the safety guardrails, and the grounded astrology and tarot module. The code is in private company repositories.
 
 ## Previous role: Sing One Song (Aug 2025 to Oct 2026)
 Jiya was a Software Engineering Intern at Sing One Song (written "SingOneSong" in some places; the company's GitHub organisation is private) from August 2025 to October 2026, working from Bangalore, and left to join Eight Network. Sing One Song is a singing app: a Flutter mobile app that hosts a suite of voice-controlled games built in TypeScript (Phaser 3 and Canvas2D) inside a WebView, with a Python vocal-analysis backend. The notes that follow describe that work.
