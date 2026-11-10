@@ -10,6 +10,7 @@ Architecture:
 """
 
 import json
+import os
 import logging
 from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
@@ -31,7 +32,7 @@ from app.telemetry.latency_log import TurnTimer
 
 logger = logging.getLogger(__name__)
 
-MODEL = "gemini-2.5-flash"
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_TOOL_TURNS = 4  # safety cap on tool-call loop
 THINKING_BUDGET = 400  # tokens of thought per turn; see GenerateContentConfig below
 
