@@ -44,7 +44,7 @@ Run against 30 questions covering factual recall (including the corrected number
 | voice ttft p50 (Phase 5 prod smoke) | **1.0 s** (target < 2 s) |
 | real Cal.com event booked end-to-end | yes |
 
-Hallucination rate (groundedness < 0.8) is 20% — driven by one repeating cross-repo leak (FAISS+sentence-embedding details from the search-listings card bleeding into the TradeIndia narrative). This is documented in failure mode #3 of the PDF and is the first item on the two-week roadmap.
+Hallucination rate (groundedness < 0.8) was 20% on the Aug 2026 corpus, driven by one repeating cross-repo leak (FAISS and sentence-embedding details from the search-listings card bleeding into the TradeIndia narrative), documented as failure mode #3 in the PDF. After the corpus rebuild the 30 Sep run measures it at 0% (`evals/results/latest.json`).
 
 ---
 
@@ -205,7 +205,7 @@ jiya-persona/
 │   └── lib/
 │       └── api.ts                     SSE event parser
 ├── evals/
-│   ├── test_set.json                  20 questions
+│   ├── test_set.json                  30 questions
 │   ├── run_evals.py                   runs test set, LLM-judges
 │   ├── generate_report.py             ReportLab 1-page PDF
 │   └── results/
