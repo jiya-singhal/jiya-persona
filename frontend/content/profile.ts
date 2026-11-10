@@ -30,7 +30,7 @@ export const COPY = {
     name: "JIYA SINGHAL",
     headline: "I like figuring out why things behave the way they do.",
     sub: "I build voice, AI and backend systems, usually somewhere between making something work and understanding why it didn't.",
-    current: "Software Engineering Intern · voice / real-time audio / game systems · currently building @ Sing One Song",
+    current: "AI Software Engineer Intern · LLM products, evals and voice AI · currently building Simp @ Eight Network",
     ctaPrimary: "See what I've been building",
     ctaSecondary: "Ask my AI persona ↗",
     statsNote: "numbers are nicer when they mean something.",

@@ -63,6 +63,7 @@ def _detect_company(text: str) -> str:
     rest of the corpus uses "SingOneSong", so both spellings map to one label.
     """
     aliases = [
+        ("eight network", "Eight Network"),
         ("singonesong", "SingOneSong"),
         ("sing one song", "SingOneSong"),
         ("tradeindia", "TradeIndia"),

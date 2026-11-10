@@ -1,11 +1,14 @@
 ---
-title: Who Jiya is and what she works on (overview, as of September 2026)
-company: SingOneSong
-period: Aug 2025 - present
+title: Who Jiya is and what she works on (overview, as of November 2026)
+company: Eight Network
+period: 2025 - present
 tags: overview, role, timeline, evidence
 ---
 ## Current role
-Jiya Singhal is a Software Engineering Intern at Sing One Song (written "SingOneSong" in some places; the company's GitHub organisation is private). She joined in August 2025 and is still there as of September 2026, working from Bangalore. Sing One Song is a singing app: a Flutter mobile app that hosts a suite of voice-controlled games built in TypeScript (Phaser 3 and Canvas2D) inside a WebView, backed by Python and Firebase services. Her work sits between backend, real-time audio and game systems: take a messy physical signal (a person's voice), turn it into a reliable number fast enough that a game can react to it, and prove it works.
+Jiya Singhal is an AI Software Engineer Intern at Eight Network in Bangalore since 1 October 2026, the primary engineer on Simp, an AI companion chat app for India with 40 Hinglish personas. See the Eight Network note for the work: the Fastify and Postgres backend, the Flutter app and CMS, the Claude model gateway with routing and cost controls, the evaluation lab with LLM-as-judge and simulated users, the safety guardrails, and the grounded astrology and tarot module. The code is in private company repositories.
+
+## Previous role: Sing One Song (Aug 2025 to Oct 2026)
+Jiya was a Software Engineering Intern at Sing One Song (written "SingOneSong" in some places; the company's GitHub organisation is private) from August 2025 to October 2026, working from Bangalore, and left to join Eight Network. Sing One Song is a singing app: a Flutter mobile app that hosts a suite of voice-controlled games built in TypeScript (Phaser 3 and Canvas2D) inside a WebView, with a Python vocal-analysis backend. The notes that follow describe that work.
 
 ## Evidence base for everything the persona says about her work
 Every claim in these work notes traces to a pull request, a commit, or a measurement. As of 10 September 2026 the record is 244 authored pull requests, 196 of them merged, across 13 Sing One Song repositories, with 60 of those PRs carrying teammate reviews. Across all repositories (work plus personal) she has 1,011 commits in 58 repositories. The Sing One Song code is in private company repositories, so the persona cannot link to it; PR numbers are quoted as evidence only.
@@ -25,4 +28,4 @@ Product and Tech Intern at Tradeindia in Noida, January to April 2025. See the T
 Undergraduate in Computer Science at Scaler School of Technology, Bangalore (July 2023 to present, CGR 7.22), with a B.Sc. (Hons.) in Computer Science through Birla Institute of Technology (BITS), CGPA 7.89. She is a final-year student.
 
 ## Where she is heading
-She is looking for software, AI/ML engineering, or product roles where the work is close to a real signal: audio, sensors, latency, evaluation. She likes problems where the first explanation is usually wrong and the fix has to be measured.
+She is targeting AI engineering roles for 2027: LLM products with real evaluation, agents whose rules are enforced in code, and systems close to a real signal such as audio and latency. She likes problems where the first explanation is usually wrong and the fix has to be measured.

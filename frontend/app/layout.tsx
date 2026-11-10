@@ -33,7 +33,7 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "Jiya Singhal · I like figuring out why things behave the way they do",
   description:
-    "Software engineering intern working across voice, real-time audio, game and backend systems. Measured work, honest numbers, and an AI persona you can actually talk to.",
+    "AI software engineer intern working across LLM products, evaluation systems, voice and backend. Measured work, honest numbers, and an AI persona you can actually talk to.",
   metadataBase: new URL("https://jiya-persona.vercel.app"),
   openGraph: {
     title: "Jiya Singhal · I like figuring out why things behave the way they do",
